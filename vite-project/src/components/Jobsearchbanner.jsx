@@ -1,5 +1,5 @@
 import React from 'react'
-import backgroundImage from  '../assets/background-image.jpg';
+import backgroundImage from  '../assets/back.jpeg';
 
 
 const Jobsearchbanner = () => {
@@ -9,7 +9,7 @@ const Jobsearchbanner = () => {
       className="relative bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-center px-4"
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
-      <div className="bg-white bg-opacity-80 p-6 rounded shadow-md max-w-2xl w-full">
+      <div className=" bg-transparent max-w-2xl w-full">
         <h1 className="text-2xl md:text-4xl font-bold text-black mb-4">
           Linking Talent and <span className="text-blue-600">Opportunities</span>
         </h1>
