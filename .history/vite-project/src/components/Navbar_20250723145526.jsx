@@ -11,7 +11,7 @@ export default function NavigationHeader() {
 
   return (
     <div className="bg-white shadow-sm">
-      <nav className="mx-auto  px-4 sm:px-6 lg:px-8">
+      <nav className=" px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           
           {/* Left: Logo */}
@@ -35,19 +35,18 @@ export default function NavigationHeader() {
           </div>
 
           {/* Right: Auth Buttons */}
-          <div className=" text-xl hidden md:flex items-center space-x-1 ">
+          <div className="hidden md:flex items-center space-x-4">
             <a
               href="#"
-              className=" px-1  py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200"
             >
-              For Jobsekeers 
+              REGISTER
             </a>
-            <span>|</span>
             <a
               href="#"
-              className=" px-1 py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
+              className="bg-blue-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200"
             >
-              For Employers
+              Login
             </a>
           </div>
 

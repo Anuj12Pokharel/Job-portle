@@ -35,17 +35,16 @@ export default function NavigationHeader() {
           </div>
 
           {/* Right: Auth Buttons */}
-          <div className=" text-xl hidden md:flex items-center space-x-1 ">
+          <div className=" text-2xl hidden md:flex items-center space-x-1 ">
             <a
               href="#"
-              className=" px-1  py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
+              className="   py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
             >
-              For Jobsekeers 
+              For Jobsekeers
             </a>
-            <span>|</span>
             <a
               href="#"
-              className=" px-1 py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
+              className="  py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
             >
               For Employers
             </a>
