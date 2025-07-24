@@ -10,8 +10,8 @@ const Jobsearchbanner = () => {
       style={{ backgroundImage: `url(${backgroundImage})` }}
     >
       <div className=" bg-transparent max-w-2xl w-full">
-        <h1 className="text-2xl md:text-4xl font-bold text-black mb-4">
-          Linking Talent and <span className="text-blue-600">Opportunities</span>
+        <h1 className="text-xl md:text-4xl font-bold text-white mb-4">
+          Linking Talent and Opportunities
         </h1>
         <div className="flex items-center border border-gray-300 rounded overflow-hidden">
           <input
