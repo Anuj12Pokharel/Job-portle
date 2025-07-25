@@ -10,7 +10,7 @@ function Home() {
         <Navbar />
         <div className="front" >
             <Jobsearchbanner/>
-            <Jobportal/>
+            <jobportal/>
             <Jobcard/>
             
         </div>
