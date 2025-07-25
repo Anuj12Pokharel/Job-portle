@@ -1,7 +1,7 @@
 import Navbar from "./Navbar";
 import Jobsearchbanner from "./Jobsearchbanner";
 import Jobcard from "./Jobcard";
-import Jobportal from './Jobportal'
+import jobportal from '.'
 
 
 
@@ -10,7 +10,7 @@ function Home() {
         <Navbar />
         <div className="front" >
             <Jobsearchbanner/>
-            <Jobportal/>
+            <jobportal/>
             <Jobcard/>
             
         </div>
