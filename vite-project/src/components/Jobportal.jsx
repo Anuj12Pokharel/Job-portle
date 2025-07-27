@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Form from "./Form";
-
+import Jobcard from "./Jobcard"; 
 export default function JobPortal() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -13,6 +13,7 @@ export default function JobPortal() {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForm, setShowForm] = useState(false);
 
   function handleInputChange(field, value) {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -27,26 +28,42 @@ export default function JobPortal() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Fake submit delay
     setTimeout(() => {
       alert("Form submitted!\n" + JSON.stringify(formData, null, 2));
       setIsSubmitting(false);
-      // Reset form if you want:
-      // setFormData({ fullName: "", designation: "", email: "", contactNumber: "", fieldOfExpertise: "", employmentStatus: "" });
-      // setSelectedFile(null);
     }, 1000);
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <Form
-        formData={formData}
-        onInputChange={handleInputChange}
-        selectedFile={selectedFile}
-        onFileChange={handleFileChange}
-        isSubmitting={isSubmitting}
-        onSubmit={handleSubmit}
-      />
+    <div className="min-h-screen bg-gray-100 p-6 flex flex-col items-center">
+      <div className="text-center mb-6">
+        <p className="text-lg font-medium mb-2">Looking for new opportunity?</p>
+        <button
+          className="border border-green-600 text-black px-6 py-2 rounded hover:bg-green-100 transition"
+          onClick={() => setShowForm(prev => !prev)}
+        >
+          {showForm ? "Close form ✕" : "Open to new role →"}
+        </button>
+      </div>
+
+      {/* Only render form when it's open */}
+      {showForm ? (
+        <div className="w-full max-w-4xl mb-8">
+          <Form
+            formData={formData}
+            onInputChange={handleInputChange}
+            selectedFile={selectedFile}
+            onFileChange={handleFileChange}
+            isSubmitting={isSubmitting}
+            onSubmit={handleSubmit}
+          />
+        </div>
+      ) : null}
+
+      {/* Jobcard section always visible */}
+      <div className="w-full max-w-6xl">
+        <Jobcard />
+      </div>
     </div>
   );
 }
