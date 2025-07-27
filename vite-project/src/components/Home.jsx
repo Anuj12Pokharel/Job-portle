@@ -1,6 +1,6 @@
 import Navbar from "./Navbar";
 import Jobsearchbanner from "./Jobsearchbanner";
-import Jobcard from "./Jobcard";
+// import Jobcard from "./Jobcard";
 import Jobportal from './Jobportal'
 
 
@@ -11,7 +11,7 @@ function Home() {
         <div className="front" >
             <Jobsearchbanner/>
             <Jobportal/>
-            <Jobcard/>
+            {/* <Jobcard/> */}
             
         </div>
     </>
