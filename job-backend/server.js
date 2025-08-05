@@ -15,9 +15,12 @@ app.use(express.json()); // Parse JSON bodies
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
+const userFormRoutes = require('./routes/userFormRoutes');
+
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/form', userFormRoutes);
 
 
 // MongoDB connection
