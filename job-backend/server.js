@@ -17,12 +17,16 @@ app.use(express.json()); // Parse JSON bodies
 const authRoutes = require('./routes/authRoutes');
 const userFormRoutes = require('./routes/userFormRoutes');
 const jobRoutes = require('./routes/jobRoutes');
+const AdminRoutes = require('./routes/AdminRoutes');
 
 
 
 app.use('/api/auth', authRoutes);
 app.use('/api/form', userFormRoutes);
 app.use('/api/jobs', jobRoutes);
+app.use('/api/admin', AdminRoutes);
+
+
 
 
 // MongoDB connection

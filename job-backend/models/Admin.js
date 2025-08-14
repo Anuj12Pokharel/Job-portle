@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
+
 
 const adminSchema = new mongoose.Schema(
   {
@@ -44,4 +45,4 @@ const adminSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Admin", adminSchema);
+module.exports =  mongoose.model("Admin", adminSchema);
