@@ -1,8 +1,11 @@
 const Job = require('../models/Job');
 
-// @desc    Post a new job (admin only)
-const postJob = async (req, res) => {
+// @desc    Admin posts a new job
+// @route   POST /api/jobs
+// @access  Admin
+const createJob = async (req, res) => {
   try {
+    const adminId = req.user._id; // from protect + checkAdmin middleware
     const {
       companyName,
       position,
@@ -17,9 +20,14 @@ const postJob = async (req, res) => {
       description
     } = req.body;
 
+    if (!companyName || !position) {
+      return res.status(400).json({ message: "Company name and position are required" });
+    }
+
+    // Fix Windows file path issue
     const logo = req.file ? req.file.path.replace(/\\/g, "/") : null;
 
-    const job = await Job.create({
+    const job = new Job({
       companyName,
       logo,
       position,
@@ -32,39 +40,43 @@ const postJob = async (req, res) => {
       experience,
       expiryDate,
       description,
-      postedBy: req.user._id
+      postedBy: adminId
     });
 
-    res.status(201).json(job);
-  } catch (error) {
-    console.error('Error posting job:', error);
-    res.status(500).json({ message: 'Server error while posting job' });
+    await job.save();
+
+    res.status(201).json({ message: "Job posted successfully", job });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to post job" });
   }
 };
 
-// @desc    Get all jobs (for users)
-const getAllJobs = async (req, res) => {
+// @desc    Get all jobs for users
+// @route   GET /api/jobs
+// @access  Public
+const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate('postedBy', 'fullName email');
-    res.status(200).json(jobs);
-  } catch (error) {
-    console.error('Error fetching jobs:', error);
-    res.status(500).json({ message: 'Server error while fetching jobs' });
+    const jobs = await Job.find().populate('postedBy', 'companyName email');
+    res.json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch jobs" });
   }
 };
 
-// @desc    Get single job by ID
+// @desc    Get a single job by ID
+// @route   GET /api/jobs/:id
+// @access  Public
 const getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id).populate('postedBy', 'fullName email');
-    if (!job) {
-      return res.status(404).json({ message: 'Job not found' });
-    }
-    res.status(200).json(job);
-  } catch (error) {
-    console.error('Error fetching job:', error);
-    res.status(500).json({ message: 'Server error while fetching job' });
+    const job = await Job.findById(req.params.id).populate('postedBy', 'companyName email');
+    if (!job) return res.status(404).json({ message: "Job not found" });
+    res.json(job);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch job" });
   }
 };
 
-module.exports = { postJob, getAllJobs, getJobById };
+module.exports = { createJob, getJobs, getJobById };

@@ -15,7 +15,8 @@ const jobSchema = new mongoose.Schema({
   description: String,
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+    ref: 'Admin',
+    required:true
   }
 }, { timestamps: true });
 
