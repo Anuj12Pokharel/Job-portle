@@ -8,7 +8,7 @@ const userformSchema = new mongoose.Schema({
   contact: String,
   field: String,
   employmentStatus: String,
-  resume: String, // File path
+  resume: String, 
   createdAt: { type: Date, default: Date.now }
 });
 
