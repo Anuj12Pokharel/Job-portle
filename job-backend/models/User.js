@@ -5,12 +5,23 @@ const userSchema = new mongoose.Schema({
  
   fullName: {
       type: String,
-      required: true,
-      trim: true,
+      required: true
+    
     },
     preferredJobCategory: {
       type: String,
-      required: true, // Example: "Software Development", "Marketing"
+      required: true,
+      enum: [
+      "Software Development",
+      "Design",
+      "Marketing",
+      "Sales",
+      "Customer Support",
+      "Human Resources",
+      "Finance",
+      "Operations",
+      // add more categories here
+    ], // Example: "Software Development", "Marketing"
     },
     mobileNumber: {
       type: String,
