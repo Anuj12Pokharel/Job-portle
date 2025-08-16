@@ -2,6 +2,10 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const userFormRoutes = require('./routes/userFormRoutes');
+const jobRoutes = require('./routes/jobRoutes');
+const AdminRoutes = require('./routes/AdminRoutes');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,10 +18,7 @@ app.use(cors());
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
-const authRoutes = require('./routes/authRoutes');
-const userFormRoutes = require('./routes/userFormRoutes');
-const jobRoutes = require('./routes/jobRoutes');
-const AdminRoutes = require('./routes/AdminRoutes');
+
 
 
 
