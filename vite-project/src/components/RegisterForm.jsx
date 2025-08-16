@@ -1,0 +1,155 @@
+import React, { useState } from "react";
+import axios from "axios";
+import register from '../assets/background-image.jpg'
+
+const RegisterForm = () => {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    preferredJobCategory: "",
+    mobileNumber: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitting formData:", formData);
+    setError("");
+    setSuccess("");
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/register",formData,
+       
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      setSuccess("Registration successful!");
+      console.log("Response:", res.data);
+    } catch (err) {
+      setError(err.response?.data?.message || "Registration failed");
+      console.error(err.response?.data || err.message);
+    }
+  };
+
+  return (
+    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full md:w-1/2 bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-2 text-center">Create your free jobseeker account  </h2>
+        <p className="mb-4 text-black text-center">
+        Create an account, fill out your profile, and apply for jobs at 
+no cost.
+        </p>
+
+        {error && <p className="text-red-500">{error}</p>}
+        {success && <p className="text-green-500 text-center  text-2xl">{success}</p>}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="fullName"
+            placeholder="Full Name"
+            value={formData.fullName}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+          <select
+  name="preferredJobCategory"
+  value={formData.preferredJobCategory}
+  onChange={handleChange}
+  className="w-full border rounded-lg px-4 py-2 "
+  required
+>
+  <option value="">Select Preferred Job Category</option>
+  <option value="Software Development">Software Development</option>
+  <option value="Design">Design</option>
+  <option value="Marketing">Marketing</option>
+  <option value="Sales">Sales</option>
+  <option value="Customer Support">Customer Support</option>
+  <option value="Human Resources">Human Resources</option>
+  <option value="Finance">Finance</option>
+  <option value="Operations">Operations</option>
+  {/* Add more categories as needed */}
+</select>
+
+          <input
+            type="text"
+            name="mobileNumber"
+            placeholder="Mobile Number"
+            value={formData.mobileNumber}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          />
+
+          <div className=" flex justify-center">
+            
+             <button
+            type="submit"
+            className=" items-center  w-1/2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-800"
+          >
+            Create jobseeker account
+          </button>
+         
+          </div>
+           <p className="text-balck font-bold text-center"> Already have jobseeker account? Login  
+Or login with google </p>
+<div className="w-full md:w-1/2 justify-center mt-8 md:mt-0">
+        <img
+          src={register}
+          alt="Register Illustration"
+          className="w-full hidden lg:flex"
+        />
+      </div>
+
+        
+        </form>
+      </div>
+
+      
+    </div>
+  );
+};
+
+export default RegisterForm;

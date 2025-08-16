@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 // Register user
 // Register user
 const registerUser = async (req, res) => {
+  console.log("📥 Received body:", req.body);
   try {
     const {
       fullName,
@@ -13,6 +14,21 @@ const registerUser = async (req, res) => {
       password,
       confirmPassword
     } = req.body;
+    const validCategories = [
+      "Software Development",
+      "Design",
+      "Marketing",
+      "Sales",
+      "Customer Support",
+      "Human Resources",
+      "Finance",
+      "Operations",
+    ];
+
+    if (!validCategories.includes(preferredJobCategory)) {
+      return res.status(400).json({ message: "Invalid job category" });
+    }
+
 
     // Check if passwords match
     if (password !== confirmPassword) {
