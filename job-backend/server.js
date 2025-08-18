@@ -18,6 +18,9 @@ app.use(cors());
 app.use(express.json()); // Parse JSON bodies
 
 // Routes
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the Job Backend API" });
+});
 
 
 
