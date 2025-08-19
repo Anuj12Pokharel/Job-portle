@@ -1,19 +1,21 @@
 "use client"
-
-import { Menu, X } from "lucide-react"
+import { Menu, X, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import logo from '../assets/logo.jpeg'
+import { Link } from "react-router-dom"
 
-export default function NavigationHeader() {
+export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [jobseekerOpen, setJobseekerOpen] = useState(false)
+  const [employerOpen, setEmployerOpen] = useState(false)
 
   const mainNavItems = ["JOB CATEGORY", "SERVICES", "TRAINING", "BLOGS", "ABOUT US", "CONTACT US"]
 
   return (
-    <div className="bg-white shadow-sm">
-      <nav className="mx-auto  px-4 sm:px-6 lg:px-8">
+    <div className="bg-white shadow-sm relative">
+      <nav className="mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          
+
           {/* Left: Logo */}
           <div className="flex items-center flex-shrink-0">
             <div className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-200">
@@ -34,22 +36,72 @@ export default function NavigationHeader() {
             ))}
           </div>
 
-          {/* Right: Auth Buttons */}
-          <div className=" text-xl hidden md:flex items-center space-x-1 ">
-            <a
-              href="#"
-              className="  text-lg px-1  py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
-            >
-              For Jobsekeers 
-            </a>
-            <span>|</span>
-            <a
-              href="#"
-              className=" text-lg px-1 py-2 text-gray-700 hover:text-gray-900  font-medium transition-colors duration-200"
-            >
-              For Employers
-            </a>
-          </div>
+          {/* Right: Auth Dropdowns */}
+          <div className="hidden md:flex items-center space-x-6 relative">
+
+            {/* For Jobseekers */}
+            <div className="relative">
+  <button
+    onClick={() => setJobseekerOpen(!jobseekerOpen)}
+    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
+  >
+    For Jobseekers <ChevronDown className="w-4 h-4" />
+  </button>
+
+  {jobseekerOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+      <Link
+                    to="/Jobseeker-Login"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setJobseekerOpen(false)}
+                  >
+        Login
+         </Link>
+     <Link
+                    to="/Jobseeker-Register"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setJobseekerOpen(false)}
+                  >
+                    Register
+                  </Link>
+    </div>
+  )}
+</div>
+
+            
+            
+            
+
+            {/* For Employers */}
+            <div className="relative">
+  <button
+    onClick={() => setEmployerOpen(!employerOpen)}
+    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
+  >
+    For Employers <ChevronDown className="w-4 h-4" />
+  </button>
+
+  {employerOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+      <Link
+                    to="/Employeer-Login"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setEmployerOpen(false)}
+                  >
+                    Login
+                  </Link>
+       <Link
+                    to="/Employeer-Register"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    onClick={() => setEmployerOpen(false)}
+                  >
+                    Register
+                  </Link>
+    </div>
+  )}
+</div>
+
+</div>
 
           {/* Mobile menu button */}
           <div className="md:hidden">
@@ -65,7 +117,8 @@ export default function NavigationHeader() {
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
-            <div className="px-4 pt-4 pb-4 space-y-2 bg-gray-50">
+            <div className="px-4 pt-4 pb-4 space-y-4 bg-gray-50">
+              {/* Main Nav */}
               {mainNavItems.map((item, index) => (
                 <a
                   key={index}
@@ -75,18 +128,64 @@ export default function NavigationHeader() {
                   {item}
                 </a>
               ))}
-              <a
-                href="#"
-                className="bg-blue-600 text-white block px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-              >
-                REGISTER
-              </a>
-              <a
-                href="#"
-                className="bg-blue-600 text-white block px-4 py-2 rounded-md text-base font-medium hover:bg-blue-700"
-              >
-                Login
-              </a>
+
+              {/* For Jobseekers */}
+              <div>
+                <button
+                  onClick={() => setJobseekerOpen(!jobseekerOpen)}
+                  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+                >
+                  For Jobseekers
+                  <span>{jobseekerOpen ? "▲" : "▼"}</span>
+                </button>
+                {jobseekerOpen && (
+                  <div className="mt-2 space-y-2 pl-4">
+                    <Link
+                      to="/Jobseeker-Login"
+                      className="block text-gray-700 hover:text-gray-900 text-base"
+                      onClick={() => setJobseekerOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/Jobseeker-Register"
+                      className="block text-gray-700 hover:text-gray-900 text-base"
+                      onClick={() => setJobseekerOpen(false)}
+                    >
+                      Register
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* For Employers */}
+              <div>
+                <button
+                  onClick={() => setEmployerOpen(!employerOpen)}
+                  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+                >
+                  For Employers
+                  <span>{employerOpen ? "▲" : "▼"}</span>
+                </button>
+                {employerOpen && (
+                  <div className="mt-2 space-y-2 pl-4">
+                   <Link
+                      to="/Employeer-Login"
+                      className="block text-gray-700 hover:text-gray-900 text-base"
+                      onClick={() => setEmployerOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      to="/Employeer-Register"
+                      className="block text-gray-700 hover:text-gray-900 text-base"
+                      onClick={() => setEmployerOpen(false)}
+                    >
+                      Register
+                    </Link>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
