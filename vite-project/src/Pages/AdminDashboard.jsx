@@ -29,7 +29,7 @@ export default function AdminDashboard() {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside className="w-64 bg-white shadow-lg p-5">
-        <h1 className="text-2xl font-bold text-indigo-600 mb-8">Jobseeker Dashboard</h1>
+        <h1 className="text-2xl font-bold text-indigo-600 mb-8">Employer Dashboard</h1>
         <nav className="space-y-2">
           {menuItems.map((item) => (
             <button
