@@ -33,7 +33,7 @@ const EmployerRegister = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/admin/register",formData,
+        "https://job-portle-backend-fsai.onrender.com/api/admin/register",formData,
        
         { headers: { "Content-Type": "application/json" } }
       );
