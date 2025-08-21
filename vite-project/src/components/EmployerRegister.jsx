@@ -16,6 +16,7 @@ const EmployerRegister = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false); 
    const navigate = useNavigate(); 
 
   const handleChange = (e) => {
@@ -26,6 +27,7 @@ const EmployerRegister = () => {
     e.preventDefault();
     console.log("Submitting formData:", formData);
     setError("");
+      setLoading(true);
     setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
