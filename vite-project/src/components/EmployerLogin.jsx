@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const EmployerLogin = () => {
   const [formData, setFormData] = useState({
@@ -10,6 +11,8 @@ const EmployerLogin = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+   const navigate = useNavigate(); 
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,7 +41,7 @@ const EmployerLogin = () => {
         if (formData.remember) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
         }
-        window.location.href = "http://localhost:8501/";
+       navigate("/admin-dashboard");
       }
     } catch (err) {
       setError(
