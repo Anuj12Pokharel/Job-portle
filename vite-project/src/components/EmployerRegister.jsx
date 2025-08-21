@@ -53,7 +53,7 @@ const EmployerRegister = () => {
       console.log("Response:", res.data);
       setTimeout(() => {
         navigate("/Employeer-Login"); // change "/login" if your route is different
-      }, 1500);
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.error(err.response?.data || err.message);
