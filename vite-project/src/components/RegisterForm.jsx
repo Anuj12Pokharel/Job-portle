@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import register from '../assets/background-image.jpg'
+import register from "../assets/background-image.jpg";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,6 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting formData:", formData);
     setError("");
     setSuccess("");
 
@@ -32,8 +31,8 @@ const RegisterForm = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/register",formData,
-       
+        "https://job-portle-backend-fsai.onrender.com/api/auth/register",
+        formData,
         { headers: { "Content-Type": "application/json" } }
       );
 
@@ -47,15 +46,20 @@ const RegisterForm = () => {
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full md:w-1/2 bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-2 text-center">Create your free jobseeker account  </h2>
+      {/* Left Side: Form */}
+      <div className="w-full md:w-2/5 bg-white p-8 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-2 text-center">
+          Create your free jobseeker account
+        </h2>
         <p className="mb-4 text-black text-center">
-        Create an account, fill out your profile, and apply for jobs at 
-no cost.
+          Create an account, fill out your profile, and apply for jobs at no
+          cost.
         </p>
 
         {error && <p className="text-red-500">{error}</p>}
-        {success && <p className="text-green-500 text-center  text-2xl">{success}</p>}
+        {success && (
+          <p className="text-green-500 text-center text-2xl">{success}</p>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -67,24 +71,24 @@ no cost.
             className="w-full border rounded-lg px-4 py-2"
             required
           />
+
           <select
-  name="preferredJobCategory"
-  value={formData.preferredJobCategory}
-  onChange={handleChange}
-  className="w-full border rounded-lg px-4 py-2 "
-  required
->
-  <option value="">Select Preferred Job Category</option>
-  <option value="Software Development">Software Development</option>
-  <option value="Design">Design</option>
-  <option value="Marketing">Marketing</option>
-  <option value="Sales">Sales</option>
-  <option value="Customer Support">Customer Support</option>
-  <option value="Human Resources">Human Resources</option>
-  <option value="Finance">Finance</option>
-  <option value="Operations">Operations</option>
-  {/* Add more categories as needed */}
-</select>
+            name="preferredJobCategory"
+            value={formData.preferredJobCategory}
+            onChange={handleChange}
+            className="w-full border rounded-lg px-4 py-2"
+            required
+          >
+            <option value="">Select Preferred Job Category</option>
+            <option value="Software Development">Software Development</option>
+            <option value="Design">Design</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Sales">Sales</option>
+            <option value="Customer Support">Customer Support</option>
+            <option value="Human Resources">Human Resources</option>
+            <option value="Finance">Finance</option>
+            <option value="Operations">Operations</option>
+          </select>
 
           <input
             type="text"
@@ -95,6 +99,7 @@ no cost.
             className="w-full border rounded-lg px-4 py-2"
             required
           />
+
           <input
             type="email"
             name="email"
@@ -104,6 +109,7 @@ no cost.
             className="w-full border rounded-lg px-4 py-2"
             required
           />
+
           <input
             type="password"
             name="password"
@@ -113,6 +119,7 @@ no cost.
             className="w-full border rounded-lg px-4 py-2"
             required
           />
+
           <input
             type="password"
             name="confirmPassword"
@@ -123,31 +130,29 @@ no cost.
             required
           />
 
-          <div className=" flex justify-center">
-            
-             <button
-            type="submit"
-            className=" items-center  w-1/2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-800"
-          >
-            Create jobseeker account
-          </button>
-         
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-1/2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-800"
+            >
+              Create jobseeker account
+            </button>
           </div>
-           <p className="text-balck font-bold text-center"> Already have jobseeker account? Login  
-Or login with google </p>
-<div className="w-full md:w-1/2 justify-center mt-8 md:mt-0">
-        <img
-          src={register}
-          alt="Register Illustration"
-          className="w-full hidden lg:flex"
-        />
-      </div>
 
-        
+          <p className="text-black font-bold text-center">
+            Already have jobseeker account? Login Or login with google
+          </p>
         </form>
       </div>
 
-      
+      {/* Right Side: Image */}
+      <div className="w-full md:w-2/5 flex justify-center mt-8 md:mt-0">
+        <img
+          src={register}
+          alt="Register Illustration"
+          className="w-full object-cover rounded-lg hidden md:block"
+        />
+      </div>
     </div>
   );
 };
