@@ -42,7 +42,7 @@ const RegisterForm = () => {
       setSuccess("Registration successful!");
       console.log("Response:", res.data);
       setTimeout(() => {
-        navigate("/login"); // change "/login" if your route is different
+        navigate("/Jobseeker-Login"); 
       }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
