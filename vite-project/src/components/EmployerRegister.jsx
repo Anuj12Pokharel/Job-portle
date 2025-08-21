@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import register from '../assets/background-image.jpg'
+import { useNavigate } from "react-router-dom";
 
 const EmployerRegister = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const EmployerRegister = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+   const navigate = useNavigate(); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,7 +41,19 @@ const EmployerRegister = () => {
       );
 
       setSuccess("Registration successful!");
+       setFormData({
+        companyName: "",
+        companyLocation: "",
+        email: "",
+        mobileNumber: "",
+        password: "",
+        confirmPassword: "",
+      });
+
       console.log("Response:", res.data);
+      setTimeout(() => {
+        navigate("/Employeer-Login"); // change "/login" if your route is different
+      }, 1500);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.error(err.response?.data || err.message);
