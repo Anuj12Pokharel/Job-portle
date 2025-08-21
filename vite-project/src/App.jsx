@@ -5,6 +5,7 @@ import EmployeerRegister from './Pages/EmployeerRegister';
 import EmployeerLogin from './Pages/EmployeerLogin';
 import JobseekerLogin from './Pages/JobseekerLogin';
 import JobseekerRegister from './Pages/JobseekerRegister';
+import AdminDashboard from './Pages/AdminDashboard';
 
 
 
@@ -21,6 +22,8 @@ function App() {
               <Route path='/Employeer-Login' element={<EmployeerLogin/>}></Route>
                <Route path='/Jobseeker-Login' element={<JobseekerLogin/>}></Route>
                 <Route path='/Jobseeker-Register' element={<JobseekerRegister/>}></Route>
+                 <Route path='/admin-dashboard' element={<AdminDashboard/>}></Route>
+
 
       
       
