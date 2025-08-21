@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import register from "../assets/background-image.jpg";
+import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ const RegisterForm = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -38,6 +41,9 @@ const RegisterForm = () => {
 
       setSuccess("Registration successful!");
       console.log("Response:", res.data);
+      setTimeout(() => {
+        navigate("/login"); // change "/login" if your route is different
+      }, 1000);
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.error(err.response?.data || err.message);
