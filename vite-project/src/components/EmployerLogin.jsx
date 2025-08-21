@@ -114,9 +114,10 @@ const EmployerLogin = () => {
         {/* Login Button */}
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
         >
-          Login
+          {loading ? "Logging..." : "Login"}
         </button>
 
         {/* Register + Google */}
