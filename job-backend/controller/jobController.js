@@ -5,7 +5,7 @@ const Job = require('../models/Job');
 // @access  Admin
 const createJob = async (req, res) => {
   try {
-    const adminId = req.user._id; // from protect + checkAdmin middleware
+    const adminId = req.user._id; 
     const {
       companyName,
       position,
@@ -78,5 +78,56 @@ const getJobById = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch job" });
   }
 };
+const updateJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
 
-module.exports = { createJob, getJobs, getJobById };
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    // check ownership
+    if (job.postedBy.toString() !== req.user._id.toString()) {
+       console.log("Job postedBy:", job.postedBy.toString());
+  console.log("User id:", req.user._id.toString());
+      return res.status(403).json({ message: "Not authorized to update this job" });
+    }
+
+    const updatedData = { ...req.body };
+
+    // handle logo update if file uploaded
+    if (req.file) {
+      updatedData.logo = req.file.path.replace(/\\/g, "/");
+    }
+
+    const updatedJob = await Job.findByIdAndUpdate(req.params.id, updatedData, { new: true });
+
+    res.json({ message: "Job updated successfully", job: updatedJob });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update job" });
+  }
+};
+// @desc    Delete a job (only admin who posted it)
+// @route   DELETE /api/jobs/:id
+// @access  Admin
+const deleteJob = async (req, res) => {
+  try {
+    const job = await Job.findById(req.params.id);
+
+    if (!job) return res.status(404).json({ message: "Job not found" });
+
+    // check ownership
+    if (job.postedBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized to delete this job" });
+    }
+
+    await job.deleteOne();
+
+    res.json({ message: "Job deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete job" });
+  }
+};
+
+
+module.exports = { createJob, getJobs, getJobById,updateJob, deleteJob };

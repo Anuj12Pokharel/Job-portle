@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const userFormRoutes = require('./routes/userFormRoutes');
 const jobRoutes = require('./routes/jobRoutes');
 const AdminRoutes = require('./routes/AdminRoutes');
+const contactRoutes = require('./routes/contactRoutes')
 
 // Load environment variables from .env file
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/form', userFormRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/admin', AdminRoutes);
+app.use('/api/Contact',contactRoutes);
 
 
 
