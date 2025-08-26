@@ -26,7 +26,7 @@ const Contactus = () => {
     setStatus("Sending...");
 
     try {
-      const res = await axios.post("http://localhost:3000/api/contact", formData, {
+      const res = await axios.post("https://job-portle-backend-fsai.onrender.com/api/contact", formData, {
         headers: {
           "Content-Type": "application/json",
         },
