@@ -41,7 +41,7 @@ export const registerAdmin = async (req, res) => {
       email,
       mobileNumber,
       password: hashedPassword,
-      confirmPassword: hashedPassword, // Optional, but you can remove this field from model later
+      
       role: "admin"
     });
 
@@ -51,7 +51,7 @@ export const registerAdmin = async (req, res) => {
     const token = jwt.sign(
       { id: newAdmin._id, role: newAdmin.role },
       process.env.JWT_SECRET,
-      { expiresIn: "5d" }
+      { expiresIn: "9d" }
     );
 
     res.status(201).json({
@@ -97,9 +97,9 @@ export const loginAdmin = async (req, res) => {
 
     // Create token
     const token = jwt.sign(
-      { id: admin._id, role: admin.role },
+      { id: admin._id, role: "admin" },
       process.env.JWT_SECRET,
-      { expiresIn: "5d" }
+      { expiresIn: "9d" }
     );
 
     res.status(200).json({

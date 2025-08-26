@@ -30,11 +30,7 @@ const adminSchema = new mongoose.Schema(
       required: true,
       minlength: 6,
     },
-    confirmPassword: {
-      type: String,
-      required: true,
-      minlength: 6,
-    },
+   
     // Role for RBAC
     role: {
       type: String,
