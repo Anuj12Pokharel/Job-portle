@@ -5,6 +5,7 @@ import Joblink from '../assets/JobLink.jpeg';
 import mission from '../assets/Mission.jpeg'
 import vision from '../assets/Vision.jpeg'
 import hr from '../assets/Hrservices.png'
+import whychoose from '../assets/Choose.jpeg'
 
 
 
@@ -152,9 +153,9 @@ professional development and industry networking.
         </div>
         <div className="flex-1 flex justify-center">
           <img
-            src="https://via.placeholder.com/400"
+            src={whychoose}
             alt="Why Choose Us"
-            className="rounded-lg shadow-md"
+            className="rounded-lg shadow-md h-64 w-96"
           />
         </div>
       </div>
