@@ -4,6 +4,7 @@ import Ourteam from "./Ourteam";
 import Joblink from '../assets/JobLink.jpeg';
 import mission from '../assets/Mission.jpeg'
 import vision from '../assets/Vision.jpeg'
+import hr from '../assets/Hrservices.png'
 
 
 
@@ -48,11 +49,11 @@ export default function Aboutus() {
           <p className="text-gray-700 mt-2">
             Our mission at JobLink360 is simple yet purposeful: to deliver
             professional and ethical human resource services that connect
-            potential employers with talented individuals. Our commitment is to
-            make recruitment more transparent, efficient, and human
-            capital-driven. We design our services to enable job seekers and
-            organizations to build sustainable job opportunities and a robust
-            workforce environment throughout Nepal.
+            potential employers with talented individuals. Our commitment 
+            is to make recruitment more transparent, efficient, and human
+            capital-driven. We design our services to enable job seekers 
+            and organizations to build sustainable job opportunities and a 
+            robust workforce environment throughout Nepal.
           </p>
         </div>
         <div className="flex-1 flex justify-center">
@@ -69,9 +70,9 @@ export default function Aboutus() {
         <div className="flex-1 border-2 border-green-600 p-3">
           <h2 className="font-bold text-lg text-green-800">Our Vision</h2>
           <p className="text-gray-700 mt-2">
-            We envision ourselves as Nepal's premier HR solution provider on the
-            basis of our integrity, innovation, and excellence. Through
-            continuous improvement, strategic partnerships, and client
+            We envision ourselves as Nepal's premier HR solution provider 
+            on the basis of our integrity, innovation, and excellence. 
+            Through continuous improvement, strategic partnerships, and client
             achievement, we aspire to become Nepal's top HR company and make the
             job market more productive and inclusive.
           </p>
@@ -126,11 +127,11 @@ professional development and industry networking.
            
           </ul>
         </div>
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center h-full">
           <img
-            src="https://via.placeholder.com/400"
+            src={hr}
             alt="Services"
-            className="rounded-lg shadow-md"
+            className="rounded-lg shadow-md h-full w-full"
           />
         </div>
       </div>
