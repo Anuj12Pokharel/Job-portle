@@ -9,7 +9,13 @@ export default function Navbar() {
   const [jobseekerOpen, setJobseekerOpen] = useState(false)
   const [employerOpen, setEmployerOpen] = useState(false)
 
-  const mainNavItems = ["JOB CATEGORY", "SERVICES", "TRAINING", "BLOGS", "ABOUT US", "CONTACT US"]
+  const mainNavItems = [ { name: "JOB CATEGORY", path: "/job-category" },
+  { name: "SERVICES", path: "/services" },
+  { name: "TRAINING", path: "/training" },
+  { name: "BLOGS", path: "/blogs" },
+  { name: "ABOUT US", path: "/aboutus" },
+  { name: "CONTACT US", path: "/contact" }
+  ]
 
   return (
     <div className="bg-white shadow-sm relative">
@@ -28,10 +34,10 @@ export default function Navbar() {
             {mainNavItems.map((item, index) => (
               <a
                 key={index}
-                href="#"
+                href={item.path}
                 className="text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
               >
-                {item}
+                {item.name}
               </a>
             ))}
           </div>
@@ -120,13 +126,13 @@ export default function Navbar() {
             <div className="px-4 pt-4 pb-4 space-y-4 bg-gray-50">
               {/* Main Nav */}
               {mainNavItems.map((item, index) => (
-                <a
+                <Link
                   key={index}
-                  href="#"
+                  to={item.path}
                   className="text-gray-700 hover:text-gray-900 block text-base font-medium"
                 >
-                  {item}
-                </a>
+                  {item.name}
+                </Link>
               ))}
 
               {/* For Jobseekers */}
