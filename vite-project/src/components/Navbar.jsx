@@ -32,13 +32,13 @@ export default function Navbar() {
           {/* Center: Navigation Links */}
           <div className="hidden md:flex items-center space-x-11">
             {mainNavItems.map((item, index) => (
-              <a
+              <Link
                 key={index}
-                href={item.path}
+                to={item.path}
                 className="text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </div>
 
