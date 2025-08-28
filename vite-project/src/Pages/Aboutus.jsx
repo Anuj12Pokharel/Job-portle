@@ -44,7 +44,7 @@ export default function Aboutus() {
       </div>
 
       {/* Mission */}
-      <div className="flex flex-col lg:flex-row-reverse items-center  md:gap-8 px-6 rounded-lg">
+      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  rounded-xl border-2 border-cyan-600 shadow-lg bg-white p-6">
         <div className="flex-1">
           <h2 className="font-bold text-lg text-teal-600">Our Mission</h2>
           <p className="text-black mt-2 text-justify">
@@ -67,7 +67,7 @@ export default function Aboutus() {
       </div>
 
       {/* Vision */}
-      <div className="flex flex-col lg:flex-row items-center md:gap-8 px-6  rounded-lg">
+      <div className="flex flex-col lg:flex-row items-center md:gap-8 border-4 border-double border-cyan-600 rounded-xl p-6 shadow">
         <div className="flex-1">
           <h2 className="font-bold text-lg text-teal-600">Our Vision</h2>
           <p className="text-black mt-2 text-justify">
@@ -88,8 +88,9 @@ export default function Aboutus() {
       </div>
 
       {/* Services */}
-      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 px-6 rounded-lg">
-        <div className="flex-1">
+      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 p-[2px] rounded-2xl bg-gradient-to-r from-cyan-500 to-teal-600">
+ 
+        <div className="flex-1 bg-white rounded-2xl p-6 shadow-md">
           <h2 className="font-bold text-lg text-teal-600">
             What We Provide – Core HR Services in Nepal
           </h2>
@@ -135,10 +136,11 @@ professional development and industry networking.
             className="rounded-lg shadow-md h-full w-full hidden md:block"
           />
         </div>
+        
       </div>
 
       {/* Why Choose Us */}
-      <div className="flex flex-col lg:flex-row items-center  px-6 rounded-lg">
+      <div className="flex flex-col lg:flex-row items-center rounded-xl shadow-xl border border-gray-200 p-6">
         <div className="flex-1 ">
           <h2 className="font-bold text-lg text-teal-600">
             Why Choose JobLink360?
