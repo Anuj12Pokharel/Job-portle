@@ -13,13 +13,13 @@ export default function Aboutus() {
   return (
     <>
       <div
-          className="relative bg-cover bg-center h-[250px] md:h-[400px] flex flex-col items-center justify-center text-center px-4"
+          className="relative bg-cover bg-center h-[250px] md:h-[350px] flex flex-col items-center justify-center text-center px-4"
           
           style={{ backgroundImage: `url(${backgroundImage})` }}
         > <p className="text-white font-bold text-2xl"> About us </p></div>
     <section className="bg-white px-6 lg:px-20 py-12 space-y-12">
       {/* Intro */}
-      <div className="flex flex-col lg:flex-row items-center gap-8 p-6 rounded-lg bg-gray-50">
+      <div className="flex flex-col lg:flex-row items-center gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
         <div className="flex-1 ">
           <h2 className="font-bold text-lg text-teal-600">
             JobLink360 | Linking Talent and Opportunity
@@ -44,7 +44,7 @@ export default function Aboutus() {
       </div>
 
       {/* Mission */}
-      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  rounded-xl border-2 border-cyan-600 shadow-lg bg-white p-6">
+      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  rounded-xl shadow-xl border border-gray-200 p-6">
         <div className="flex-1">
           <h2 className="font-bold text-lg text-teal-600">Our Mission</h2>
           <p className="text-black mt-2 text-justify">
@@ -61,13 +61,13 @@ export default function Aboutus() {
           <img
             src={mission}
             alt="Mission"
-            className="rounded-lg shadow-md h-60 w-full hidden md:block"
+            className="rounded-lg shadow-md h-72 hidden md:block"
           />
         </div>
       </div>
 
       {/* Vision */}
-      <div className="flex flex-col lg:flex-row items-center md:gap-8 border-4 border-double border-cyan-600 rounded-xl p-6 shadow">
+      <div className="flex flex-col lg:flex-row items-center md:gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
         <div className="flex-1">
           <h2 className="font-bold text-lg text-teal-600">Our Vision</h2>
           <p className="text-black mt-2 text-justify">
@@ -82,13 +82,13 @@ export default function Aboutus() {
           <img
             src={vision}
             alt="Vision"
-            className="rounded-lg shadow-md h-60 w-full hidden md:block "
+            className="rounded-2xl shadow-lg  h-72  object-contain hidden md:block "
           />
         </div>
       </div>
 
       {/* Services */}
-      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 p-[2px] rounded-2xl bg-gradient-to-r from-cyan-500 to-teal-600">
+      <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
  
         <div className="flex-1 bg-white rounded-2xl p-6 shadow-md">
           <h2 className="font-bold text-lg text-teal-600">
@@ -133,7 +133,7 @@ professional development and industry networking.
           <img
             src={hr}
             alt="Services"
-            className="rounded-lg shadow-md h-full w-full hidden md:block"
+            className="rounded-lg object-cover h-96  hidden md:block"
           />
         </div>
         
@@ -157,7 +157,7 @@ professional development and industry networking.
           <img
             src={whychoose}
             alt="Why Choose Us"
-            className="rounded-lg shadow-md h-64 w-96 hidden md:block"
+            className=" hidden md:block rounded-full object-cover  h-72 "
           />
         </div>
       </div>
