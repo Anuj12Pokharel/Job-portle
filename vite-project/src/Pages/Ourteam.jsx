@@ -17,7 +17,7 @@ const teamMembers = [
     name: "Anjali Singh",
     role: "Managing Director",
     title: "MBA",
-    image: "", // Empty to show placeholder
+    image: "", 
   },
 ];
 
