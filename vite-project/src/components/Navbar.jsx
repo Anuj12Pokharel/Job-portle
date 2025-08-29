@@ -8,9 +8,11 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [jobseekerOpen, setJobseekerOpen] = useState(false)
   const [employerOpen, setEmployerOpen] = useState(false)
+  const [servicesOpen, setServicesOpen] = useState(false)
 
-  const mainNavItems = [ { name: "JOB CATEGORY", path: "/job-category" },
-  { name: "SERVICES", path: "/services" },
+
+  const mainNavItems = [ 
+  { name: "JOB CATEGORY", path: "/job-category" },
   { name: "TRAINING", path: "/training" },
   { name: "BLOGS", path: "/blogs" },
   { name: "ABOUT US", path: "/aboutus" },
@@ -20,11 +22,11 @@ export default function Navbar() {
   return (
     <div className="bg-white shadow-sm relative">
       <nav className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
 
           {/* Left: Logo */}
           <div className="flex items-center flex-shrink-0">
-            <div className="w-[50px] h-[50px] rounded-full overflow-hidden border border-gray-200">
+            <div className="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200">
               <img src={logo} alt="Logo" className="w-full h-full object-cover" />
             </div>
           </div>
@@ -40,6 +42,72 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+            {/* Services Dropdown */}
+            <div className="relative">
+               <Link
+          to="/services"
+          className="text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
+        >
+          SERVICES
+        </Link>
+              
+              <button
+                onClick={() => setServicesOpen(!servicesOpen)}
+                
+              >
+               <ChevronDown className="w-4 h-4 translate-y-1  " />
+              </button>
+
+             
+
+              {servicesOpen && (
+                <div className="absolute left-0 mt-2 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <Link
+                    to="/services/hiring-tools"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                    Hiring & Management Tools
+                  </Link>
+                  <Link
+                    to="/services/recruitment"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                    Recruitment
+                  </Link>
+                  <Link
+                    to="/services/outsourcing"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                    Outsourcing
+                  </Link>
+                  <Link
+                    to="/services/corporate&eventmanagement"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                  Corporate event management
+                  </Link>
+                   <Link
+                    to="/services/hr-consulting"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                Human resource consulting
+                  </Link>
+                   <Link
+                    to="/services/training_and_development"
+                    className="block px-4 py-1 text-sm text-black hover:bg-gray-100"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                  Training and development
+                  </Link>
+                </div>
+              )}
+            </div>
+
           </div>
 
           {/* Right: Auth Dropdowns */}
