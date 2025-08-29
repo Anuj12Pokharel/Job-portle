@@ -202,6 +202,12 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
+              <Link
+        to="/services"
+        className="text-gray-700 hover:text-gray-900 block text-base font-medium"
+      >
+        SERVICES
+      </Link>
 
               {/* For Jobseekers */}
               <div>
