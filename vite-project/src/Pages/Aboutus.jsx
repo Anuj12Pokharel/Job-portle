@@ -90,7 +90,7 @@ export default function Aboutus() {
       {/* Services */}
       <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
  
-        <div className="flex-1 bg-white rounded-2xl p-6 shadow-md">
+        <div className="flex-1 bg-white rounded-2xl p-3 lg:p-6 ">
           <h2 className="font-bold text-lg text-teal-600">
             What We Provide – Core HR Services in Nepal
           </h2>

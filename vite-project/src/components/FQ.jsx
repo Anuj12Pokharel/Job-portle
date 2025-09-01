@@ -31,11 +31,11 @@ export default function FQ() {
   }
 
   return (
-    <div className=" mx-auto py-12 px-4">
+    <div className=" mx-auto p-9">
       <h2 className="text-3xl font-bold text-center mb-8 text-cyan-600">Frequently Asked Questions</h2>
-      <div className="grid md:grid-cols-2 gap-5">
+      <div className="grid md:grid-cols-2 gap-5 max-h-[50vh] overflow-y-auto md:max-h-full ">
         {faqs.map((faq, index) => (
-          <div key={index} className="border rounded-lg shadow-sm">
+          <div key={index} className="border rounded-lg shadow-sm overflow-y-auto">
             <button
               onClick={() => toggleFAQ(index)}
               className="flex justify-between items-center w-full text-left p-4 font-medium text-gray-900 hover:bg-gray-100"
