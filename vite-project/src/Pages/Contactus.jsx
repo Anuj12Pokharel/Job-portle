@@ -51,7 +51,7 @@ const Contactus = () => {
   return (
     <>
     <div
-              className="relative bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-center px-4"
+              className="relative bg-cover bg-center h-[350px] flex flex-col items-center justify-center text-center px-4"
               
               style={{ backgroundImage: `url(${backgroundImage})` }}
             > <p className="text-white font-bold text-2xl"> Contact us </p></div>
@@ -79,7 +79,7 @@ const Contactus = () => {
             title="Kathmandu Map"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3420.775863769035!2d85.34498043755795!3d27.722529770008887!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39eb1900629884c9%3A0xf7eeccbe33368be!2sHAMRO%20JOB%20PVT.%20LTD.!5e1!3m2!1sen!2snp!4v1756181546899!5m2!1sen!2snp"
             width="100%"
-            height="620"
+            height="550"
             className="rounded-xl border-0"
             loading="lazy"
           ></iframe>
@@ -92,7 +92,8 @@ const Contactus = () => {
               Contact Us
             </h2>
            <form className="space-y-4" onSubmit={handleSubmit}>
-              <div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div flex-1>
                 <label className="block font-semibold mb-1">First Name</label>
                 <input
                   type="text"
@@ -105,7 +106,7 @@ const Contactus = () => {
                 />
               </div>
 
-              <div>
+              <div className="flex-1">
                 <label className="block font-semibold mb-1">Last Name</label>
                 <input
                   type="text"
@@ -116,6 +117,7 @@ const Contactus = () => {
                   className="w-full border border-gray-300 rounded px-4 py-2 focus:ring-2 focus:ring-sky-400 focus:outline-none"
                   required
                 />
+              </div>
               </div>
 
               <div>

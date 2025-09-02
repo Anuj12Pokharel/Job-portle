@@ -6,18 +6,18 @@ import FQ from '../../components/FQ'
 
 const Hiring = () => {
   return (
-   <div className='p-6'>
+   <div className=''>
            <div className="flex flex-col lg:flex-row items-center md:gap-8  p-8">
                    <div className="flex-1">
-                     <h2 className="font-bold  text-teal-600 text-3xl">Simplify Hiring and <br/>Workforce Management</h2>
+                     <h2 className="font-bold  text-teal-600 text-3xl">Simplify Hiring and Workforce Management</h2>
                      <p className="text-black mt-2 text-justify">
                      JobLink Job provides user-friendly tools to help you manage job postings, review applicants, and oversee 
 employee progress, all from a single platform designed for smooth hiring experiences.
                      </p>
                    </div>
-                   <div className="flex-1 flex justify-center">
+                  
                     <ServiceInquiry/>
-                   </div>
+                   
                  </div>
                  <LogoSlider/>
                  <Benefitservice/>
