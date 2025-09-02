@@ -2,6 +2,8 @@ import React, { useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import { IoMdArrowDropleftCircle, IoMdArrowDroprightCircle } from "react-icons/io";
+import { Link } from "react-router-dom";
+
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -13,30 +15,35 @@ const data = [
     title: "Simplify Hiring and Workforce Management",
     description:
       "JobLink Job provides user-friendly tools to help you manage job postings, review applicants, and oversee employee progress, all from a single platform designed for smooth hiring experiences.",
+      link:"/services/hiring-tools"
   },
   {
     name: "Recruitment",
     title: "Effective Recruitment That Delivers Results",
     description:
       "Our recruitment services connect you with the best-fit candidates quickly and efficiently. We handle the sourcing, screening, and shortlisting so you can focus on choosing the perfect hire.",
+      link:"/services/recruitment"
   },
   {
     name: "Outsourcing",
     title: "Reliable Outsourcing for Better Productivity",
     description:
       "Delegate time-consuming tasks to trusted professionals through our outsourcing services. Reduce your workload and operational stress while maintaining high-quality performance.",
+      link:"/services/outsourcing"
   },
   {
     name: "Cooperative event management",
     title: "Seamless Management of Cooperative Events",
     description:
       "Plan and execute training sessions, job fairs, or cooperative gatherings with expert assistance. We take care of logistics and coordination to ensure your event runs smoothly.",
+      link:"/services/corporate&eventmanagement"
   },
   {
     name: "Human resource consulting",
     title: "Strategic HR Consulting for Better Business Practices",
     description:
       "Enhance your HR operations with guidance from our expert consultants. From improving workplace policies to boosting employee satisfaction, we help align your HR practices with your company’s goals.",
+      link:"/services/hr-consulting"
   },
 ];
 
@@ -94,9 +101,12 @@ const Serviceslider = () => {
                       ? d.description.slice(0, 100) + "..."
                       : d.description}
                   </p>
-                  <button className="bg-white text-cyan-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition">
-                    Read More
-                  </button>
+                  <Link
+  to={d.link}
+  className="bg-white text-cyan-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition"
+>
+  Read More
+</Link>
                 </div>
               </div>
             </SwiperSlide>
