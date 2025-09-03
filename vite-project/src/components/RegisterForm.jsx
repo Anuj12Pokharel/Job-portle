@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import register from "../assets/background-image.jpg";
+import register from "../assets/register.png";
 import { useNavigate } from "react-router-dom";
 
 const RegisterForm = () => {
@@ -51,13 +51,14 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 px-4">
+    <div className="flex flex-col md:flex-row-reverse items-stretch justify-center min-h-screen bg-gray-50 px-4">
       {/* Left Side: Form */}
-      <div className="w-full md:w-2/5 bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-2 text-center">
+    <div className="w-full md:w-1/3 flex py-14">
+        <div className=" flex-1 bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-2 text-center text-cyan-600">
           Create your free jobseeker account
         </h2>
-        <p className="mb-4 text-black text-center">
+        <p className="mb-4 text-teal-500 text-center">
           Create an account, fill out your profile, and apply for jobs at no
           cost.
         </p>
@@ -150,13 +151,14 @@ const RegisterForm = () => {
           </p>
         </form>
       </div>
+    </div>
 
       {/* Right Side: Image */}
-      <div className="w-full md:w-2/5 flex justify-center mt-8 md:mt-0">
+      <div className="w-full md:w-1/2 md:flex justify-center mt-8 md:mt-0 py-14 px-6">
         <img
           src={register}
           alt="Register Illustration"
-          className="w-full object-cover rounded-lg hidden md:block"
+          className="w-full h-full object-cover rounded-lg hidden md:block"
         />
       </div>
     </div>

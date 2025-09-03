@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import axios from "axios";
-import register from '../assets/background-image.jpg'
+import register from '../assets/register.png'
 import { useNavigate } from "react-router-dom";
 
 const EmployerRegister = () => {
@@ -51,11 +51,8 @@ const EmployerRegister = () => {
         password: "",
         confirmPassword: "",
       });
-
-      console.log("Response:", res.data);
-      setTimeout(() => {
         navigate("/Employeer-Login"); // change "/login" if your route is different
-      }, 1000);
+       
     } catch (err) {
       setError(err.response?.data?.message || "Registration failed");
       console.error(err.response?.data || err.message);
@@ -63,10 +60,11 @@ const EmployerRegister = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full md:w-1/2 bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-2 text-center">Create your free Employeer account  </h2>
-        <p className="mb-4 text-black text-center">
+    <div className="flex flex-col md:flex-row items-stretch justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full md:w-1/3 flex py-14">
+        <div className="flex-1 bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold mb-2 text-center text-teal-500">Create your free Employeer account  </h2>
+        <p className="mb-4 text-cyan-600 text-center">
         Create an account, fill out your profile, and apply for jobs at 
 no cost.
         </p>
@@ -148,18 +146,19 @@ no cost.
           </div>
            <p className="text-balck font-bold text-center"> Already have jobseeker account? Login  
 Or login with google </p>
-<div className="w-full md:w-1/2 justify-center mt-8 md:mt-0">
-        <img
-          src={register}
-          alt="Register Illustration"
-          className="w-full hidden lg:flex"
-        />
-      </div>
 
         
         </form>
       </div>
+      </div>
+       <div className="w-full md:w-1/2 hidden md:flex py-14 px-4">
+        <img
+          src={register}
+          alt="Register Illustration"
+          className="w-full h-full object-cover rounded-lg "
+        />
 
+ </div>
       
     </div>
   );
