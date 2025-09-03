@@ -1,5 +1,5 @@
 import React from 'react'
-import mission from '../../assets/background-image.jpg'
+import mission from '../../assets/Joblink360.png'
 import FQ from '../../components/FQ'
 import Serviceslider from '../../components/Serviceslider'
 import LogoSlider from '../../components/LogoSlider'
