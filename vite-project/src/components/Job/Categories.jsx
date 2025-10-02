@@ -7,7 +7,7 @@ const Categories = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/jobs/categories");
+        const res = await axios.get("https://job-portle-backend-fsai.onrender.com/api/jobs/categories");
         setCategories(res.data);
       } catch (err) {
         console.error("Failed to fetch categories:", err);
