@@ -1,7 +1,7 @@
 import React,{ useState } from 'react'
-import Hero from '../components/Blog/Hero'
-import Blogsection from "../components/Blog/Blogsection";
-import Pagination from "../components/Blog/Pagination";
+import Hero from '../components/Blog/Hero.jsx'
+import Blogsection from "../components/Blog/Blogsection.jsx";
+import Pagination from "../components/Blog/Pagination.jsx";
 
 const Blog = () => {
   const [currentPage, setCurrentPage] = useState(1);
