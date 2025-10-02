@@ -2,7 +2,7 @@
 import React,{ useRef } from 'react';
 
 import Advancejob from '../../assets/Advancejob.png';
-import careeropor from '../../assets/careeropor.png';
+import careeropor from '../../assets/Careeropor.png';
 import Realtime from '../../assets/Realtime.png';
 import Premium from '../../assets/Premium.png';
 
