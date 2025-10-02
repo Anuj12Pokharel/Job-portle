@@ -14,6 +14,10 @@ const Jobpost = () => {
     experience: "",
     expiryDate: "",
     description: "",
+    aboutCompany:"",
+     companyWebsite:"",
+
+
   });
 
   const [logo, setLogo] = useState(null);
@@ -45,7 +49,7 @@ const Jobpost = () => {
 
       const token = localStorage.getItem("token"); 
       const response = await axios.post(
-        "https://job-portle-backend-fsai.onrender.com/api/jobs/create",
+        "http://localhost:3000/api/jobs/create",
         data,
         {
           headers: {
@@ -68,6 +72,9 @@ const Jobpost = () => {
         experience: "",
         expiryDate: "",
         description: "",
+        aboutCompany:"",
+        companyWebsite:"",
+        
       });
       setLogo(null);
     } catch (err) {
@@ -132,6 +139,25 @@ const Jobpost = () => {
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"
         />
+        <div className="col-span-1">
+  <label className="block text-sm font-medium text-gray-500 mb-1">
+    Job Type
+  </label>
+  <select
+    name="jobType"
+    value={formData.jobType}
+    onChange={handleChange}
+    className="w-full border p-3 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+    required
+  >
+    <option value="Full-time">Full-time</option>
+    <option value="Part-time">Part-time</option>
+    <option value="Internship">Internship</option>
+    <option value="Contract">Contract</option>
+    <option value="Remote">Remote</option>
+  </select>
+</div>
+
 
         <input
           type="text"
@@ -163,6 +189,7 @@ const Jobpost = () => {
         <input
           type="date"
           name="expiryDate"
+          placeholder="Expirydate"
           value={formData.expiryDate}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"
@@ -189,6 +216,22 @@ const Jobpost = () => {
           value={formData.description}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full col-span-2"
+        />
+         <input
+          type="AboutCompany"
+          name="aboutCompany"
+          placeholder="AboutCompany"
+          value={formData.aboutCompany}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
+        />
+         <input
+          type="CompnayWebsite"
+          name="companyWebsite"
+          placeholder="CompanyWebsite"
+          value={formData.companyWebsite}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
         />
 
         <button

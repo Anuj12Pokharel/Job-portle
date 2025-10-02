@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require("path");
 const authRoutes = require('./routes/authRoutes');
 const userFormRoutes = require('./routes/userFormRoutes');
 const jobRoutes = require('./routes/jobRoutes');
@@ -13,6 +14,7 @@ dotenv.config();
 
 // Create Express app
 const app = express();
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
 app.use(cors());
