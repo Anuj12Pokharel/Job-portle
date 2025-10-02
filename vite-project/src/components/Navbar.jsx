@@ -3,16 +3,18 @@ import { Menu, X, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import logo from '../assets/logo.jpeg'
 import { Link } from "react-router-dom"
+import Categories from "./Job/Categories"
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [jobseekerOpen, setJobseekerOpen] = useState(false)
   const [employerOpen, setEmployerOpen] = useState(false)
   const [servicesOpen, setServicesOpen] = useState(false)
+   const [categoryOpen, setCategoryOpen] = useState(false)
 
 
   const mainNavItems = [ 
-  { name: "JOB CATEGORY", path: "/job-category" },
+  
   { name: "TRAINING", path: "/training" },
   { name: "BLOGS", path: "/blogs" },
   { name: "ABOUT US", path: "/aboutus" },
@@ -33,6 +35,21 @@ export default function Navbar() {
 
           {/* Center: Navigation Links */}
           <div className="hidden md:flex items-center space-x-11">
+             <div className="relative">
+              <button
+                onClick={() => setCategoryOpen(!categoryOpen)}
+                className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
+              >
+                JOB CATEGORY
+                <ChevronDown className="w-4 h-4" />
+              </button>
+
+              {categoryOpen && (
+                <div className="absolute left-0 mt-2 w-[900px] bg-white border border-gray-200 rounded-md shadow-lg z-50 p-6">
+                  <Categories/> {/* ✅ Render your Category component here */}
+                </div>
+              )}
+            </div>
             {mainNavItems.map((item, index) => (
               <Link
                 key={index}
@@ -42,6 +59,7 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+
             {/* Services Dropdown */}
             <div className="relative">
                <Link

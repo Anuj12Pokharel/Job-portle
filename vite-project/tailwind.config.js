@@ -16,6 +16,7 @@ export default {
         marquee: 'marquee 20s linear infinite', // Adjust duration as needed
       },
     },
+    
   },
   plugins: [],
 }
