@@ -12,7 +12,7 @@ const Topjob = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/api/jobs/get");
+        const res = await axios.get("https://job-portle-backend-fsai.onrender.com/api/jobs/get");
         setJobs(res.data);
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
