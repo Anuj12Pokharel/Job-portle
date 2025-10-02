@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema({
       enum: ["user", "admin", "superadmin"],
       default: "user", // default role for new registrations
     },
+     savedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }],
+
+    // Applied jobs
+    appliedJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Application" }]
   },
   { timestamps: true }
 );

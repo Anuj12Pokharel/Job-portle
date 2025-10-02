@@ -25,28 +25,7 @@ const Jobsearchbanner = () => {
         </div>
       </div>
     </div>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto mt-12 px-4">
-        {/* Box 1 */}
-        <div className="bg-white border border-gray-200 shadow-md rounded-lg p-6 hover:shadow-xl transition duration-300 text-center">
-          <div className="text-4xl mb-4">💼</div>
-          <h2 className="text-xl font-semibold mb-2">Top Job Categories</h2>
-          <p className="text-gray-600">Explore jobs in IT, Marketing, Finance, and more. Find your perfect fit.</p>
-        </div>
-
-        {/* Box 2 */}
-        <div className="bg-white border border-gray-200 shadow-md rounded-lg p-6 hover:shadow-xl transition duration-300 text-center">
-          <div className="text-4xl mb-4">🏢</div>
-          <h2 className="text-xl font-semibold mb-2">Featured Companies</h2>
-          <p className="text-gray-600">Apply to jobs from Nepal's top-rated employers hiring now.</p>
-        </div>
-
-        {/* Box 3 */}
-        <div className="bg-white border border-gray-200 shadow-md rounded-lg p-6 hover:shadow-xl transition duration-300 text-center">
-          <div className="text-4xl mb-4">🚀</div>
-          <h2 className="text-xl font-semibold mb-2">Quick Apply</h2>
-          <p className="text-gray-600">Apply to jobs with just one click. No long forms, no hassle.</p>
-        </div>
-      </div>
+    
     </div>
   )
 }

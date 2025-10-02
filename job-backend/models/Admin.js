@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const validator = require("validator");
+
 
 
 const adminSchema = new mongoose.Schema(
@@ -19,6 +21,7 @@ const adminSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
       trim: true,
+       validate: [validator.isEmail, "Please enter a valid email address"],
     },
     mobileNumber: {
       type: String,
@@ -37,8 +40,15 @@ const adminSchema = new mongoose.Schema(
       enum: ["admin", "superadmin"],
       default: "admin",
     },
+     jobs: [{ type: mongoose.Schema.Types.ObjectId, ref: "Job" }]
   },
   { timestamps: true }
 );
+adminSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
 
 module.exports =  mongoose.model("Admin", adminSchema);

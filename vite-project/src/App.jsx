@@ -1,13 +1,12 @@
 import { Routes, Route } from 'react-router-dom'
 
-import Home from './components/Home'
+import Home from './Pages/Home'
 import EmployeerRegister from './Pages/EmployeerRegister';
 import EmployeerLogin from './Pages/EmployeerLogin';
 import JobseekerLogin from './Pages/JobseekerLogin';
 import JobseekerRegister from './Pages/JobseekerRegister';
 import AdminDashboard from './Pages/AdminDashboard';
 import Contactus from './Pages/Contactus';
-import Ourteam from './Pages/Ourteam';
 import Aboutus from './Pages/Aboutus';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
@@ -18,6 +17,9 @@ import Outsourcing from './Pages/Services/Outsourcing';
 import Recruitment from './Pages/Services/Recruitment';
 import Resource from './Pages/Services/Resource';
 import Training from './Pages/Services/Training';
+import Trainings from './Pages/Trainings';
+import Blog from './Pages/Blog';
+import Customerservice from './Pages/Training/Customerservice';
 
 
 
@@ -44,6 +46,12 @@ function App() {
                           <Route path='/services/recruitment' element={<Recruitment/>}></Route>
                            <Route path='/services/hr-consulting' element={<Resource/>}></Route>
                             <Route path='/services/training_and_development' element={<Training/>}></Route>
+                             <Route path='/training' element={<Trainings/>}></Route>
+                              <Route path='/training/customerservice' element={<Customerservice/>}></Route>
+
+                               <Route path='/blogs' element={<Blog/>}></Route>
+
+
 
 
                    

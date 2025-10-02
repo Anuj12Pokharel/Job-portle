@@ -138,7 +138,7 @@ no cost.
              <button
             type="submit"
              disabled={loading}
-            className=" items-center  w-1/2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-800"
+            className=" items-center  w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
           >
             {loading ? "Creating..." : "Create jobseeker account"} 
           </button>

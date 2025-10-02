@@ -140,7 +140,7 @@ const RegisterForm = () => {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-1/2 bg-orange-600 text-white py-2 rounded-lg hover:bg-orange-800"
+              className="w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
             >
               Create jobseeker account
             </button>

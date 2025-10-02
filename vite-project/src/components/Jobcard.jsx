@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card.jsx";
 
 function CardBlock({ title, note, items }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -10,36 +9,44 @@ function CardBlock({ title, note, items }) {
   };
 
   return (
-    <Card
-      className="border-2 border-green-300 relative cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={toggleList}
-    >
-      <CardHeader>
-        <CardTitle className="text-xl text-black">{title}</CardTitle>
-        {note && (
-          <p className="text-sm text-gray-600">
-            {isHovered ? "Release to close list" : note}
-          </p>
-        )}
-      </CardHeader>
+    <div className="flex flex-col">
+      <div
+        className="border-2 border-gray-200 relative cursor-pointer rounded-lg"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onClick={toggleList}
+      >
+        {/* Header */}
+        <div className="p-4">
+          <h2 className="text-xl font-semibold text-cyan-500">{title}</h2>
+          {note && (
+            <p className="text-sm text-gray-600">
+              {isHovered ? "Release to close list" : note}
+            </p>
+          )}
+        </div>
 
-      {isHovered && (
-        <CardContent className="absolute z-10 bg-white border border-green-500 rounded shadow-lg w-full max-h-64 overflow-auto top-full left-0">
-          <ol className="space-y-2 text-black p-4">
+        {/* Content */}
+        <div
+          className={`${
+            isHovered
+              ? "bg-white border border-cyan-500 rounded shadow-lg w-full max-h-64 overflow-auto transition-all duration-300 ease-in-out"
+              : "hidden"
+          }`}
+        >
+          <ol className="flex flex-row flex-wrap gap-4 text-black p-4">
             {items.map((item, idx) => (
               <li
                 key={idx}
-                className="text-base hover:text-green-600 hover:font-semibold transition-colors duration-200"
+                className="text-base hover:text-cyan-600 hover:font-semibold transition-colors duration-200"
               >
                 {item}
               </li>
             ))}
           </ol>
-        </CardContent>
-      )}
-    </Card>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -48,22 +55,43 @@ export default function Jobcard() {
     {
       title: "JOBS BY EMPLOYMENT TYPE:",
       note: "(hover to see list)",
-      items: ["Full time", "Part time", "Contract", "Freelance", "Internship", "Traineeship"],
+      items: [
+        "Full time",
+        "Part time",
+        "Contract",
+        "Freelance",
+        "Internship",
+        "Traineeship",
+      ],
     },
     {
       title: "JOBS BY SECTOR TYPE:",
       note: "(hover to see list)",
-      items: ["Government", "Banking & Insurance", "NGOs & INGOs", "Industry", "Hospitality", "IT"],
+      items: [
+        "Government",
+        "Banking & Insurance",
+        "NGOs & INGOs",
+        "Industry",
+        "Hospitality",
+        "IT",
+      ],
     },
     {
       title: "JOBS BY LOCATION:",
       note: "(hover to see list)",
-      items: ["Kathmandu", "Lalitpur", "Pokhara", "Birjung", "Kanchanpur", "more"],
+      items: [
+        "Kathmandu",
+        "Lalitpur",
+        "Pokhara",
+        "Birjung",
+        "Kanchanpur",
+        "more",
+      ],
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="flex flex-col gap-6">
       {jobCategories.map((cat, idx) => (
         <CardBlock key={idx} {...cat} />
       ))}
