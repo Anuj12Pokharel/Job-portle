@@ -4,7 +4,7 @@ import Jobportal from '../components/Jobportal.jsx'
 import LogoSlider from "../components/LogoSlider.jsx";
 import HeroSection from "../components/Home/HeroSection.jsx";
 import Workingmethod from "../components/Home/Workingmethod.jsx";
-import Jobseeker from "../components/Home/jobseeker.jsx";
+import Jobseeker from "../components/Home/Jobseeker.jsx";
 import Employer from "../components/Home/Employer.jsx";
 import Topjob from "../components/Home/Topjob.jsx";
 import Jobsearch from "../components/Home/Jobsearch.jsx";
