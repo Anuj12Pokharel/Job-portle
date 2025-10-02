@@ -2,16 +2,16 @@
 import Jobsearchbanner from "../components/Jobsearchbanner";
 import Jobportal from '../components/Jobportal'
 import LogoSlider from "../components/LogoSlider";
-import HeroSection from "../components/Home.jsx/HeroSection";
-import Workingmethod from "../components/Home.jsx/Workingmethod";
-import Jobseeker from "../components/Home.jsx/jobseeker";
-import Employer from "../components/Home.jsx/Employer";
-import Topjob from "../components/Home.jsx/Topjob";
-import Jobsearch from "../components/Home.jsx/Jobsearch";
-import FA from "../components/Home.jsx/FA";
-import Training from "../components/Home.jsx/Training";
+import HeroSection from "../components/Home/HeroSection";
+import Workingmethod from "../components/Home/Workingmethod";
+import Jobseeker from "../components/Home/jobseeker";
+import Employer from "../components/Home/Employer";
+import Topjob from "../components/Home/Topjob";
+import Jobsearch from "../components/Home/Jobsearch";
+import FA from "../components/Home/FA";
+import Training from "../components/Home/Training";
 import JobList from "../components/Job/JobList";
-import RegistrationCards from "../components/Home.jsx/RegistrationCards";
+import RegistrationCards from "../components/Home/RegistrationCards";
 import Jobcard from "../components/Jobcard";
 
 
