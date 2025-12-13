@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { 
-  registerUser, 
-  loginUser, 
-  sendLoginOtp, 
+import {
+  registerUser,
+  loginUser,
+  sendLoginOtp,
   verifyLoginOtp,
   forgotPassword,
-  resetPassword
+  resetPassword,
 } from "../controller/authController";
+import { googleSignIn } from "../controller/googleAuthController";
 
 const router = Router();
 
@@ -16,5 +17,7 @@ router.post("/login-otp/send", sendLoginOtp);
 router.post("/login-otp/verify", verifyLoginOtp);
 router.post("/forgot-password", forgotPassword);
 router.post("/reset-password", resetPassword);
+
+router.post("/google", googleSignIn);
 
 export default router;

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
+import GoogleSignIn from './GoogleSignIn';
 
 const LoginForm = () => {
   const backendBase =
@@ -145,18 +146,7 @@ const LoginForm = () => {
           </a>
         </p>
         <div className="mt-4">
-          <button
-            type="button"
-            onClick={handleGoogleLogin}
-            className="w-full border border-gray-300 bg-white text-gray-700 py-2 rounded-md hover:bg-gray-50 transition flex items-center justify-center gap-2"
-          >
-            <img
-              src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
-              alt=""
-              className="w-5 h-5"
-            />
-            Continue with Google
-          </button>
+          <GoogleSignIn />
         </div>
       </form>
     </div>
@@ -164,3 +154,9 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
+
+
+
+
+
+
