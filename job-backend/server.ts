@@ -12,6 +12,8 @@ import jobRoutes from "./routes/jobRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import contactRoutes from "./routes/contactRoutes";
 
+import userRoutes from "./routes/userRoutes";
+
 dotenv.config();
 
 const app = express();
@@ -25,6 +27,7 @@ app.get("/", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/form", userFormRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", AdminRoutes);
@@ -47,9 +50,8 @@ app.use(
     _next: NextFunction,
   ): void => {
     try {
-      const entry = `${new Date().toISOString()} ${req.method} ${req.originalUrl} - ${
-        err instanceof Error ? err.stack : err
-      }\n`;
+      const entry = `${new Date().toISOString()} ${req.method} ${req.originalUrl} - ${err instanceof Error ? err.stack : err
+        }\n`;
       fs.appendFileSync(path.join(logsDir, "error.log"), entry);
     } catch (writeErr) {
       console.error("Failed writing to error.log", writeErr);

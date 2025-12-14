@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin, { IAdmin } from "../models/Admin";
+import User from "../models/User";
 import { sendEmail } from "../utils/mailer";
 
 const jwtSecret = process.env.JWT_SECRET;
@@ -187,5 +188,95 @@ export const resetPasswordAdmin = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to reset password" });
+  }
+};
+
+export const getAllEmployers = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+    const admins = await Admin.find({ role: "admin" }).select("-password");
+    res.json(admins);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch employers" });
+  }
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+    const users = await User.find().select("-password");
+    res.json(users);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch users" });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete user" });
+  }
+};
+
+export const deleteEmployer = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+    await Admin.findByIdAndDelete(req.params.id);
+    res.json({ message: "Employer deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to delete employer" });
+  }
+};
+
+export const updateUserByAdmin = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.profilePicture = req.file.path.replace(/\\/g, "/");
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password");
+    res.json(updatedUser);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update user" });
+  }
+};
+
+export const updateEmployerByAdmin = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+
+    const updateData = { ...req.body };
+    if (req.file) {
+      updateData.profilePicture = req.file.path.replace(/\\/g, "/");
+    }
+
+    const updatedEmployer = await Admin.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password");
+    res.json(updatedEmployer);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update employer" });
   }
 };
