@@ -25,10 +25,9 @@ export const googleSignIn = async (req: Request, res: Response) => {
     const email = payload.email.toLowerCase();
     const fullName = payload.name || "";
 
-    let user = await User.findOne({ email });
+    const user = await User.findOne({ email });
     if (!user) {
-      user = new User({ fullName, email, password: Math.random().toString(36).slice(-8), role: "user" });
-      await user.save();
+      return res.status(404).json({ message: "Incorrect Email" });
     }
 
     const token = jwt.sign({ id: user._id, role: user.role }, jwtSecret, { expiresIn: "5d" });

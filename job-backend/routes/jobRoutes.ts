@@ -9,7 +9,9 @@ import {
   applyJob,
   saveJob,
   getAppliedJobs,
+  getAppliedJobs,
   getCategories,
+  getMyJobs,
 } from "../controller/jobController";
 import { protect } from "../middleware/authMiddleware";
 import checkAdmin from "../middleware/checkAdmin";
@@ -28,6 +30,7 @@ router.get("/user/applied", protect, getAppliedJobs);
 router.post("/create", protect, checkAdmin, upload.single("logo"), createJob);
 router.put("/update/:id", protect, checkAdmin, upload.single("logo"), updateJob);
 router.delete("/delete/:id", protect, checkAdmin, deleteJob);
+router.get("/myjobs", protect, checkAdmin, getMyJobs);
 router.get("/:id/applicants", protect, checkAdmin, getApplicantsForJob);
 
 export default router;

@@ -20,7 +20,7 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
       const decoded = jwt.verify(token, process.env.JWT_SECRET || "") as DecodedToken;
 
       let userDoc;
-      if (decoded.role === "admin") {
+      if (decoded.role === "admin" || decoded.role === "superadmin") {
         userDoc = await Admin.findById(decoded.id).select("-password");
       } else {
         userDoc = await User.findById(decoded.id).select("-password");
