@@ -8,6 +8,8 @@ export interface IUser extends Document {
   preferredJobCategory: string;
   mobileNumber: string;
   email: string;
+  profilePicture?: string;
+  location?: string;
   password: string;
   confirmPassword: string;
   role: Role;
@@ -49,6 +51,14 @@ const userSchema = new Schema<IUser>(
       unique: true,
       lowercase: true,
       trim: true,
+    },
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+    location: {
+      type: String,
+      default: "",
     },
     password: {
       type: String,

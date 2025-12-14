@@ -37,7 +37,7 @@ export const updateJob = async (req: Request, res: Response) => {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
-    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id)) {
+    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id) && req.user?.role !== "superadmin") {
       return res.status(403).json({ message: "Not authorized" });
     }
 
@@ -60,7 +60,7 @@ export const deleteJob = async (req: Request, res: Response) => {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
-    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id))
+    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id) && req.user?.role !== "superadmin")
       return res.status(403).json({ message: "Not authorized" });
 
     await job.deleteOne();
@@ -76,7 +76,7 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
     const job = await Job.findById(req.params.id);
     if (!job) return res.status(404).json({ message: "Job not found" });
 
-    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id))
+    if (job.postedBy.toString() !== String(req.user?._id || req.user?.id) && req.user?.role !== "superadmin")
       return res.status(403).json({ message: "Not authorized" });
 
     const applicants = await Application.find({ job: job._id }).populate("user", "fullName email");
@@ -195,5 +195,17 @@ export const getCategories = async (_req: Request, res: Response) => {
   } catch (err: any) {
     console.error("getCategories error:", err);
     return res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+export const getMyJobs = async (req: Request, res: Response) => {
+  try {
+    const adminId = req.user?._id || req.user?.id;
+    if (!adminId) return res.status(401).json({ message: "Not authorized" });
+
+    const jobs = await Job.find({ postedBy: adminId });
+    res.json(jobs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch jobs" });
   }
 };
