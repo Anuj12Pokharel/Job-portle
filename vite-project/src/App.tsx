@@ -6,6 +6,8 @@ import EmployeerLogin from "./Pages/EmployeerLogin";
 import JobseekerLogin from "./Pages/JobseekerLogin";
 import JobseekerRegister from "./Pages/JobseekerRegister";
 import AdminDashboard from "./Pages/AdminDashboard";
+import SuperAdminDashboard from "./Pages/SuperAdminDashboard";
+import SuperAdminLogin from "./Pages/SuperAdminLogin";
 import Contactus from "./Pages/Contactus";
 import Aboutus from "./Pages/Aboutus";
 import Footer from "./components/Footer";
@@ -41,6 +43,8 @@ function App() {
           element={<JobseekerRegister />}
         ></Route>
         <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+        <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
+        <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
         <Route path="/contact" element={<Contactus />}></Route>
         <Route path="/aboutus" element={<Aboutus />}></Route>
         <Route path="/services" element={<Services />}></Route>

@@ -15,6 +15,7 @@ const RegisterForm = () => {
   });
 
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState<any>({});
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
@@ -22,15 +23,40 @@ const RegisterForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const newErrors: any = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+
+    if (formData.fullName.length < 2) {
+      newErrors.fullName = "Min 2 chars";
+    }
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+    if (!phoneRegex.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = "Must be 10 digits";
+    }
+    if (!formData.preferredJobCategory) {
+      newErrors.preferredJobCategory = "Required";
+    }
+    if (formData.password.length < 6) {
+      newErrors.password = "Min 6 chars";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setErrors({});
     setSuccess("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    if (!validateForm()) return;
 
     try {
       const res = await axios.post(
@@ -45,7 +71,12 @@ const RegisterForm = () => {
         navigate("/Jobseeker-Login");
       }, 1000);
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const msg = err.response?.data?.message || "Registration failed";
+      if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("exists")) {
+        setErrors({ email: msg });
+      } else {
+        setError(msg);
+      }
       console.error(err.response?.data || err.message);
     }
   };
@@ -69,6 +100,7 @@ const RegisterForm = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {errors.fullName && <p className="text-red-500 text-xs mb-1 ml-1">{errors.fullName}</p>}
             <input
               type="text"
               name="fullName"
@@ -79,6 +111,7 @@ const RegisterForm = () => {
               required
             />
 
+            {errors.preferredJobCategory && <p className="text-red-500 text-xs mb-1 ml-1">{errors.preferredJobCategory}</p>}
             <select
               name="preferredJobCategory"
               value={formData.preferredJobCategory}
@@ -97,6 +130,7 @@ const RegisterForm = () => {
               <option value="Operations">Operations</option>
             </select>
 
+            {errors.mobileNumber && <p className="text-red-500 text-xs mb-1 ml-1">{errors.mobileNumber}</p>}
             <input
               type="text"
               name="mobileNumber"
@@ -107,6 +141,7 @@ const RegisterForm = () => {
               required
             />
 
+            {errors.email && <p className="text-red-500 text-xs mb-1 ml-1">{errors.email}</p>}
             <input
               type="email"
               name="email"
@@ -117,6 +152,7 @@ const RegisterForm = () => {
               required
             />
 
+            {errors.password && <p className="text-red-500 text-xs mb-1 ml-1">{errors.password}</p>}
             <input
               type="password"
               name="password"
@@ -127,6 +163,7 @@ const RegisterForm = () => {
               required
             />
 
+            {errors.confirmPassword && <p className="text-red-500 text-xs mb-1 ml-1">{errors.confirmPassword}</p>}
             <input
               type="password"
               name="confirmPassword"

@@ -4,7 +4,7 @@ import { API_BASE_URL } from "../config/api";
 
 const GoogleSignIn: React.FC = () => {
   useEffect(() => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '1043671253832-oe725li125eeda640v08opko1sv0g23i.apps.googleusercontent.com';
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '49940105856-6edqjocuk098bjn1k6hvugfucc3q8lub.apps.googleusercontent.com';
     if (!clientId) {
       console.warn('VITE_GOOGLE_CLIENT_ID not set');
       return;
@@ -19,6 +19,7 @@ const GoogleSignIn: React.FC = () => {
             try {
               const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken });
               if (res.data?.token) {
+                alert("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
                 if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user));
                 window.dispatchEvent(new Event('storage'));
@@ -50,6 +51,7 @@ const GoogleSignIn: React.FC = () => {
             try {
               const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken });
               if (res.data?.token) {
+                alert("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
                 if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user));
                 window.dispatchEvent(new Event('storage'));

@@ -31,6 +31,20 @@ const LoginForm = () => {
     setError("");
     setSuccess("");
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+    const { identifier, password } = formData;
+
+    if (!identifier) {
+      setError("Please enter email/phone and password");
+      return;
+    }
+
+    if (!emailRegex.test(identifier) && !phoneRegex.test(identifier)) {
+      setError("Please enter a valid Email or 10-digit Phone Number");
+      return;
+    }
+
     try {
       const res = await axios.post(
         `${API_BASE_URL}/api/auth/login`,

@@ -1,11 +1,35 @@
 "use client";
-import { Menu, X, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
 import Categories from "./Job/Categories";
 
 export default function Navbar() {
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    const loadUser = () => {
+      const stored = localStorage.getItem("user");
+      if (stored) {
+        try { setUser(JSON.parse(stored)); } catch (e) { setUser(null); }
+      } else {
+        setUser(null);
+      }
+    };
+    loadUser();
+    window.addEventListener("storage", loadUser);
+    return () => window.removeEventListener("storage", loadUser);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    window.dispatchEvent(new Event("storage"));
+    window.location.assign("/");
+  };
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [jobseekerOpen, setJobseekerOpen] = useState(false);
   const [employerOpen, setEmployerOpen] = useState(false);
@@ -123,65 +147,116 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right: Auth Dropdowns */}
+          {/* Right: Auth Dropdowns or Profile */}
           <div className="hidden md:flex items-center space-x-6 relative">
-            {/* For Jobseekers */}
-            <div className="relative">
-              <button
-                onClick={() => setJobseekerOpen(!jobseekerOpen)}
-                className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
-              >
-                For Jobseekers <ChevronDown className="w-4 h-4" />
-              </button>
+            {user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setIsProfileOpen(!isProfileOpen)}
+                  className="flex items-center gap-2 focus:outline-none hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                >
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                      <UserIcon className="w-5 h-5" />
+                    </div>
+                  )}
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-medium text-gray-700">{user.fullName}</p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
+                </button>
 
-              {jobseekerOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <Link
-                    to="/Jobseeker-Login"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setJobseekerOpen(false)}
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
+                    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
+                      <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
+                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                    </div>
+                    <Link
+                      to="/profile-settings"
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                      onClick={() => setIsProfileOpen(false)}
+                    >
+                      <Settings className="w-4 h-4" />
+                      Profile Settings
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                {/* For Jobseekers */}
+                <div className="relative">
+                  <button
+                    onClick={() => setJobseekerOpen(!jobseekerOpen)}
+                    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
                   >
-                    Login
-                  </Link>
-                  <Link
-                    to="/Jobseeker-Register"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setJobseekerOpen(false)}
-                  >
-                    Register
-                  </Link>
+                    For Jobseekers <ChevronDown className="w-4 h-4" />
+                  </button>
+
+                  {jobseekerOpen && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                      <Link
+                        to="/Jobseeker-Login"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setJobseekerOpen(false)}
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/Jobseeker-Register"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setJobseekerOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {/* For Employers */}
-            <div className="relative">
-              <button
-                onClick={() => setEmployerOpen(!employerOpen)}
-                className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
-              >
-                For Employers <ChevronDown className="w-4 h-4" />
-              </button>
+                {/* For Employers */}
+                <div className="relative">
+                  <button
+                    onClick={() => setEmployerOpen(!employerOpen)}
+                    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
+                  >
+                    For Employers <ChevronDown className="w-4 h-4" />
+                  </button>
 
-              {employerOpen && (
-                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <Link
-                    to="/Employeer-Login"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setEmployerOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/Employeer-Register"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setEmployerOpen(false)}
-                  >
-                    Register
-                  </Link>
+                  {employerOpen && (
+                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                      <Link
+                        to="/Employeer-Login"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setEmployerOpen(false)}
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/Employeer-Register"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setEmployerOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           {/* Mobile menu button */}
