@@ -15,6 +15,7 @@ const EmployerRegister = () => {
   });
 
   const [error, setError] = useState("");
+  const [errors, setErrors] = useState<any>({});
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,17 +24,43 @@ const EmployerRegister = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const validateForm = () => {
+    const newErrors: any = {};
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+
+    if (formData.companyName.length < 2) {
+      newErrors.companyName = "Min 2 chars";
+    }
+    if (formData.companyLocation.length < 2) {
+      newErrors.companyLocation = "Required";
+    }
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = "Invalid email format";
+    }
+    if (!phoneRegex.test(formData.mobileNumber)) {
+      newErrors.mobileNumber = "Must be 10 digits";
+    }
+    if (formData.password.length < 6) {
+      newErrors.password = "Min 6 chars";
+    }
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting formData:", formData);
     setError("");
-    setLoading(true);
+    setErrors({});
     setSuccess("");
 
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
-    }
+    if (!validateForm()) return;
+
+    setLoading(true);
 
     try {
       const res = await axios.post(
@@ -53,7 +80,12 @@ const EmployerRegister = () => {
       });
       navigate("/Employeer-Login"); // change "/login" if your route is different
     } catch (err) {
-      setError(err.response?.data?.message || "Registration failed");
+      const msg = err.response?.data?.message || "Registration failed";
+      if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("exists")) {
+        setErrors({ email: msg });
+      } else {
+        setError(msg);
+      }
       console.error(err.response?.data || err.message);
     }
   };
@@ -76,6 +108,7 @@ const EmployerRegister = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {errors.companyName && <p className="text-red-500 text-xs mb-1 ml-1">{errors.companyName}</p>}
             <input
               type="text"
               name="companyName"
@@ -86,6 +119,7 @@ const EmployerRegister = () => {
               required
             />
 
+            {errors.companyLocation && <p className="text-red-500 text-xs mb-1 ml-1">{errors.companyLocation}</p>}
             <input
               type="text"
               name="companyLocation"
@@ -95,6 +129,7 @@ const EmployerRegister = () => {
               className="w-full border rounded-lg px-4 py-2"
               required
             />
+            {errors.email && <p className="text-red-500 text-xs mb-1 ml-1">{errors.email}</p>}
             <input
               type="email"
               name="email"
@@ -104,6 +139,7 @@ const EmployerRegister = () => {
               className="w-full border rounded-lg px-4 py-2"
               required
             />
+            {errors.mobileNumber && <p className="text-red-500 text-xs mb-1 ml-1">{errors.mobileNumber}</p>}
             <input
               type="text"
               name="mobileNumber"
@@ -114,6 +150,7 @@ const EmployerRegister = () => {
               required
             />
 
+            {errors.password && <p className="text-red-500 text-xs mb-1 ml-1">{errors.password}</p>}
             <input
               type="password"
               name="password"
@@ -124,6 +161,7 @@ const EmployerRegister = () => {
               required
             />
 
+            {errors.confirmPassword && <p className="text-red-500 text-xs mb-1 ml-1">{errors.confirmPassword}</p>}
             <input
               type="password"
               name="confirmPassword"

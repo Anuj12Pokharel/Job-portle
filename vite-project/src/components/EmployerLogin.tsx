@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
+import GoogleSignIn from "./GoogleSignIn";
 
 const EmployerLogin = () => {
   const [formData, setFormData] = useState({
@@ -49,7 +50,12 @@ const EmployerLogin = () => {
         }
         // Trigger auth refresh and hard reload to reflect logged-in UI
         window.dispatchEvent(new Event("storage"));
-        window.location.assign("/admin-dashboard");
+
+        if (res.data.admin?.role === "superadmin") {
+          window.location.assign("/super-admin-dashboard");
+        } else {
+          window.location.assign("/admin-dashboard");
+        }
       }
     } catch (err) {
       setError(
@@ -142,6 +148,9 @@ const EmployerLogin = () => {
         <p className="text-center text-gray-500 mt-2 text-sm">
           Or login with Google
         </p>
+        <div className="mt-4">
+          <GoogleSignIn />
+        </div>
       </form>
     </div>
   );
