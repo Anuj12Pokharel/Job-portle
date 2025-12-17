@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import GoogleSignIn from "./GoogleSignIn";
 
 const EmployerLogin = () => {
@@ -141,9 +141,9 @@ const EmployerLogin = () => {
         {/* Register + Google */}
         <p className="text-center text-gray-700 mt-6 text-sm">
           DonG��t have an account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <Link to="/Employeer-Register" className="text-blue-600 hover:underline">
             Register now
-          </a>
+          </Link>
         </p>
         <p className="text-center text-gray-500 mt-2 text-sm">
           Or login with Google

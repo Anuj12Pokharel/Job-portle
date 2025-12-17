@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -67,6 +67,21 @@ const SuperAdminDashboard = () => {
         } catch (err) {
             console.error("Delete failed", err);
             alert("Delete failed");
+        }
+    };
+
+    const handleVerify = async (id: string, status: "approved" | "rejected") => {
+        const token = localStorage.getItem("token");
+        try {
+            await axios.put(`${API_BASE_URL}/api/admin/verify-employer/${id}`,
+                { status },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            fetchData();
+            alert(`Employer ${status} successfully`);
+        } catch (err) {
+            console.error("Verification failed", err);
+            alert("Verification failed");
         }
     };
 
@@ -320,6 +335,7 @@ const SuperAdminDashboard = () => {
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Mobile</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
                                             </>
                                         )}
@@ -363,7 +379,25 @@ const SuperAdminDashboard = () => {
                                             <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "employer")}>{u.companyName}</td>
                                             <td className="px-6 py-4">{u.email}</td>
                                             <td className="px-6 py-4">{u.mobileNumber}</td>
+                                            <td className="px-6 py-4">
+                                                <span className={`px-2 py-1 rounded-full text-xs font-semibold 
+                                                    ${u.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                        u.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                                            'bg-yellow-100 text-yellow-800'}`}>
+                                                    {u.status || 'pending'}
+                                                </span>
+                                            </td>
                                             <td className="px-6 py-4 flex gap-2">
+                                                {(!u.status || u.status === 'pending') && (
+                                                    <>
+                                                        <button onClick={() => handleVerify(u._id, "approved")} className="text-green-500 hover:text-green-700" title="Approve">
+                                                            <CheckCircle className="w-5 h-5" />
+                                                        </button>
+                                                        <button onClick={() => handleVerify(u._id, "rejected")} className="text-red-500 hover:text-red-700" title="Reject">
+                                                            <XCircle className="w-5 h-5" />
+                                                        </button>
+                                                    </>
+                                                )}
                                                 <button onClick={() => handleEdit(u, "employer")} className="text-blue-500 hover:text-blue-700" title="Edit">
                                                     <Edit className="w-5 h-5" />
                                                 </button>

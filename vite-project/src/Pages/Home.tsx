@@ -13,7 +13,12 @@ import JobList from "../components/Job/JobList";
 import RegistrationCards from "../components/Home/RegistrationCards";
 import Jobcard from "../components/Jobcard";
 
+import { useSearchParams } from "react-router-dom";
+
 function Home() {
+  const [searchParams] = useSearchParams();
+  const category = searchParams.get("category") || "";
+
   return (
     <>
       <div className="front">
@@ -27,12 +32,12 @@ function Home() {
 
           {/* Main Content */}
           <div className="w-full lg:w-[74%] xl:w-[78%] flex flex-col gap-6">
-            <JobList />
+            <JobList category={category} />
             <Jobportal />
           </div>
         </div>
 
-        <Topjob />
+        <Topjob category={category} />
         <LogoSlider />
         <HeroSection />
 

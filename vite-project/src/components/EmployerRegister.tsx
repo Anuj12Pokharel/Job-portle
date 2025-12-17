@@ -78,7 +78,7 @@ const EmployerRegister = () => {
         password: "",
         confirmPassword: "",
       });
-      navigate("/Employeer-Login"); // change "/login" if your route is different
+      navigate("/registration-pending");
     } catch (err) {
       const msg = err.response?.data?.message || "Registration failed";
       if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("exists")) {
