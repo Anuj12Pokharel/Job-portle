@@ -1,18 +1,36 @@
 import React, { useEffect, useState } from "react";
 
-export default function Blogsection({ currentPage, itemsPerPage }) {
-  const [blogs, setBlogs] = useState([]);
+interface Blog {
+  id: number;
+  title: string;
+  body: string;
+  userId: number;
+  image: string;
+  date: string;
+  author: string;
+}
+
+interface BlogsectionProps {
+  currentPage: number;
+  itemsPerPage: number;
+}
+
+const Blogsection: React.FC<BlogsectionProps> = ({
+  currentPage,
+  itemsPerPage,
+}) => {
+  const [blogs, setBlogs] = useState<Blog[]>([]);
 
   useEffect(() => {
     async function fetchBlogs() {
       try {
         const res = await fetch(
-          `https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=${itemsPerPage}`,
+          `https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=${itemsPerPage}`
         );
-        const data = await res.json();
+        const data: any[] = await res.json();
 
         // Enhance each blog with dummy image, date, and author
-        const enhancedData = data.map((blog) => ({
+        const enhancedData: Blog[] = data.map((blog) => ({
           ...blog,
           image: `https://picsum.photos/seed/${blog.id}/400/250`, // unique image
           date: new Date(Date.now() - blog.id * 10000000).toDateString(), // fake publish date
@@ -48,7 +66,7 @@ export default function Blogsection({ currentPage, itemsPerPage }) {
               {/* Meta info */}
               <div className="flex justify-between text-xs text-gray-500 mb-2">
                 <span>{blog.date}</span>
-                <span>G�� {blog.author}</span>
+                <span>• {blog.author}</span>
               </div>
 
               {/* Title */}
@@ -61,7 +79,7 @@ export default function Blogsection({ currentPage, itemsPerPage }) {
 
               {/* Read More button */}
               <button className="mt-3 text-cyan-600 font-medium hover:underline">
-                Read More G��
+                Read More →
               </button>
             </div>
           </article>
@@ -69,4 +87,6 @@ export default function Blogsection({ currentPage, itemsPerPage }) {
       </div>
     </section>
   );
-}
+};
+
+export default Blogsection;

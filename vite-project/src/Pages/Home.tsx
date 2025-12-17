@@ -18,6 +18,7 @@ import { useSearchParams } from "react-router-dom";
 function Home() {
   const [searchParams] = useSearchParams();
   const category = searchParams.get("category") || "";
+  const search = searchParams.get("search") || "";
 
   return (
     <>
@@ -32,7 +33,7 @@ function Home() {
 
           {/* Main Content */}
           <div className="w-full lg:w-[74%] xl:w-[78%] flex flex-col gap-6">
-            <JobList category={category} />
+            <JobList category={category} search={search} />
             <Jobportal />
           </div>
         </div>
