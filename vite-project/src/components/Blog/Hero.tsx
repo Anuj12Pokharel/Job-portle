@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Hero() {
+const Hero: React.FC = () => {
   return (
     <section
       className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden"
@@ -45,4 +45,6 @@ export default function Hero() {
       </div>
     </section>
   );
-}
+};
+
+export default Hero;

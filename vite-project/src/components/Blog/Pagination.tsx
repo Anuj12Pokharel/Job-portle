@@ -1,8 +1,18 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-export default function Pagination({ currentPage, totalPages, onPageChange }) {
-  const handlePageChange = (page) => {
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}) => {
+  const handlePageChange = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       onPageChange(page);
       console.log("Page changed to:", page);
@@ -13,7 +23,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
   const handleNext = () => handlePageChange(currentPage + 1);
 
   const getPageNumbers = () => {
-    const pages = [];
+    const pages: number[] = [];
     const maxVisiblePages = 5;
 
     if (totalPages <= maxVisiblePages) {
@@ -44,11 +54,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
           <button
             key={page}
             onClick={() => handlePageChange(page)}
-            className={`px-3 py-1 rounded border ${
-              currentPage === page
+            className={`px-3 py-1 rounded border ${currentPage === page
                 ? "bg-blue-600 text-white border-blue-600"
                 : "border-gray-300 hover:bg-gray-100"
-            }`}
+              }`}
           >
             {page}
           </button>
@@ -67,4 +76,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       </button>
     </div>
   );
-}
+};
+
+export default Pagination;
