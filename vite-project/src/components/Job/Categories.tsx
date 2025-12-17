@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 type Category = { name: string; count: number };
 
-const Categories = () => {
+const Categories = ({ onSelect }: { onSelect?: () => void }) => {
+  const navigate = useNavigate();
   const backendBase =
     import.meta.env.VITE_API_BASE_URL ||
     "https://job-portle-backend-fsai.onrender.com";
@@ -47,16 +49,20 @@ const Categories = () => {
       )}
 
       {!loading && !error && (
-        <div className="max-h-80 overflow-auto pr-1">
+        <div className="max-h-80 overflow-auto pr-1 custom-scrollbar">
           {categories.length === 0 && (
             <div className="text-sm text-gray-500">No categories found.</div>
           )}
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             {categories.map((cat) => (
               <button
                 key={cat.name}
                 type="button"
-                className="flex w-full items-center justify-between rounded-md border border-gray-100 bg-white px-3 py-2 text-left shadow-sm hover:shadow transition focus:outline-none focus:ring-2 focus:ring-cyan-500"
+                onClick={() => {
+                  navigate(`/?category=${encodeURIComponent(cat.name)}`);
+                  if (onSelect) onSelect();
+                }}
+                className="flex w-full items-center justify-between rounded-md border-b border-gray-50 bg-white px-3 py-2 text-left hover:bg-gray-50 transition focus:outline-none"
               >
                 <span className="text-sm font-medium text-gray-800">
                   {cat.name}

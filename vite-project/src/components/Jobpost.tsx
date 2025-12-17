@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
@@ -9,7 +9,7 @@ const Jobpost = () => {
     category: "",
     location: "",
     jobLevel: "",
-    jobType: "",
+    jobType: "Full-time",
     salary: "",
     educationLevel: "",
     desiredCandidate: "",
@@ -19,6 +19,24 @@ const Jobpost = () => {
     aboutCompany: "",
     companyWebsite: "",
   });
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user) {
+          setFormData(prev => ({
+            ...prev,
+            companyName: user.companyName || "",
+            location: user.companyLocation || ""
+          }));
+        }
+      } catch (e) {
+        console.error("Failed to parse user data", e);
+      }
+    }
+  }, []);
 
   const [logo, setLogo] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -94,8 +112,8 @@ const Jobpost = () => {
           name="companyName"
           placeholder="Company Name"
           value={formData.companyName}
-          onChange={handleChange}
-          className="border p-3 rounded-lg w-full"
+          readOnly
+          className="border p-3 rounded-lg w-full bg-gray-100 text-gray-500 cursor-not-allowed"
           required
         />
 
@@ -123,8 +141,8 @@ const Jobpost = () => {
           name="location"
           placeholder="Location"
           value={formData.location}
-          onChange={handleChange}
-          className="border p-3 rounded-lg w-full"
+          readOnly
+          className="border p-3 rounded-lg w-full bg-gray-100 text-gray-500 cursor-not-allowed"
         />
 
         <input

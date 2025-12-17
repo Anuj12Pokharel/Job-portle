@@ -16,12 +16,20 @@ import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
+import ApplicationModal from "../components/ApplicationModal";
+
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, post-job, my-jobs, applications
     const [myJobs, setMyJobs] = useState([]);
     const [stats, setStats] = useState({ totalJobs: 0, totalApplicants: 0 });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    // Applicants State
+    const [viewApplicantsJobId, setViewApplicantsJobId] = useState<string | null>(null);
+    const [applicants, setApplicants] = useState<any[]>([]);
+    const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Form State for Post Job
     const [jobData, setJobData] = useState({
@@ -41,6 +49,21 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         fetchMyJobs();
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                if (user) {
+                    setJobData(prev => ({
+                        ...prev,
+                        companyName: user.companyName || "",
+                        location: user.companyLocation || ""
+                    }));
+                }
+            } catch (e) {
+                console.error("Failed to parse user data", e);
+            }
+        }
     }, []);
 
     const fetchMyJobs = async () => {
@@ -56,10 +79,30 @@ const AdminDashboard = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setMyJobs(res.data);
-            setStats({ totalJobs: res.data.length, totalApplicants: 0 }); // Todo: fetch applicants count
+
+            // Calculate total applicants roughly if API supports, for now just jobs
+            setStats({ totalJobs: res.data.length, totalApplicants: 0 });
             setLoading(false);
         } catch (err) {
             console.error("Failed to fetch jobs", err);
+            setLoading(false);
+        }
+    };
+
+    const fetchApplicants = async (jobId: string) => {
+        setLoading(true);
+        const token = localStorage.getItem("token");
+        try {
+            const res = await axios.get(`${API_BASE_URL}/api/jobs/${jobId}/applicants`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setApplicants(res.data);
+            setViewApplicantsJobId(jobId);
+            setActiveTab("applications"); // Switch view context conceptually
+            setLoading(false);
+        } catch (err) {
+            console.error("Failed to fetch applicants", err);
+            alert("Failed to fetch applicants");
             setLoading(false);
         }
     };
@@ -95,7 +138,7 @@ const AdminDashboard = () => {
             });
             alert("Job Posted Successfully!");
             setActiveTab("my-jobs");
-            fetchMyJobs();
+            await fetchMyJobs();
             setJobData({
                 companyName: "", position: "", category: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
@@ -104,7 +147,8 @@ const AdminDashboard = () => {
             setLogo(null);
         } catch (err) {
             console.error(err);
-            alert("Failed to post job");
+            const msg = err.response?.data?.message || "Failed to post job";
+            alert(msg);
         }
     };
 
@@ -115,8 +159,27 @@ const AdminDashboard = () => {
         navigate("/");
     };
 
+    const openApplicationModal = (application: any) => {
+        setSelectedApplication(application);
+        setIsModalOpen(true);
+    };
+
+    const handleStatusUpdate = (id: string, newStatus: string) => {
+        // Update local state
+        setApplicants(prev => prev.map(app =>
+            app._id === id ? { ...app, status: newStatus } : app
+        ));
+    };
+
     return (
         <div className="flex min-h-screen bg-gray-50 font-sans">
+            <ApplicationModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                application={selectedApplication}
+                onStatusUpdate={handleStatusUpdate}
+            />
+
             {/* Sidebar */}
             <aside className="w-64 bg-slate-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10 hidden md:flex">
                 <div className="p-6 border-b border-slate-800">
@@ -125,18 +188,15 @@ const AdminDashboard = () => {
                     </h1>
                 </div>
                 <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-                    <button onClick={() => setActiveTab("dashboard")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => { setActiveTab("dashboard"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <LayoutDashboard className="w-5 h-5 mr-3" /> Dashboard
                     </button>
-                    <button onClick={() => setActiveTab("post-job")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post-job' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => { setActiveTab("post-job"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post-job' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <PlusCircle className="w-5 h-5 mr-3" /> Post New Job
                     </button>
-                    <button onClick={() => setActiveTab("my-jobs")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'my-jobs' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => { setActiveTab("my-jobs"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'my-jobs' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> My Jobs
                     </button>
-                    {/* <button onClick={() => setActiveTab("applications")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'applications' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
-                        <Users className="w-5 h-5 mr-3" /> Applications
-                    </button> */}
                 </nav>
                 <div className="p-4 border-t border-slate-800">
                     <button onClick={handleLogout} className="flex items-center text-slate-400 hover:text-white transition-colors w-full px-4 py-2">
@@ -145,18 +205,13 @@ const AdminDashboard = () => {
                 </div>
             </aside>
 
-            {/* Mobile Sidebar Overlay (Simplified for now) */}
-
             {/* Main Content */}
             <main className="flex-1 md:ml-64 p-8 transition-all">
                 <header className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800 capitalize">{activeTab.replace("-", " ")}</h2>
-                    <div className="flex items-center gap-4">
-                        <span className="text-gray-500 text-sm">Welcome Back</span>
-                        <div className="h-10 w-10 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 font-bold">
-                            E
-                        </div>
-                    </div>
+                    <h2 className="text-3xl font-bold text-gray-800 capitalize">
+                        {viewApplicantsJobId ? "Job Applicants" : activeTab.replace("-", " ")}
+                    </h2>
+                    {/* Profile section removed as per request */}
                 </header>
 
                 {/* Dashboard View */}
@@ -169,7 +224,6 @@ const AdminDashboard = () => {
                             </div>
                             <p className="text-3xl font-bold text-gray-800">{stats.totalJobs}</p>
                         </div>
-                        {/* Add more stats here */}
                     </div>
                 )}
 
@@ -205,7 +259,13 @@ const AdminDashboard = () => {
                                                 <td className="px-6 py-4 text-gray-500">
                                                     {new Date(job.createdAt).toLocaleDateString()}
                                                 </td>
-                                                <td className="px-6 py-4">
+                                                <td className="px-6 py-4 flex items-center gap-3">
+                                                    <button
+                                                        onClick={() => fetchApplicants(job._id)}
+                                                        className="px-3 py-1 bg-teal-50 text-teal-600 rounded-md hover:bg-teal-100 text-sm font-medium transition"
+                                                    >
+                                                        View Applicants
+                                                    </button>
                                                     <button onClick={() => handleDeleteJob(job._id)} className="text-red-500 hover:text-red-700 p-2">
                                                         <Trash2 className="w-5 h-5" />
                                                     </button>
@@ -219,6 +279,67 @@ const AdminDashboard = () => {
                     </div>
                 )}
 
+                {/* Applications List View */}
+                {activeTab === "applications" && viewApplicantsJobId && (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div className="p-4 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+                            <button onClick={() => setActiveTab("my-jobs")} className="text-gray-500 hover:text-gray-700 flex items-center gap-1 text-sm">
+                                &larr; Back to Jobs
+                            </button>
+                            <span className="text-gray-500 text-sm">{applicants.length} Applicants found</span>
+                        </div>
+                        {loading ? (
+                            <div className="p-8 text-center">Loading...</div>
+                        ) : applicants.length === 0 ? (
+                            <div className="p-12 text-center text-gray-500 flex flex-col items-center">
+                                <Users className="w-12 h-12 text-gray-300 mb-3" />
+                                <p>No applicants for this job yet.</p>
+                            </div>
+                        ) : (
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50 border-b border-gray-200">
+                                        <tr>
+                                            <th className="px-6 py-4 font-semibold text-gray-600">Applicant</th>
+                                            <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
+                                            <th className="px-6 py-4 font-semibold text-gray-600">Applied Date</th>
+                                            <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
+                                            <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {applicants.map((app: any) => (
+                                            <tr key={app._id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4 font-medium text-gray-900">{app.user?.fullName}</td>
+                                                <td className="px-6 py-4 text-gray-500">{app.user?.email}</td>
+                                                <td className="px-6 py-4 text-gray-500">
+                                                    {new Date(app.createdAt).toLocaleDateString()}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`px-2 py-1 rounded text-xs font-medium 
+                                                        ${app.status === 'hired' ? 'bg-green-100 text-green-700' :
+                                                            app.status === 'rejected' ? 'bg-red-100 text-red-700' :
+                                                                app.status === 'hiring-process' ? 'bg-purple-100 text-purple-700' :
+                                                                    app.status === 'viewing' ? 'bg-yellow-100 text-yellow-700' :
+                                                                        'bg-gray-100 text-gray-700'}`}>
+                                                        {app.status}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <button onClick={() => openApplicationModal(app)} className="text-teal-600 hover:text-teal-800 font-medium text-sm">
+                                                        View Application
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                )}
+
+
                 {/* Post Job View */}
                 {activeTab === "post-job" && (
                     <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
@@ -226,7 +347,14 @@ const AdminDashboard = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                                    <input type="text" value={jobData.companyName} onChange={e => setJobData({ ...jobData, companyName: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                    <input
+                                        type="text"
+                                        value={jobData.companyName}
+                                        onChange={e => setJobData({ ...jobData, companyName: e.target.value })}
+                                        readOnly={!!jobData.companyName && jobData.companyName.length > 0}
+                                        className={`w-full border rounded-lg px-4 py-2 ${jobData.companyName ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
+                                        required
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Position / Job Title</label>
@@ -234,7 +362,14 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
-                                    <input type="text" value={jobData.location} onChange={e => setJobData({ ...jobData, location: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                    <input
+                                        type="text"
+                                        value={jobData.location}
+                                        onChange={e => setJobData({ ...jobData, location: e.target.value })}
+                                        readOnly={!!jobData.location && jobData.location.length > 0}
+                                        className={`w-full border rounded-lg px-4 py-2 ${jobData.location ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
+                                        required
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>

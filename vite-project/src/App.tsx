@@ -25,6 +25,11 @@ import Customerservice from "./Pages/Training/Customerservice";
 import ProfileSettings from "./Pages/ProfileSettings";
 import ForgotPassword from "./components/ForgotPassword";
 import ForgotPasswordEmployer from "./components/ForgotPasswordEmployer";
+import JobDetails from "./Pages/JobDetails";
+import ApplyJob from "./Pages/ApplyJob";
+import AppliedJobs from "./Pages/AppliedJobs";
+import SavedJobs from "./Pages/SavedJobs";
+import RegistrationPending from "./Pages/RegistrationPending";
 
 function App() {
   return (
@@ -32,6 +37,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
+        <Route path="/saved-jobs" element={<SavedJobs />}></Route>
         <Route
           path="/Employeer-Register"
           element={<EmployeerRegister />}
@@ -72,6 +78,10 @@ function App() {
           path="/forgot-password-employer"
           element={<ForgotPasswordEmployer />}
         ></Route>
+        <Route path="/jobs/:id" element={<JobDetails />}></Route>
+        <Route path="/apply-job/:id" element={<ApplyJob />}></Route>
+        <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
+        <Route path="/registration-pending" element={<RegistrationPending />}></Route>
       </Routes>
       <Footer />
     </>
