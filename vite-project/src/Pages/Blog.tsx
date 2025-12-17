@@ -3,8 +3,8 @@ import Hero from "../components/Blog/Hero";
 import Blogsection from "../components/Blog/Blogsection";
 import Pagination from "../components/Blog/Pagination";
 
-const Blog = () => {
-  const [currentPage, setCurrentPage] = useState(1);
+const Blog: React.FC = () => {
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 6; // how many blogs per page
   const totalItems = 100; // jsonplaceholder has 100 posts
   const totalPages = Math.ceil(totalItems / itemsPerPage);

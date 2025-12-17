@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { MapPin, Calendar, Filter } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface Job {
   _id: string;
@@ -19,9 +20,13 @@ interface Category {
   count: number;
 }
 
-import { useNavigate } from "react-router-dom";
-
-export default function JobList({ category }: { category?: string }) {
+export default function JobList({
+  category,
+  search,
+}: {
+  category?: string;
+  search?: string;
+}) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
@@ -51,33 +56,39 @@ export default function JobList({ category }: { category?: string }) {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const url = category
-          ? `${backendBase}/api/jobs/get?category=${encodeURIComponent(category)}`
-          : `${backendBase}/api/jobs/get`;
+        let url = `${backendBase}/api/jobs/get?`;
+        const params = new URLSearchParams();
 
-        const res = await axios.get(url);
+        if (category) params.append("category", category);
+        if (search) params.append("search", search);
+
+        const res = await axios.get(url + params.toString());
         setJobs(res.data);
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
       }
     };
     fetchJobs();
-  }, [category, backendBase]);
+  }, [category, search, backendBase]);
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newCategory = e.target.value;
-    if (newCategory) {
-      navigate(`/?category=${encodeURIComponent(newCategory)}`);
-    } else {
-      navigate("/");
-    }
+    const params = new URLSearchParams();
+    if (newCategory) params.append("category", newCategory);
+    if (search) params.append("search", search);
+
+    navigate(`/?${params.toString()}`);
+  };
+
+  const clearFilter = () => {
+    navigate("/");
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-0 py-6">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold mb-4 sm:mb-0 text-center sm:text-left">
-          Featured Jobs
+          {search ? `Search Results for "${search}"` : "Featured Jobs"}
         </h2>
 
         <div className="relative inline-block w-full sm:w-64">
@@ -97,19 +108,25 @@ export default function JobList({ category }: { category?: string }) {
             ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
           </div>
         </div>
       </div>
 
       {jobs.length === 0 ? (
         <div className="text-center py-10 text-gray-500 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-          <p className="text-lg">No jobs found in this category.</p>
+          <p className="text-lg">No jobs found matching your criteria.</p>
           <button
-            onClick={() => navigate("/")}
+            onClick={clearFilter}
             className="mt-2 text-blue-600 hover:underline text-sm"
           >
-            Clear filter
+            Clear all filters
           </button>
         </div>
       ) : (
@@ -136,8 +153,18 @@ export default function JobList({ category }: { category?: string }) {
                     </div>
                   )}
                   <div className="overflow-hidden">
-                    <h1 className="font-semibold text-gray-800 truncate" title={job.companyName}>{job.companyName}</h1>
-                    <p className="text-gray-500 text-sm truncate" title={job.position}>{job.position}</p>
+                    <h1
+                      className="font-semibold text-gray-800 truncate"
+                      title={job.companyName}
+                    >
+                      {job.companyName}
+                    </h1>
+                    <p
+                      className="text-gray-500 text-sm truncate"
+                      title={job.position}
+                    >
+                      {job.position}
+                    </p>
                   </div>
                 </div>
 
@@ -146,7 +173,9 @@ export default function JobList({ category }: { category?: string }) {
                   {/* Location */}
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4 text-gray-400" />
-                    <span className="truncate">{job.location || "Location not specified"}</span>
+                    <span className="truncate">
+                      {job.location || "Location not specified"}
+                    </span>
                   </div>
 
                   {/* Expiry Date */}
@@ -156,7 +185,7 @@ export default function JobList({ category }: { category?: string }) {
                       {job.expiryDate
                         ? `${Math.ceil(
                           (new Date(job.expiryDate).getTime() - Date.now()) /
-                          (1000 * 60 * 60 * 24),
+                          (1000 * 60 * 60 * 24)
                         )} days left`
                         : "No expiry"}
                     </span>
