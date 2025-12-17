@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import GoogleSignIn from './GoogleSignIn';
@@ -9,6 +9,7 @@ const LoginForm = () => {
     import.meta.env.VITE_API_BASE_URL ||
     "https://job-portle-backend-fsai.onrender.com";
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     identifier: "",
     password: "",
@@ -62,7 +63,18 @@ const LoginForm = () => {
         }
         // Trigger auth refresh and hard reload to reflect logged-in UI
         window.dispatchEvent(new Event("storage"));
-        window.location.assign("/");
+
+        const from = location.state?.from || "/";
+        if (from === "/") {
+          window.location.assign("/");
+        } else {
+          // For specific redirect, we can use navigate, but might need forced update for Navbar. 
+          // Ideally App should listen to storage event or use Context. 
+          // Given existing code uses window.location.assign, let's stick to it for reliability or navigate if just route change.
+          // We'll use navigate for smoother transition if possible, but dispatch helper might be needed.
+          // Let's use window.location.assign to be safe with existing "reload" pattern, but pointing to 'from'.
+          window.location.assign(from);
+        }
         return;
       }
 
@@ -155,9 +167,9 @@ const LoginForm = () => {
         {/* Register + Google */}
         <p className="text-center text-gray-700 mt-6 text-sm">
           DonG��t have an account?{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <Link to="/Jobseeker-Register" className="text-blue-600 hover:underline">
             Register now
-          </a>
+          </Link>
         </p>
         <div className="mt-4">
           <GoogleSignIn />
