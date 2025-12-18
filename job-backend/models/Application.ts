@@ -5,6 +5,10 @@ export interface IApplication extends Document {
   user: Types.ObjectId;
   resume?: string | null;
   coverLetter?: string;
+  totalExperience?: number;
+  expectedSalary?: string;
+  fieldOfExpertise?: string;
+  additionalInfo?: string;
   status: "applied" | "reviewed" | "shortlisted" | "rejected" | "hired";
 }
 
@@ -14,9 +18,13 @@ const applicationSchema = new Schema<IApplication>(
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     resume: { type: String },
     coverLetter: { type: String },
+    totalExperience: { type: Number }, // New field
+    expectedSalary: { type: String }, // New field
+    fieldOfExpertise: { type: String }, // New field
+    additionalInfo: { type: String }, // New field
     status: {
       type: String,
-      enum: ["applied", "reviewed", "shortlisted", "rejected", "hired"],
+      enum: ["applied", "viewing", "hiring-process", "hired", "rejected"],
       default: "applied",
     },
   },

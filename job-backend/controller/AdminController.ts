@@ -36,23 +36,20 @@ export const registerAdmin = async (req: Request, res: Response) => {
       mobileNumber,
       password: hashedPassword,
       role: "admin",
+      status: "pending",
     });
 
     await newAdmin.save();
 
-    const token = jwt.sign({ id: newAdmin._id, role: newAdmin.role }, ensureSecret(), {
-      expiresIn: "9d",
-    });
-
+    // Do not return token for pending admins
     res.status(201).json({
-      token,
+      message: "Registration successful. Please wait for Super Admin approval before logging in.",
       admin: {
         id: newAdmin._id,
         companyName: newAdmin.companyName,
-        companyLocation: newAdmin.companyLocation,
         email: newAdmin.email,
-        mobileNumber: newAdmin.mobileNumber,
         role: newAdmin.role,
+        status: newAdmin.status
       },
     });
   } catch (err) {
@@ -77,6 +74,16 @@ export const loginAdmin = async (req: Request, res: Response) => {
     const token = jwt.sign({ id: admin._id, role: admin.role }, ensureSecret(), {
       expiresIn: "9d",
     });
+
+    // Check approval status for employers (admins)
+    // Superadmins bypass this check
+    if (admin.role === "admin" && admin.status !== "approved") {
+      return res.status(403).json({
+        message: admin.status === "rejected"
+          ? "Your company registration has been rejected."
+          : "Your company registration is pending approval by the Super Admin."
+      });
+    }
 
     res.status(200).json({
       token,
@@ -278,5 +285,31 @@ export const updateEmployerByAdmin = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to update employer" });
+  }
+};
+
+export const verifyEmployer = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Access denied. SuperAdmin only." });
+    }
+
+    const { status } = req.body;
+    if (!["approved", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    const employer = await Admin.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    ).select("-password");
+
+    if (!employer) return res.status(404).json({ message: "Employer not found" });
+
+    res.json({ message: `Employer ${status} successfully`, employer });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to verify employer" });
   }
 };
