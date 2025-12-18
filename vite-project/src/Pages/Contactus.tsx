@@ -64,10 +64,10 @@ const Contactus = () => {
         {/* Header */}
         <div className="text-center max-w-3xl mb-12">
           <h1 className="text-3xl font-bold text-cyan-600">Get in Touch</h1>
-          <p className="text-lime-600 mt-4">
+          <p className=" mt-4">
             Have questions or need assistance?
           </p>
-          <p className="text-lime-600 mt-2">
+          <p className=" mt-2">
             Feel free to fill out the form below or reach out to us directly at
             01-4502062.
           </p>
@@ -176,7 +176,7 @@ const Contactus = () => {
 
                 <button
                   type="submit"
-                  className="w-full sm:w-auto bg-orange-600 text-white px-6 py-2 mt-4 rounded hover:bg-orange-700 flex justify-center sm:justify-start items-center gap-2 transition-colors duration-200"
+                  className="w-full sm:w-auto bg-cyan-600 text-white px-6 py-2 mt-4 rounded hover:bg-cyan-700 flex justify-center sm:justify-start items-center gap-2 transition-colors duration-200"
                 >
                   Send message
                 </button>
