@@ -59,7 +59,7 @@ const Categories = ({ onSelect }: { onSelect?: () => void }) => {
                 key={cat.name}
                 type="button"
                 onClick={() => {
-                  navigate(`/?category=${encodeURIComponent(cat.name)}`);
+                  navigate(`/jobs?category=${encodeURIComponent(cat.name)}`);
                   if (onSelect) onSelect();
                 }}
                 className="flex w-full items-center justify-between rounded-md border-b border-gray-50 bg-white px-3 py-2 text-left hover:bg-gray-50 transition focus:outline-none"
