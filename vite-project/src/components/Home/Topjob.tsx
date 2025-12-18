@@ -5,7 +5,7 @@ import { MapPin, Calendar } from "lucide-react";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { FaBusinessTime } from "react-icons/fa";
 
-const Topjob = ({ category }: { category?: string }) => {
+const Topjob = ({ category, search }: { category?: string; search?: string }) => {
   const [jobs, setJobs] = useState<any[]>([]); // Use appropriate type if available, else any[]
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
 
@@ -22,9 +22,11 @@ const Topjob = ({ category }: { category?: string }) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const url = category
-          ? `${backendBase}/api/jobs/get?category=${encodeURIComponent(category)}`
-          : `${backendBase}/api/jobs/get`;
+        const params = new URLSearchParams();
+        if (category) params.append("category", category);
+        if (search) params.append("search", search);
+
+        const url = `${backendBase}/api/jobs/get${params.toString() ? `?${params.toString()}` : ""}`;
 
         const res = await axios.get(url);
         setJobs(res.data);
@@ -33,7 +35,7 @@ const Topjob = ({ category }: { category?: string }) => {
       }
     };
     fetchJobs();
-  }, [category, backendBase]);
+  }, [category, search, backendBase]);
 
   const sortedJobs = [...jobs].sort((a, b) => {
     const dateA = new Date(a.createdAt || 0).getTime();
@@ -45,7 +47,7 @@ const Topjob = ({ category }: { category?: string }) => {
     <div className="px-4 sm:px-6 lg:px-0 py-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold text-center sm:text-left">
-          Top Job
+          {search ? `Top Jobs - Search Results for "${search}"` : "Top Jobs"}
         </h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-gray-600 font-medium">Sort by:</span>
