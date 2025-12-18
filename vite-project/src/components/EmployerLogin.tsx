@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useNavigate, Link } from "react-router-dom";
-import GoogleSignIn from "./GoogleSignIn";
+
 
 const EmployerLogin = () => {
   const [formData, setFormData] = useState({
@@ -133,24 +133,19 @@ const EmployerLogin = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
+          className="w-full bg-cyan-500 text-white py-2 rounded-md hover:bg-cyan-600 transition"
         >
           {loading ? "Logging..." : "Login"}
         </button>
 
         {/* Register + Google */}
         <p className="text-center text-gray-700 mt-6 text-sm">
-          DonG��t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/Employeer-Register" className="text-blue-600 hover:underline">
             Register now
           </Link>
         </p>
-        <p className="text-center text-gray-500 mt-2 text-sm">
-          Or login with Google
-        </p>
-        <div className="mt-4">
-          <GoogleSignIn />
-        </div>
+       
       </form>
     </div>
   );
