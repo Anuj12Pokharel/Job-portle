@@ -5,7 +5,6 @@ type Role = "user" | "admin" | "superadmin";
 
 export interface IUser extends Document {
   fullName: string;
-  preferredJobCategory: string;
   mobileNumber: string;
   email: string;
   profilePicture?: string;
@@ -26,20 +25,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
-    preferredJobCategory: {
-      type: String,
-      required: true,
-      enum: [
-        "Software Development",
-        "Design",
-        "Marketing",
-        "Sales",
-        "Customer Support",
-        "Human Resources",
-        "Finance",
-        "Operations",
-      ],
-    },
+   
     mobileNumber: {
       type: String,
       required: true,
