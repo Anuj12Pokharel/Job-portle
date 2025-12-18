@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    preferredJobCategory: "",
     mobileNumber: "",
     email: "",
     password: "",
@@ -37,9 +36,7 @@ const RegisterForm = () => {
     if (!phoneRegex.test(formData.mobileNumber)) {
       newErrors.mobileNumber = "Must be 10 digits";
     }
-    if (!formData.preferredJobCategory) {
-      newErrors.preferredJobCategory = "Required";
-    }
+   
     if (formData.password.length < 6) {
       newErrors.password = "Min 6 chars";
     }
@@ -110,27 +107,7 @@ const RegisterForm = () => {
               className="w-full border rounded-lg px-4 py-2"
               required
             />
-
-            {errors.preferredJobCategory && <p className="text-red-500 text-xs mb-1 ml-1">{errors.preferredJobCategory}</p>}
-            <select
-              name="preferredJobCategory"
-              value={formData.preferredJobCategory}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-2"
-              required
-            >
-              <option value="">Select Preferred Job Category</option>
-              <option value="Software Development">Software Development</option>
-              <option value="Design">Design</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Sales">Sales</option>
-              <option value="Customer Support">Customer Support</option>
-              <option value="Human Resources">Human Resources</option>
-              <option value="Finance">Finance</option>
-              <option value="Operations">Operations</option>
-            </select>
-
-            {errors.mobileNumber && <p className="text-red-500 text-xs mb-1 ml-1">{errors.mobileNumber}</p>}
+{errors.mobileNumber && <p className="text-red-500 text-xs mb-1 ml-1">{errors.mobileNumber}</p>}
             <input
               type="text"
               name="mobileNumber"

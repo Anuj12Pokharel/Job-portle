@@ -101,7 +101,7 @@ const LoginForm = () => {
           Welcome back to joblink360!
         </h2>
         <p className="text-center text-gray-600 mb-6 text-sm">
-          Login with your registered Email &amp; Password.
+          Login with your registered Email and Password.
         </p>
 
         {/* Error / Success Messages */}
@@ -159,14 +159,14 @@ const LoginForm = () => {
         {/* Login Button */}
         <button
           type="submit"
-          className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
+          className="w-full bg-cyan-500 text-white py-2 rounded-md hover:bg-cyan-600 transition"
         >
           Login
         </button>
 
         {/* Register + Google */}
         <p className="text-center text-gray-700 mt-6 text-sm">
-          DonG��t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/Jobseeker-Register" className="text-blue-600 hover:underline">
             Register now
           </Link>
