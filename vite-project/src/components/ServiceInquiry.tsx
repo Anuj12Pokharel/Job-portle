@@ -146,7 +146,7 @@ const ServiceInquiry = () => {
           {/* Button */}
           <button
             type="submit"
-            className="w-full sm:w-auto bg-orange-600 text-white px-6 py-2 mt-4 rounded hover:bg-orange-700 flex justify-center sm:justify-start items-center gap-2 transition-colors duration-200"
+            className="w-full sm:w-auto bg-cyan-600 text-white px-6 py-2 mt-4 rounded hover:bg-cyan-700 flex justify-center sm:justify-start items-center gap-2 transition-colors duration-200"
           >
             Send message
           </button>
