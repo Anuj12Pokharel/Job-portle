@@ -86,10 +86,10 @@ const Registration = () => {
               <div className="bg-gradient-to-r from-blue-100 to-cyan-100 p-6 rounded-lg">
                 <h3 className="font-semibold mb-2">Why Choose JobLink360?</h3>
                 <ul className="space-y-2 text-sm text-gray-600">
-                  <li>G�� Industry-certified instructors</li>
-                  <li>G�� Hands-on practical training</li>
-                  <li>G�� Job placement assistance</li>
-                  <li>G�� Flexible scheduling options</li>
+                  <li>Industry-certified instructors</li>
+                  <li> Hands-on practical training</li>
+                  <li>Job placement assistance</li>
+                  <li> Flexible scheduling options</li>
                 </ul>
               </div>
             </div>
