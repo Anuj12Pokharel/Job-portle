@@ -38,7 +38,7 @@ function Home() {
           </div>
         </div>
 
-        <Topjob category={category} />
+        <Topjob category={category} search={search} />
         <LogoSlider />
         <HeroSection />
 

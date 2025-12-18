@@ -318,6 +318,25 @@ export default function Navbar() {
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="px-4 pt-4 pb-4 space-y-4 bg-gray-50">
+              {/* Job Category Dropdown for Mobile */}
+              <div>
+                <button
+                  onClick={() => setCategoryOpen(!categoryOpen)}
+                  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+                >
+                  JOB CATEGORY
+                  <span>{categoryOpen ? "−" : "+"}</span>
+                </button>
+                {categoryOpen && (
+                  <div className="mt-2 bg-white rounded-md border border-gray-200 shadow-sm">
+                    <Categories onSelect={() => {
+                      setCategoryOpen(false);
+                      setIsMobileMenuOpen(false);
+                    }} />
+                  </div>
+                )}
+              </div>
+
               {/* Main Nav */}
               {mainNavItems.map((item, index) => (
                 <Link
