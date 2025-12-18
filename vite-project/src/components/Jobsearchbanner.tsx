@@ -8,9 +8,9 @@ const Jobsearchbanner = () => {
 
   const handleSearch = () => {
     if (searchTerm.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchTerm.trim())}`);
+      navigate(`/jobs?search=${encodeURIComponent(searchTerm.trim())}`);
     } else {
-      navigate("/");
+      navigate("/jobs");
     }
   };
 

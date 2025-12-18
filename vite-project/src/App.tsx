@@ -30,6 +30,7 @@ import ApplyJob from "./Pages/ApplyJob";
 import AppliedJobs from "./Pages/AppliedJobs";
 import SavedJobs from "./Pages/SavedJobs";
 import RegistrationPending from "./Pages/RegistrationPending";
+import Jobs from "./Pages/Jobs";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />}></Route>
+        <Route path="/jobs" element={<Jobs />}></Route>
         <Route path="/saved-jobs" element={<SavedJobs />}></Route>
         <Route
           path="/Employeer-Register"
