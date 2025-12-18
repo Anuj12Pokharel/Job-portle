@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -12,6 +12,7 @@ const SuperAdminDashboard = () => {
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [viewingEmployer, setViewingEmployer] = useState<any>(null);
 
     // Edit State
     const [editingItem, setEditingItem] = useState<any>(null);
@@ -39,6 +40,13 @@ const SuperAdminDashboard = () => {
             } else if (activeTab === "employers") {
                 const res = await axios.get(`${API_BASE_URL}/api/admin/employers`, config);
                 setEmployers(res.data);
+            } else if (activeTab === "pending") {
+                const res = await axios.get(`${API_BASE_URL}/api/admin/employers`, config);
+                // Filter only pending and sort by newest first
+                const pendingEmployers = res.data
+                    .filter((emp: any) => !emp.status || emp.status === 'pending')
+                    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+                setEmployers(pendingEmployers);
             } else if (activeTab === "jobs") {
                 const res = await axios.get(`${API_BASE_URL}/api/jobs/get`, config);
                 setJobs(res.data);
@@ -281,6 +289,99 @@ const SuperAdminDashboard = () => {
         );
     };
 
+    const renderDetailModal = () => {
+        if (!viewingEmployer) return null;
+
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-2xl overflow-y-auto max-h-[90vh]">
+                    <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-2xl font-bold text-gray-800">Employer Details</h3>
+                        <button onClick={() => setViewingEmployer(null)} className="text-gray-500 hover:text-gray-700">
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
+
+                    <div className="space-y-6">
+                        {/* Profile Picture */}
+                        <div className="flex justify-center">
+                            <div className="w-32 h-32 rounded-full bg-gray-200 overflow-hidden border-4 border-blue-100">
+                                {viewingEmployer.profilePicture ? (
+                                    <img src={`${API_BASE_URL}/${viewingEmployer.profilePicture}`} alt="Company Logo" className="w-full h-full object-cover" />
+                                ) : (
+                                    <div className="flex items-center justify-center h-full text-gray-400"><Building2 size={64} /></div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Company Information */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Company Name</label>
+                                <p className="text-gray-800 font-medium">{viewingEmployer.companyName}</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Company Location</label>
+                                <p className="text-gray-800 font-medium">{viewingEmployer.companyLocation}</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Email</label>
+                                <p className="text-gray-800 font-medium">{viewingEmployer.email}</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Mobile Number</label>
+                                <p className="text-gray-800 font-medium">{viewingEmployer.mobileNumber}</p>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Status</label>
+                                <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold 
+                                    ${viewingEmployer.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                        viewingEmployer.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                            'bg-yellow-100 text-yellow-800'}`}>
+                                    {viewingEmployer.status || 'pending'}
+                                </span>
+                            </div>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                                <label className="block text-sm font-semibold text-gray-600 mb-1">Registration Date</label>
+                                <p className="text-gray-800 font-medium">
+                                    {viewingEmployer.createdAt ? new Date(viewingEmployer.createdAt).toLocaleDateString('en-US', {
+                                        year: 'numeric',
+                                        month: 'long',
+                                        day: 'numeric'
+                                    }) : 'N/A'}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        {(!viewingEmployer.status || viewingEmployer.status === 'pending') && (
+                            <div className="flex justify-end gap-3 pt-4 border-t">
+                                <button
+                                    onClick={() => {
+                                        handleVerify(viewingEmployer._id, "rejected");
+                                        setViewingEmployer(null);
+                                    }}
+                                    className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 flex items-center gap-2 transition-colors"
+                                >
+                                    <XCircle className="w-5 h-5" /> Reject
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        handleVerify(viewingEmployer._id, "approved");
+                                        setViewingEmployer(null);
+                                    }}
+                                    className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 flex items-center gap-2 transition-colors"
+                                >
+                                    <CheckCircle className="w-5 h-5" /> Confirm
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
             {/* Sidebar */}
@@ -294,6 +395,9 @@ const SuperAdminDashboard = () => {
                 <nav className="flex-1 p-4 space-y-2">
                     <button onClick={() => setActiveTab("users")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Users className="w-5 h-5 mr-3" /> Jobseekers
+                    </button>
+                    <button onClick={() => setActiveTab("pending")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'pending' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                        <Clock className="w-5 h-5 mr-3" /> Pending Requests
                     </button>
                     <button onClick={() => setActiveTab("employers")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'employers' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Building2 className="w-5 h-5 mr-3" /> Employers
@@ -336,6 +440,15 @@ const SuperAdminDashboard = () => {
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Mobile</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                            </>
+                                        )}
+                                        {activeTab === "pending" && (
+                                            <>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
                                             </>
                                         )}
@@ -407,6 +520,49 @@ const SuperAdminDashboard = () => {
                                             </td>
                                         </tr>
                                     ))}
+                                    {activeTab === "pending" && employers.map((u: any) => (
+                                        <tr key={u._id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="px-6 py-4">
+                                                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                                                    {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Building2 className="p-2 w-full h-full text-gray-400" />}
+                                                </div>
+                                            </td>
+                                            <td className="px-6 py-4 font-medium">{u.companyName}</td>
+                                            <td className="px-6 py-4">{u.email}</td>
+                                            <td className="px-6 py-4">
+                                                {u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric'
+                                                }) : 'N/A'}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => setViewingEmployer(u)}
+                                                        className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1 transition-colors"
+                                                        title="View Details"
+                                                    >
+                                                        <Eye className="w-4 h-4" /> Details
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleVerify(u._id, "approved")}
+                                                        className="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 flex items-center gap-1 transition-colors"
+                                                        title="Confirm"
+                                                    >
+                                                        <CheckCircle className="w-4 h-4" /> Confirm
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleVerify(u._id, "rejected")}
+                                                        className="px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center gap-1 transition-colors"
+                                                        title="Reject"
+                                                    >
+                                                        <XCircle className="w-4 h-4" /> Reject
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
                                     {activeTab === "jobs" && jobs.map((j: any) => (
                                         <tr key={j._id} className="hover:bg-gray-50 transition-colors">
                                             <td className="px-6 py-4" onClick={() => handleEdit(j, "job")}>
@@ -428,7 +584,7 @@ const SuperAdminDashboard = () => {
                                     ))}
                                 </tbody>
                             </table>
-                            {!loading && ((activeTab === 'users' && users.length === 0) || (activeTab === 'employers' && employers.length === 0) || (activeTab === 'jobs' && jobs.length === 0)) && (
+                            {!loading && ((activeTab === 'users' && users.length === 0) || (activeTab === 'employers' && employers.length === 0) || (activeTab === 'pending' && employers.length === 0) || (activeTab === 'jobs' && jobs.length === 0)) && (
                                 <div className="p-8 text-center text-gray-500">No records found</div>
                             )}
                         </div>
@@ -438,6 +594,9 @@ const SuperAdminDashboard = () => {
 
             {/* Edit Modal */}
             {renderEditModal()}
+
+            {/* Detail Modal */}
+            {renderDetailModal()}
         </div>
     );
 };
