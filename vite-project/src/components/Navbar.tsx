@@ -90,6 +90,13 @@ export default function Navbar() {
 
               {categoryOpen && (
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                  <Link
+                    to="/jobs"
+                    className="block px-4 py-3 text-sm font-semibold text-cyan-600 hover:bg-cyan-50 border-b-2 border-cyan-100 transition"
+                    onClick={() => setCategoryOpen(false)}
+                  >
+                    📋 Browse All Jobs
+                  </Link>
                   <Categories onSelect={() => setCategoryOpen(false)} />
                 </div>
               )}
@@ -329,6 +336,16 @@ export default function Navbar() {
                 </button>
                 {categoryOpen && (
                   <div className="mt-2 bg-white rounded-md border border-gray-200 shadow-sm">
+                    <Link
+                      to="/jobs"
+                      className="block px-4 py-3 text-sm font-semibold text-cyan-600 hover:bg-cyan-50 border-b-2 border-cyan-100 transition"
+                      onClick={() => {
+                        setCategoryOpen(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                    >
+                      📋 Browse All Jobs
+                    </Link>
                     <Categories onSelect={() => {
                       setCategoryOpen(false);
                       setIsMobileMenuOpen(false);
