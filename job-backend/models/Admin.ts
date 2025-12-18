@@ -12,6 +12,7 @@ export interface IAdmin extends Document {
   jobs: Types.ObjectId[];
   resetOTP?: string;
   resetOTPExpiry?: Date;
+  status: "pending" | "approved" | "rejected";
 }
 
 const adminSchema = new Schema<IAdmin>(
@@ -48,6 +49,11 @@ const adminSchema = new Schema<IAdmin>(
       type: String,
       enum: ["admin", "superadmin"],
       default: "admin",
+    },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "rejected"],
+      default: "pending",
     },
     profilePicture: { type: String },
     jobs: [{ type: Schema.Types.ObjectId, ref: "Job" }],

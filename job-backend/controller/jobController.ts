@@ -18,6 +18,7 @@ export const createJob = async (req: Request, res: Response) => {
 
     const job = new Job(jobData);
     await job.save();
+    console.log("createJob - Job saved with postedBy:", job.postedBy);
 
     const admin = await Admin.findById(adminObjectId);
     if (admin) {
@@ -87,9 +88,30 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
   }
 };
 
-export const getJobs = async (_req: Request, res: Response) => {
+export const getJobs = async (req: Request, res: Response) => {
   try {
-    const jobs = await Job.find().populate("postedBy", "companyName logo companyWebsite");
+    const { category, search } = req.query;
+    const filter: any = {};
+
+    if (category) {
+      filter.category = category;
+    }
+
+    if (search) {
+      const searchRegex = new RegExp(String(search), "i");
+      filter.$or = [
+        { position: searchRegex },
+        { location: searchRegex },
+        { companyName: searchRegex },
+        { description: searchRegex },
+        { jobType: searchRegex },
+      ];
+    }
+
+    const jobs = await Job.find(filter).populate(
+      "postedBy",
+      "companyName logo companyWebsite"
+    );
     res.json(jobs);
   } catch (err) {
     console.error(err);
@@ -125,6 +147,10 @@ export const applyJob = async (req: Request, res: Response) => {
       user: ensureObjectId(String(userId)),
       job: ensureObjectId(jobId),
       coverLetter: (req.body as any).coverLetter,
+      totalExperience: (req.body as any).totalExperience,
+      expectedSalary: (req.body as any).expectedSalary,
+      fieldOfExpertise: (req.body as any).fieldOfExpertise,
+      additionalInfo: (req.body as any).additionalInfo,
       resume: req.file ? req.file.path : null,
     });
 
@@ -151,15 +177,42 @@ export const saveJob = async (req: Request, res: Response) => {
 
     const user = await User.findById(userId);
 
-    if (user && !user.savedJobs.map(String).includes(jobId)) {
-      user.savedJobs.push(ensureObjectId(jobId));
-      await user.save();
+    if (user) {
+      const savedIndex = user.savedJobs.map(String).indexOf(jobId);
+      if (savedIndex !== -1) {
+        user.savedJobs.splice(savedIndex, 1);
+        await user.save();
+        res.json({ message: "Job removed from saved", isSaved: false, savedJobs: user.savedJobs });
+      } else {
+        user.savedJobs.push(ensureObjectId(jobId));
+        await user.save();
+        res.json({ message: "Job saved successfully", isSaved: true, savedJobs: user.savedJobs });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
     }
-
-    res.json({ message: "Job saved successfully", savedJobs: user?.savedJobs ?? [] });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to save job" });
+  }
+};
+
+export const getSavedJobs = async (req: Request, res: Response) => {
+  try {
+    const userId = req.user?._id || req.user?.id;
+    if (!userId) return res.status(401).json({ message: "Not authorized" });
+
+    const user = await User.findById(userId).populate({
+      path: "savedJobs",
+      populate: { path: "postedBy", select: "companyName logo" },
+    });
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json(user.savedJobs);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch saved jobs" });
   }
 };
 
@@ -200,12 +253,49 @@ export const getCategories = async (_req: Request, res: Response) => {
 export const getMyJobs = async (req: Request, res: Response) => {
   try {
     const adminId = req.user?._id || req.user?.id;
+    console.log("getMyJobs - Admin ID:", adminId);
     if (!adminId) return res.status(401).json({ message: "Not authorized" });
 
     const jobs = await Job.find({ postedBy: adminId });
+    console.log("getMyJobs - Found jobs:", jobs.length);
     res.json(jobs);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch jobs" });
+  }
+};
+
+export const updateApplicationStatus = async (req: Request, res: Response) => {
+  try {
+    const { status } = req.body;
+    const { id } = req.params;
+
+    const application = await Application.findById(id);
+    if (!application) {
+      return res.status(404).json({ message: "Application not found" });
+    }
+
+    const job = await Job.findById(application.job);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Authorization check: Only the job poster (admin) can update status
+    const userId = req.user?._id || req.user?.id;
+    if (job.postedBy.toString() !== String(userId) && req.user?.role !== "superadmin") {
+      return res.status(403).json({ message: "Not authorized to update this application" });
+    }
+
+    if (!["applied", "viewing", "hiring-process", "hired", "rejected"].includes(status)) {
+      return res.status(400).json({ message: "Invalid status" });
+    }
+
+    application.status = status;
+    await application.save();
+
+    res.json({ message: "Status updated successfully", application });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Failed to update status" });
   }
 };
