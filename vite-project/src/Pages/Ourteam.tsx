@@ -1,61 +1,124 @@
-import React from "react";
+import { useEffect, useState } from "react";
 
-const teamMembers = [
-  {
-    name: " Prem Rijal",
-    role: "Founder",
-    title: "MBA",
-    image: "https://via.placeholder.com/150", // Replace with real image URL
-  },
-  {
-    name: " Bishwojit Singh",
-    role: "Co-Founder",
-    title: "Engineer",
-    image: "https://via.placeholder.com/150", // Replace with real image URL
-  },
-  {
-    name: "Anjali Singh",
-    role: "Managing Director",
-    title: "MBA",
-    image: "",
-  },
-];
-
-export default function Ourteam() {
-  return (
-    <section className="bg-gray-50 py-12 px-6 lg:px-20 text-center">
-      {/* Heading */}
-      <h2 className="text-2xl font-bold text-teal-600 mb-2">Our Team</h2>
-      <p className="text-gray-600 max-w-2xl mx-auto mb-10">
-        Our team brings experience, innovation, and integrity to every project.
-      </p>
-
-      {/* Team Members */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {teamMembers.map((member, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition"
-          >
-            <div className="flex flex-col items-center">
-              {member.image ? (
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-32 h-32 rounded-full object-cover shadow-md mb-4"
-                />
-              ) : (
-                <div className="w-32 h-32 flex items-center justify-center rounded-full bg-gray-200 text-gray-500 shadow-md mb-4">
-                  {member.role}
-                </div>
-              )}
-              <h3 className="text-lg font-bold text-gray-900">{member.name}</h3>
-              <p className="text-teal-600 font-medium">{member.role}</p>
-              <p className="text-green-600 italic">{member.title}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
+/* ===============================
+   1️⃣ TYPES (TypeScript Interface)
+================================ */
+interface TeamMember {
+  id: number;
+  name: string;
+  designation: string;
+  image: string;
+  description: string;
 }
+
+/* ===============================
+   2️⃣ DUMMY API (Mock Backend)
+================================ */
+const fetchTeamMembers = (): Promise<TeamMember[]> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve([
+        {
+          id: 1,
+          name: "Singh Bahadur Moktan",
+          designation: "Executive Chairman",
+          image: "/images/chairman.jpg",
+          description:
+            "With more than 20 years of experience in Sales, HR, and operation.",
+        },
+        {
+          id: 2,
+          name: "Ramesh Adhikari",
+          designation: "Managing Director",
+          image: "/images/director.jpg",
+          description:
+            "Experienced leader with strong business and operational skills.",
+        },
+      ]);
+    }, 800);
+  });
+};
+
+/* ===============================
+   3️⃣ TEAM CARD COMPONENT
+================================ */
+const TeamCard = ({
+  name,
+  designation,
+  image,
+  description,
+}: Omit<TeamMember, "id">) => {
+  return (
+    <div className="w-[300px] h-[420px] perspective-1000 group">
+      {/* 👆 group added here */}
+
+      <div
+        className="
+          relative w-full h-full
+          transform-style-preserve-3d
+          transition-transform duration-700 ease-in-out
+          group-hover:rotate-y-180
+        "
+      >
+        {/* FRONT */}
+        <div className="absolute inset-0 backface-hidden border-2 border-cyan-500 rounded-lg bg-white text-center p-5">
+          <img
+            src={image}
+            alt={name}
+            className="w-[120px] h-[120px] mx-auto mt-5 rounded-lg object-cover"
+          />
+          <h3 className="mt-4 text-xl font-semibold text-cyan-500">
+            {name}
+          </h3>
+          <p className="mt-2 text-gray-700">{designation}</p>
+        </div>
+
+        {/* BACK */}
+        <div className="absolute inset-0 backface-hidden rotate-y-180 border-2 border-cyan-500 rounded-lg bg-white text-center p-5">
+          <h3 className="text-xl font-semibold text-cyan-500">About</h3>
+          <p className="mt-4 text-gray-700 text-sm">
+            {description}
+          </p>
+          <button className="mt-6 w-11 h-11 bg-cyan-500 text-white text-2xl rounded-md">
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ===============================
+   4️⃣ MAIN TEAM COMPONENT
+================================ */
+const OurTeam = () => {
+  const [team, setTeam] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTeamMembers().then((data) => {
+      setTeam(data);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) {
+    return <p className="text-center mt-10">Loading team...</p>;
+  }
+
+  return (
+    <div className="flex flex-wrap justify-center gap-8">
+      {team.map((member) => (
+        <TeamCard
+          key={member.id}
+          name={member.name}
+          designation={member.designation}
+          image={member.image}
+          description={member.description}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default OurTeam;
