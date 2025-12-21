@@ -31,6 +31,8 @@ import AppliedJobs from "./Pages/AppliedJobs";
 import SavedJobs from "./Pages/SavedJobs";
 import RegistrationPending from "./Pages/RegistrationPending";
 import Jobs from "./Pages/Jobs";
+import BlogDetails from "./Pages/BlogDetails";
+import Createblog from "./Pages/Createblog";
 
 function App() {
   return (
@@ -53,6 +55,7 @@ function App() {
         <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
         <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
         <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
+        <Route path="/super-admin/create-blog"element={<Createblog />}/>
         <Route path="/contact" element={<Contactus />}></Route>
         <Route path="/aboutus" element={<Aboutus />}></Route>
         <Route path="/services" element={<Services />}></Route>
@@ -75,6 +78,7 @@ function App() {
         ></Route>
         <Route path="/profile-settings" element={<ProfileSettings />}></Route>
         <Route path="/blogs" element={<Blog />}></Route>
+        <Route path="/blogs/:id" element={<BlogDetails />}></Route>
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route
           path="/forgot-password-employer"

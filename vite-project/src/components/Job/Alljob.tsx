@@ -86,7 +86,7 @@ const Alljob = () => {
                 </span>
               </div>
 
-              {/* =��� View Details Link */}
+              {/*  View Details Link */}
               <div className="mt-4">
                 <Link
                   to={`/jobs/${job._id}`}
