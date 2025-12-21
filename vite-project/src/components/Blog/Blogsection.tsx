@@ -1,47 +1,36 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { API_BASE_URL } from "../../config/api";
+import { useNavigate } from "react-router-dom";
 
 interface Blog {
-  id: number;
+  _id: string;
   title: string;
   body: string;
-  userId: number;
   image: string;
-  date: string;
   author: string;
+  createdAt: string;
 }
 
-interface BlogsectionProps {
+interface Props {
   currentPage: number;
   itemsPerPage: number;
 }
 
-const Blogsection: React.FC<BlogsectionProps> = ({
+const Blogsection: React.FC<Props> = ({
   currentPage,
   itemsPerPage,
 }) => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        const res = await fetch(
-          `https://jsonplaceholder.typicode.com/posts?_page=${currentPage}&_limit=${itemsPerPage}`
-        );
-        const data: any[] = await res.json();
-
-        // Enhance each blog with dummy image, date, and author
-        const enhancedData: Blog[] = data.map((blog) => ({
-          ...blog,
-          image: `https://picsum.photos/seed/${blog.id}/400/250`, // unique image
-          date: new Date(Date.now() - blog.id * 10000000).toDateString(), // fake publish date
-          author: `Author ${blog.userId}`, // dummy author
-        }));
-
-        setBlogs(enhancedData);
-      } catch (error) {
-        console.error("Error fetching blogs:", error);
-      }
-    }
+    const fetchBlogs = async () => {
+      const res = await axios.get(
+        `${API_BASE_URL}/api/blogs?page=${currentPage}&limit=${itemsPerPage}`
+      );
+      setBlogs(res.data.blogs);
+    };
 
     fetchBlogs();
   }, [currentPage, itemsPerPage]);
@@ -51,34 +40,32 @@ const Blogsection: React.FC<BlogsectionProps> = ({
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {blogs.map((blog) => (
           <article
-            key={blog.id}
-            className="bg-white border rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition"
+            key={blog._id}
+            className="bg-white border rounded-2xl shadow-md overflow-hidden"
           >
-            {/* Blog Image */}
             <img
-              src={blog.image}
+              src={`${API_BASE_URL}${blog.image}`}
               alt={blog.title}
               className="w-full h-48 object-cover"
             />
 
-            {/* Blog Content */}
             <div className="p-4">
-              {/* Meta info */}
-              <div className="flex justify-between text-xs text-gray-500 mb-2">
-                <span>{blog.date}</span>
-                <span>• {blog.author}</span>
+              <div className="text-xs text-gray-500 mb-2">
+                {new Date(blog.createdAt).toDateString()} • {blog.author}
               </div>
 
-              {/* Title */}
               <h3 className="font-bold text-lg mb-2 line-clamp-2">
                 {blog.title}
               </h3>
 
-              {/* Description */}
-              <p className="text-gray-600 text-sm line-clamp-3">{blog.body}</p>
+              <p className="text-gray-600 text-sm line-clamp-3">
+                {blog.body}
+              </p>
 
-              {/* Read More button */}
-              <button className="mt-3 text-cyan-600 font-medium hover:underline">
+              <button
+                onClick={() => navigate(`/blogs/${blog._id}`)}
+                className="mt-3 text-cyan-600 font-medium hover:underline"
+              >
                 Read More →
               </button>
             </div>
