@@ -11,7 +11,11 @@ import userFormRoutes from "./routes/userFormRoutes";
 import jobRoutes from "./routes/jobRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import contactRoutes from "./routes/contactRoutes";
+
 import blogRoutes from "./routes/BlogRoutes";
+import trainingRoutes from "./routes/trainingRoutes";
+
+
 import userRoutes from "./routes/userRoutes";
 
 dotenv.config();
@@ -32,7 +36,11 @@ app.use("/api/form", userFormRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", AdminRoutes);
 app.use("/api/contact", contactRoutes);
+
 app.use("/api/blog", blogRoutes);
+
+app.use("/api/training", trainingRoutes);
+
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
