@@ -61,6 +61,8 @@ const EmployerLogin = () => {
       setError(
         err.response?.data?.message || "Login failed. Please try again.",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -149,7 +151,7 @@ const EmployerLogin = () => {
           Or login with Google
         </p>
         <div className="mt-4">
-          <GoogleSignIn />
+          <GoogleSignIn role="admin" />
         </div>
       </form>
     </div>

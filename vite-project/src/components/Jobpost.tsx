@@ -15,6 +15,11 @@ const Jobpost = () => {
     desiredCandidate: "",
     experience: "",
     expiryDate: "",
+    noOfOpenings: "",
+    industry: "",
+    vehicleLicense: "",
+    twoFourWheeler: "",
+    skills: "",
     description: "",
     aboutCompany: "",
     companyWebsite: "",
@@ -86,6 +91,11 @@ const Jobpost = () => {
         desiredCandidate: "",
         experience: "",
         expiryDate: "",
+        noOfOpenings: "",
+        industry: "",
+        vehicleLicense: "",
+        twoFourWheeler: "",
+        skills: "",
         description: "",
         aboutCompany: "",
         companyWebsite: "",
@@ -132,6 +142,24 @@ const Jobpost = () => {
           name="category"
           placeholder="Category"
           value={formData.category}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
+        />
+
+        <input
+          type="number"
+          name="noOfOpenings"
+          placeholder="No. of Openings"
+          value={formData.noOfOpenings}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
+        />
+
+        <input
+          type="text"
+          name="industry"
+          placeholder="Industry"
+          value={formData.industry}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"
         />
@@ -197,6 +225,7 @@ const Jobpost = () => {
           value={formData.experience}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"
+          required
         />
 
         <input
@@ -206,6 +235,33 @@ const Jobpost = () => {
           value={formData.expiryDate}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"
+        />
+
+        <input
+          type="text"
+          name="vehicleLicense"
+          placeholder="Vehicle License"
+          value={formData.vehicleLicense}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
+        />
+
+        <input
+          type="text"
+          name="twoFourWheeler"
+          placeholder="Two/Four Wheeler"
+          value={formData.twoFourWheeler}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full"
+        />
+
+        <input
+          type="text"
+          name="skills"
+          placeholder="Skills"
+          value={formData.skills}
+          onChange={handleChange}
+          className="border p-3 rounded-lg w-full col-span-2"
         />
 
         <input
