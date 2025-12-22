@@ -18,6 +18,7 @@ const LoginForm = () => {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -31,6 +32,7 @@ const LoginForm = () => {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true);
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\d{10}$/;
@@ -38,11 +40,13 @@ const LoginForm = () => {
 
     if (!identifier) {
       setError("Please enter email/phone and password");
+      setLoading(false);
       return;
     }
 
     if (!emailRegex.test(identifier) && !phoneRegex.test(identifier)) {
       setError("Please enter a valid Email or 10-digit Phone Number");
+      setLoading(false);
       return;
     }
 
@@ -84,6 +88,8 @@ const LoginForm = () => {
       setError(
         err.response?.data?.message || "Login failed. Please try again.",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -159,9 +165,10 @@ const LoginForm = () => {
         {/* Login Button */}
         <button
           type="submit"
+          disabled={loading}
           className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition"
         >
-          Login
+          {loading ? "Logging..." : "Login"}
         </button>
 
         {/* Register + Google */}
@@ -172,7 +179,7 @@ const LoginForm = () => {
           </Link>
         </p>
         <div className="mt-4">
-          <GoogleSignIn />
+          <GoogleSignIn role="user" />
         </div>
       </form>
     </div>
