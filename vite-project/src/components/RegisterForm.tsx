@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import register from "../assets/register.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +17,7 @@ const RegisterForm = () => {
   const [error, setError] = useState("");
   const [errors, setErrors] = useState<any>({});
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -58,6 +59,8 @@ const RegisterForm = () => {
 
     if (!validateForm()) return;
 
+    setLoading(true);
+
     try {
       const res = await axios.post(
         `${API_BASE_URL}/api/auth/register`,
@@ -78,6 +81,8 @@ const RegisterForm = () => {
         setError(msg);
       }
       console.error(err.response?.data || err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -179,12 +184,12 @@ const RegisterForm = () => {
                 type="submit"
                 className="w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
               >
-                Create jobseeker account
+                {loading ? "Creating..." : "Create jobseeker account"}
               </button>
             </div>
 
             <p className="text-black font-bold text-center">
-              Already have jobseeker account? Login Or login with google
+              Already have jobseeker account? <Link to="/Jobseeker-Login" className="text-blue-600 hover:underline">Login</Link>
             </p>
           </form>
         </div>
