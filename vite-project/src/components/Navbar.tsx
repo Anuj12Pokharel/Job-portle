@@ -246,33 +246,37 @@ export default function Navbar() {
             ) : (
               <>
                 {/* For Jobseekers */}
-                <div className="relative">
-                  <button
-                    onClick={() => setJobseekerOpen(!jobseekerOpen)}
-                    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
-                  >
-                    For Jobseekers <ChevronDown className="w-4 h-4" />
-                  </button>
+<div
+  className="relative h-full flex items-center"
+  onMouseEnter={() => setJobseekerOpen(true)}
+  onMouseLeave={() => setJobseekerOpen(false)}
+>
+  <button
+    className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-lg font-medium transition-colors duration-200 py-2"
+    aria-expanded={jobseekerOpen}
+  >
+    For Jobseekers
+    <ChevronDown className={`w-4 h-4 transition-transform ${jobseekerOpen ? "rotate-180" : ""}`} />
+  </button>
 
-                  {jobseekerOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                      <Link
-                        to="/Jobseeker-Login"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setJobseekerOpen(false)}
-                      >
-                        Login
-                      </Link>
-                      <Link
-                        to="/Jobseeker-Register"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setJobseekerOpen(false)}
-                      >
-                        Register
-                      </Link>
-                    </div>
-                  )}
-                </div>
+  {jobseekerOpen && (
+    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+      <Link
+        to="/Jobseeker-Login"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      >
+        Login
+      </Link>
+      <Link
+        to="/Jobseeker-Register"
+        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+      >
+        Register
+      </Link>
+    </div>
+  )}
+</div>
+
 
                 {/* For Employers */}
                 <div className="relative">
