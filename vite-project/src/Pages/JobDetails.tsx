@@ -40,6 +40,11 @@ interface Job {
     aboutCompany?: string;
     companyWebsite?: string;
     jobType: string;
+    noOfOpenings?: string;
+    industry?: string;
+    vehicleLicense?: string;
+    twoFourWheeler?: string;
+    skills?: string;
 }
 
 const JobDetails = () => {
@@ -157,11 +162,11 @@ const JobDetails = () => {
                     <div className="grid grid-cols-1 gap-y-3 text-sm">
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">No. of Openings</span>
-                            <span className="text-gray-800 font-medium">: Not Specified</span>
+                            <span className="text-gray-800 font-medium">: {job.noOfOpenings || "Not Specified"}</span>
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Industry</span>
-                            <span className="text-gray-800 font-medium">: {job.category}</span>
+                            <span className="text-gray-800 font-medium">: {job.industry || "Not Specified"}</span>
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Category</span>
@@ -202,15 +207,15 @@ const JobDetails = () => {
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Vehicle License</span>
-                            <span className="text-gray-800 font-medium">: Not Specified</span>
+                            <span className="text-gray-800 font-medium">: {job.vehicleLicense || "Not Specified"}</span>
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Two/Four Wheeler</span>
-                            <span className="text-gray-800 font-medium">: Not Specified</span>
+                            <span className="text-gray-800 font-medium">: {job.twoFourWheeler || "Not Specified"}</span>
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Skills</span>
-                            <span className="text-gray-800 font-medium">: Not Specified</span>
+                            <span className="text-gray-800 font-medium">: {job.skills || "Not Specified"}</span>
                         </div>
                     </div>
                 </div>
@@ -222,34 +227,11 @@ const JobDetails = () => {
                     </p>
                 </div>
 
-                <div className="mb-8 border-b border-gray-200 pb-8">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Key Responsibilities</h3>
-                    <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-                        {/* Placeholder logic until backend supports specific fields */}
-                        <li>Visit retail outlets, grocery stores, and distributors within assigned areas.</li>
-                        <li>Promote company products and ensure proper product placement.</li>
-                        <li>Achieve assigned sales targets and contribute to overall business.</li>
-                        <li>Build and maintain strong relationships with retailers.</li>
-                    </ul>
-                </div>
 
-                <div className="mb-8 border-b border-gray-200 pb-8">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Job Specification</h3>
-                    <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-                        <li>Minimum +2 (Intermediate) or equivalent qualification.</li>
-                        <li>Prior experience in retail sales will be an advantage.</li>
-                        <li>Strong communication and interpersonal skills.</li>
-                    </ul>
-                </div>
 
-                <div className="mb-8 border-b border-gray-200 pb-8">
-                    <h3 className="text-xl font-bold text-gray-800 mb-4">Compensation & Benefits</h3>
-                    <ul className="list-disc pl-5 space-y-2 text-sm text-gray-700">
-                        <li>Fixed monthly salary.</li>
-                        <li>Daily TADA.</li>
-                        <li>Opportunity to work with reputed organization.</li>
-                    </ul>
-                </div>
+
+
+
 
 
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">

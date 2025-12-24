@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
+import GoogleSignIn from "./GoogleSignIn";
 
 const EmployerRegister = () => {
   const [formData, setFormData] = useState({
@@ -170,20 +171,27 @@ const EmployerRegister = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-3 rounded-lg font-semibold hover:from-teal-700 hover:to-cyan-700 transition-all"
-          >
-            {loading ? "Creating..." : "Create Employer Account"}
-          </button>
-
-          <p className="text-center text-gray-700 mt-2">
-            Already have an account? Login or sign in with Google
-          </p>
-        </form>
+            <div className=" flex justify-center">
+              <button
+                type="submit"
+                disabled={loading}
+                className=" items-center  w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
+              >
+                {loading ? "Creating..." : "Create jobseeker account"}
+              </button>
+            </div>
+            <p className="text-balck font-bold text-center">
+              {" "}
+              Already have jobseeker account? Login Or login with google{" "}
+            </p>
+            <div className="mt-4">
+              <GoogleSignIn role="admin" />
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
+      
+  
   );
 };
 

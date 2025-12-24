@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useNavigate, Link } from "react-router-dom";
+import GoogleSignIn from './GoogleSignIn';
+
 
 
 const EmployerLogin = () => {
@@ -61,6 +63,8 @@ const EmployerLogin = () => {
       setError(
         err.response?.data?.message || "Login failed. Please try again.",
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -145,7 +149,12 @@ const EmployerLogin = () => {
             Register now
           </Link>
         </p>
-       
+        <p className="text-center text-gray-500 mt-2 text-sm">
+          Or login with Google
+        </p>
+        <div className="mt-4">
+          <GoogleSignIn role="admin" />
+        </div>
       </form>
     </div>
   );
