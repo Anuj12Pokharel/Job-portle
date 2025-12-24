@@ -4,7 +4,6 @@ import Ourteam from "./Ourteam";
 import Joblink from "../assets/JobLink.jpeg";
 import mission from "../assets/Mission.jpeg";
 import vision from "../assets/Vision.jpeg";
-import hr from "../assets/Hrservices.png";
 import whychoose from "../assets/Choose.jpeg";
 
 export default function Aboutus() {
@@ -19,7 +18,7 @@ export default function Aboutus() {
       </div>
       <section className="bg-white px-6 lg:px-20 py-12 space-y-12">
         {/* Intro */}
-        <div className="flex flex-col lg:flex-row items-center gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
+        <div className="flex flex-col lg:flex-row items-center gap-8  p-6">
           <div className="flex-1 ">
             <h2 className="font-bold text-lg text-teal-600">
               JobLink360 | Linking Talent and Opportunity
@@ -44,7 +43,7 @@ export default function Aboutus() {
         </div>
 
         {/* Mission */}
-        <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  rounded-xl shadow-xl border border-gray-200 p-6">
+        <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  p-6">
           <div className="flex-1">
             <h2 className="font-bold text-lg text-teal-600">Our Mission</h2>
             <p className="text-black mt-2 text-justify">
@@ -67,7 +66,7 @@ export default function Aboutus() {
         </div>
 
         {/* Vision */}
-        <div className="flex flex-col lg:flex-row items-center md:gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
+        <div className="flex flex-col lg:flex-row items-center md:gap-8 p-6">
           <div className="flex-1">
             <h2 className="font-bold text-lg text-teal-600">Our Vision</h2>
             <p className="text-black mt-2 text-justify">
@@ -87,65 +86,9 @@ export default function Aboutus() {
           </div>
         </div>
 
-        {/* Services */}
-        <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8 rounded-xl shadow-xl border border-gray-200 p-6">
-          <div className="flex-1 bg-white rounded-2xl p-3 lg:p-6 ">
-            <h2 className="font-bold text-lg text-teal-600">
-              What We Provide G�� Core HR Services in Nepal
-            </h2>
-            <p className="text-black mt-2 text-justify">
-              JobLink360 provides a complete portfolio of human resource
-              services tailored to both job seekers' and companies' individual
-              requirements:
-            </p>
-            <ul className="list-disc  marker:text-cyan-600 pl-6 text-black mt-3 space-y-2 text-justify h-[151px] overflow-y-scroll md:h-auto md:overflow-visible">
-              <li>
-                <b className="text-cyan-600">
-                  Recruitment and Staffing Services:
-                </b>{" "}
-                Our comprehensive recruitment services are crafted exclusively
-                for local hiring all over Nepal, bringing the right candidates
-                together with the right employers for long-term success.
-              </li>
-              <li>
-                <b className="text-cyan-600">HR Outsourcing:</b> Right from
-                recruitment processes and induction to payroll management,
-                statutory compliance, grievance handling, and exit management,
-                our HR outsourcing services streamline procedures and reduce
-                administrative burdens on your organization.
-              </li>
-              <li>
-                <b className="text-cyan-600">Training and Development:</b> Our
-                soft skills training is designed to strengthen communication,
-                leadership, teamwork, and other vital interpersonal abilities,
-                thereby strengthening people's professional growth and career
-                success. HR Consulting: We assist organizations to design HR
-                policies, conduct HR audits, and develop efficient
-                organizational structures that optimize business development and
-                regulatory adherence.
-              </li>
-              <li>
-                <b className="text-cyan-600">Job Posting Platform:</b> : Our job
-                posting services allow employers to reach a wide range of
-                possible candidates, increasing visibility and improving the
-                effectiveness of the hiring process. HR Event Management: We
-                organize and coordinate HR-specific events like job fairs,
-                training workshops, seminars, and networking events to support
-                professional development and industry networking.
-              </li>
-            </ul>
-          </div>
-          <div className="flex-1 flex justify-center h-full">
-            <img
-              src={hr}
-              alt="Services"
-              className="rounded-lg object-cover h-96  hidden md:block"
-            />
-          </div>
-        </div>
-
+       
         {/* Why Choose Us */}
-        <div className="flex flex-col lg:flex-row items-center rounded-xl shadow-xl border border-gray-200 p-6">
+        <div className="flex flex-col lg:flex-row items-center p-6">
           <div className="flex-1 ">
             <h2 className="font-bold text-lg text-teal-600">
               Why Choose JobLink360?
