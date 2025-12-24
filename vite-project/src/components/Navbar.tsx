@@ -1,5 +1,5 @@
 "use client";
-import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase } from "lucide-react";
+import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase, LayoutDashboard } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo.jpeg";
 import { Link } from "react-router-dom";
@@ -213,6 +213,16 @@ export default function Navbar() {
                       <Settings className="w-4 h-4" />
                       Profile Settings
                     </Link>
+                    {(user.role === "admin" || user.role === "superadmin") && (
+                      <Link
+                        to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <LayoutDashboard className="w-4 h-4" />
+                        Dashboard
+                      </Link>
+                    )}
                     {user.role === "user" && (
                       <>
                         <Link

@@ -2,7 +2,11 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-const GoogleSignIn: React.FC = () => {
+interface GoogleSignInProps {
+  role?: "user" | "admin";
+}
+
+const GoogleSignIn: React.FC<GoogleSignInProps> = ({ role }) => {
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '49940105856-6edqjocuk098bjn1k6hvugfucc3q8lub.apps.googleusercontent.com';
     if (!clientId) {
@@ -17,13 +21,26 @@ const GoogleSignIn: React.FC = () => {
           callback: async (response: any) => {
             const idToken = response.credential;
             try {
-              const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken });
+              const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken, role });
               if (res.data?.token) {
                 alert("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
-                if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user));
+
+                const userData = res.data.user || res.data.admin;
+                if (userData) {
+                  localStorage.setItem('user', JSON.stringify(userData));
+                }
+
                 window.dispatchEvent(new Event('storage'));
-                window.location.assign('/');
+
+                // Redirect based on role
+                if (userData?.role === 'superadmin') {
+                  window.location.assign('/super-admin-dashboard');
+                } else if (userData?.role === 'admin') {
+                  window.location.assign('/admin-dashboard');
+                } else {
+                  window.location.assign('/');
+                }
               }
             } catch (err) {
               console.error('Google login failed', err);
@@ -49,13 +66,26 @@ const GoogleSignIn: React.FC = () => {
           callback: async (response: any) => {
             const idToken = response.credential;
             try {
-              const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken });
+              const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken, role });
               if (res.data?.token) {
                 alert("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
-                if (res.data.user) localStorage.setItem('user', JSON.stringify(res.data.user));
+
+                const userData = res.data.user || res.data.admin;
+                if (userData) {
+                  localStorage.setItem('user', JSON.stringify(userData));
+                }
+
                 window.dispatchEvent(new Event('storage'));
-                window.location.assign('/');
+
+                // Redirect based on role
+                if (userData?.role === 'superadmin') {
+                  window.location.assign('/super-admin-dashboard');
+                } else if (userData?.role === 'admin') {
+                  window.location.assign('/admin-dashboard');
+                } else {
+                  window.location.assign('/');
+                }
               }
             } catch (err) {
               console.error('Google login failed', err);

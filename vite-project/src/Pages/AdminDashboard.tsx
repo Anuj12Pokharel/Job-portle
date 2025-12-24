@@ -10,7 +10,8 @@ import {
     Trash2,
     Edit,
     MapPin,
-    DollarSign
+    DollarSign,
+    Download
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,7 +44,14 @@ const AdminDashboard = () => {
         experience: "",
         educationLevel: "",
         aboutCompany: "",
-        companyWebsite: ""
+        companyWebsite: "",
+        noOfOpenings: "",
+        industry: "",
+        vehicleLicense: "",
+        twoFourWheeler: "",
+        skills: "",
+        expiryDate: "",
+        desiredCandidate: ""
     });
     const [logo, setLogo] = useState<File | null>(null);
 
@@ -142,7 +150,9 @@ const AdminDashboard = () => {
             setJobData({
                 companyName: "", position: "", category: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
-                educationLevel: "", aboutCompany: "", companyWebsite: ""
+                educationLevel: "", aboutCompany: "", companyWebsite: "",
+                noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
+                skills: "", expiryDate: "", desiredCandidate: ""
             });
             setLogo(null);
         } catch (err) {
@@ -169,6 +179,40 @@ const AdminDashboard = () => {
         setApplicants(prev => prev.map(app =>
             app._id === id ? { ...app, status: newStatus } : app
         ));
+    };
+
+    const handleDownloadCV = async (resumePath: string) => {
+        if (!resumePath) {
+            alert("No CV available");
+            return;
+        }
+        // Normalize path
+        const path = resumePath.replace(/\\/g, "/");
+        const url = path.startsWith("http") ? path : `${API_BASE_URL}/${path}`;
+
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Download failed');
+
+            const blob = await response.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+
+            // Extract filename from path or default to resume
+            const filename = path.split('/').pop() || 'resume';
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            link.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            console.error("Download failed:", error);
+            // Fallback to opening in new tab if direct download fails
+            window.open(url, "_blank");
+        }
     };
 
     return (
@@ -326,9 +370,18 @@ const AdminDashboard = () => {
                                                     </span>
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <button onClick={() => openApplicationModal(app)} className="text-teal-600 hover:text-teal-800 font-medium text-sm">
+                                                    <button onClick={() => openApplicationModal(app)} className="text-teal-600 hover:text-teal-800 font-medium text-sm mr-3">
                                                         View Application
                                                     </button>
+                                                    {app.resume && (
+                                                        <button
+                                                            onClick={() => handleDownloadCV(app.resume)}
+                                                            className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1"
+                                                            title="Download CV"
+                                                        >
+                                                            <Download className="w-4 h-4" /> Download
+                                                        </button>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))}
@@ -389,6 +442,50 @@ const AdminDashboard = () => {
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
                                     <input type="text" value={jobData.salary} onChange={e => setJobData({ ...jobData, salary: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Openings</label>
+                                    <input type="number" value={jobData.noOfOpenings} onChange={e => setJobData({ ...jobData, noOfOpenings: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                                    <input type="text" value={jobData.industry} onChange={e => setJobData({ ...jobData, industry: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Education Level</label>
+                                    <input type="text" value={jobData.educationLevel} onChange={e => setJobData({ ...jobData, educationLevel: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Experience (Required)</label>
+                                    <input type="text" value={jobData.experience} onChange={e => setJobData({ ...jobData, experience: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                    <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License</label>
+                                    <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Two/Four Wheeler</label>
+                                    <input type="text" value={jobData.twoFourWheeler} onChange={e => setJobData({ ...jobData, twoFourWheeler: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
+                                    <input type="text" value={jobData.skills} onChange={e => setJobData({ ...jobData, skills: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
+                                    <input type="text" value={jobData.companyWebsite} onChange={e => setJobData({ ...jobData, companyWebsite: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
+                                    <input type="text" value={jobData.aboutCompany} onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Desired Candidate</label>
+                                <textarea rows={3} value={jobData.desiredCandidate} onChange={e => setJobData({ ...jobData, desiredCandidate: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
                             </div>
 
                             <div>
