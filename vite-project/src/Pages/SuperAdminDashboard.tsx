@@ -10,6 +10,8 @@ const SuperAdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [employers, setEmployers] = useState([]);
     const [jobs, setJobs] = useState([]);
+    const [clientLogos, setClientLogos] = useState([]);
+    const [logoFile, setLogoFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [viewingEmployer, setViewingEmployer] = useState<any>(null);
@@ -50,6 +52,9 @@ const SuperAdminDashboard = () => {
             } else if (activeTab === "jobs") {
                 const res = await axios.get(`${API_BASE_URL}/api/jobs/get`, config);
                 setJobs(res.data);
+            } else if (activeTab === "partner_logos") {
+                const res = await axios.get(`${API_BASE_URL}/api/client-logos/get`);
+                setClientLogos(res.data);
             }
         } catch (err) {
             console.error("Failed to fetch data", err);
@@ -147,6 +152,42 @@ const SuperAdminDashboard = () => {
         } catch (err) {
             console.error("Update failed", err);
             alert("Update failed");
+        }
+    };
+
+    const handleUploadLogo = async () => {
+        if (!logoFile) return alert("Please select a file");
+        const token = localStorage.getItem("token");
+        const formData = new FormData();
+        formData.append("logo", logoFile);
+
+        try {
+            await axios.post(`${API_BASE_URL}/api/client-logos/add`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            alert("Logo uploaded successfully");
+            setLogoFile(null);
+            fetchData();
+        } catch (err) {
+            console.error("Upload failed", err);
+            alert("Upload failed");
+        }
+    };
+
+    const handleDeleteLogo = async (id: string) => {
+        if (!window.confirm("Are you sure?")) return;
+        const token = localStorage.getItem("token");
+        try {
+            await axios.delete(`${API_BASE_URL}/api/client-logos/delete/${id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            fetchData();
+        } catch (err) {
+            console.error("Delete failed", err);
+            alert("Delete failed");
         }
     };
 
@@ -405,6 +446,9 @@ const SuperAdminDashboard = () => {
                     <button onClick={() => setActiveTab("jobs")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'jobs' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> All Jobs
                     </button>
+                    <button onClick={() => setActiveTab("partner_logos")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'partner_logos' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                        <ImageIcon className="w-5 h-5 mr-3" /> Partner Logos
+                    </button>
                 </nav>
                 <div className="p-4 border-t border-slate-800">
                     <button onClick={handleLogout} className="flex items-center text-slate-400 hover:text-white transition-colors w-full px-4 py-2">
@@ -582,6 +626,54 @@ const SuperAdminDashboard = () => {
                                             </td>
                                         </tr>
                                     ))}
+                                    {activeTab === "partner_logos" && (
+                                        <tr>
+                                            <td colSpan={6} className="px-6 py-4">
+                                                <div className="mb-6 flex gap-4 items-end bg-gray-50 p-4 rounded-lg">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 mb-1">Add New Client Logo</label>
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={(e) => setLogoFile(e.target.files ? e.target.files[0] : null)}
+                                                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                        />
+                                                    </div>
+                                                    <button
+                                                        onClick={handleUploadLogo}
+                                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+                                                        disabled={!logoFile}
+                                                    >
+                                                        <Save className="w-4 h-4 mr-2" /> Upload
+                                                    </button>
+                                                </div>
+
+                                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                                                    {clientLogos.map((logo: any) => (
+                                                        <div key={logo._id} className="relative group bg-white border rounded-lg p-4 flex items-center justify-center hover:shadow-md transition-shadow">
+                                                            <img
+                                                                src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, '/')}`}
+                                                                alt="Client Logo"
+                                                                className="h-20 w-full object-contain"
+                                                            />
+                                                            <button
+                                                                onClick={() => handleDeleteLogo(logo._id)}
+                                                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                title="Delete Logo"
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </button>
+                                                        </div>
+                                                    ))}
+                                                    {clientLogos.length === 0 && (
+                                                        <div className="col-span-full text-center py-8 text-gray-500">
+                                                            No logos uploaded yet.
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
                                 </tbody>
                             </table>
                             {!loading && ((activeTab === 'users' && users.length === 0) || (activeTab === 'employers' && employers.length === 0) || (activeTab === 'pending' && employers.length === 0) || (activeTab === 'jobs' && jobs.length === 0)) && (

@@ -12,6 +12,7 @@ import jobRoutes from "./routes/jobRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import contactRoutes from "./routes/contactRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
+import clientLogoRoutes from "./routes/clientLogoRoutes";
 
 import userRoutes from "./routes/userRoutes";
 
@@ -34,6 +35,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", AdminRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/training", trainingRoutes);
+app.use("/api/client-logos", clientLogoRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
