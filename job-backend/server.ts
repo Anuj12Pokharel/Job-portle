@@ -14,6 +14,7 @@ import contactRoutes from "./routes/contactRoutes";
 
 import blogRoutes from "./routes/BlogRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
+import clientLogoRoutes from "./routes/clientLogoRoutes";
 
 
 import userRoutes from "./routes/userRoutes";
@@ -40,6 +41,7 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/blog", blogRoutes);
 
 app.use("/api/training", trainingRoutes);
+app.use("/api/client-logos", clientLogoRoutes);
 
 
 const logsDir = path.join(__dirname, "logs");
