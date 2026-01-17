@@ -574,6 +574,9 @@ const SuperAdminDashboard = () => {
                     <button onClick={() => setActiveTab("partner_logos")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'partner_logos' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <ImageIcon className="w-5 h-5 mr-3" /> Partner Logos
                     </button>
+                    <button onClick={() => setActiveTab("history")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                        <HistoryIcon className="w-5 h-5 mr-3" /> History
+                    </button>
                 </nav>
                 <div className="p-4 border-t border-slate-800">
                     <button onClick={handleLogout} className="flex items-center text-slate-400 hover:text-white transition-colors w-full px-4 py-2">
@@ -971,6 +974,57 @@ const SuperAdminDashboard = () => {
                                                         <div className="col-span-full text-center py-8 text-gray-500">
                                                             No logos uploaded yet.
                                                         </div>
+                                                    )}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {activeTab === "history" && (
+                                        <tr>
+                                            <td colSpan={6} className="px-6 py-4">
+                                                <div className="overflow-x-auto">
+                                                    <table className="min-w-full">
+                                                        <thead className="bg-gray-100">
+                                                            <tr>
+                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Timestamp</th>
+                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Entity Type</th>
+                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Details</th>
+                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Performed By</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {history.length === 0 ? (
+                                                                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">No history records found</td></tr>
+                                                            ) : (
+                                                                history.map((record: any) => (
+                                                                    <tr key={record._id} className="border-t hover:bg-gray-50">
+                                                                        <td className="px-4 py-3 text-sm">{new Date(record.createdAt).toLocaleString()}</td>
+                                                                        <td className="px-4 py-3 text-sm capitalize">
+                                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
+                                                                                    record.entityType === 'company' ? 'bg-purple-100 text-purple-800' :
+                                                                                        record.entityType === 'user' ? 'bg-green-100 text-green-800' :
+                                                                                            'bg-yellow-100 text-yellow-800'
+                                                                                }`}>{record.entityType}</span>
+                                                                        </td>
+                                                                        <td className="px-4 py-3 text-sm capitalize">
+                                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${record.action === 'created' ? 'bg-green-100 text-green-800' :
+                                                                                    record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                                        record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                                            record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                                                record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                                                    'bg-gray-100 text-gray-800'
+                                                                                }`}>{record.action}</span>
+                                                                        </td>
+                                                                        <td className="px-4 py-3 text-sm text-gray-700">{record.details || 'N/A'}</td>
+                                                                        <td className="px-4 py-3 text-sm">{record.performedBy?.fullName || record.performedBy?.email || 'System'}</td>
+                                                                    </tr>
+                                                                ))
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                    {history.length > 0 && (
+                                                        <div className="mt-4 text-sm text-gray-600">Total: {historyTotal} records</div>
                                                     )}
                                                 </div>
                                             </td>
