@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle, History as HistoryIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -41,6 +41,8 @@ const SuperAdminDashboard = () => {
     const [companies, setCompanies] = useState<any[]>([]);
     const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
     const [filteredCompanies, setFilteredCompanies] = useState<any[]>([]);
+    const [history, setHistory] = useState<any[]>([]);
+    const [historyTotal, setHistoryTotal] = useState(0);
 
 
 
@@ -136,6 +138,10 @@ const SuperAdminDashboard = () => {
             } else if (activeTab === "partner_logos") {
                 const res = await axios.get(`${API_BASE_URL}/api/client-logos/get`);
                 setClientLogos(res.data);
+            } else if (activeTab === "history") {
+                const res = await axios.get(`${API_BASE_URL}/api/history`, config);
+                setHistory(res.data.history || []);
+                setHistoryTotal(res.data.total || 0);
             }
         } catch (err) {
             console.error("Failed to fetch data", err);
