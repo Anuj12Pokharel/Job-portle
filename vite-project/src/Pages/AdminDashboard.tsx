@@ -22,7 +22,7 @@ import ApplicationModal from "../components/ApplicationModal";
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, post-job, my-jobs, applications
     const [myJobs, setMyJobs] = useState([]);
-    const [stats, setStats] = useState({ totalJobs: 0, totalApplicants: 0 });
+    const [stats, setStats] = useState({ totalJobs: 0, totalApplicants: 0, rejectedApplicants: 0 });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -54,6 +54,7 @@ const AdminDashboard = () => {
         desiredCandidate: ""
     });
     const [logo, setLogo] = useState<File | null>(null);
+    const [editingJobId, setEditingJobId] = useState<string | null>(null);
 
     useEffect(() => {
         fetchMyJobs();
@@ -88,8 +89,30 @@ const AdminDashboard = () => {
             });
             setMyJobs(res.data);
 
-            // Calculate total applicants roughly if API supports, for now just jobs
-            setStats({ totalJobs: res.data.length, totalApplicants: 0 });
+            // Calculate statistics
+            let totalApplicants = 0;
+            let rejectedApplicants = 0;
+
+            // Fetch applicants for each job to get counts
+            const applicantPromises = res.data.map((job: any) =>
+                axios.get(`${API_BASE_URL}/api/jobs/${job._id}/applicants`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }).catch(() => ({ data: [] }))
+            );
+
+            const applicantResults = await Promise.all(applicantPromises);
+            applicantResults.forEach((result: any) => {
+                if (result.data) {
+                    totalApplicants += result.data.length;
+                    rejectedApplicants += result.data.filter((app: any) => app.status === 'rejected').length;
+                }
+            });
+
+            setStats({
+                totalJobs: res.data.length,
+                totalApplicants,
+                rejectedApplicants
+            });
             setLoading(false);
         } catch (err) {
             console.error("Failed to fetch jobs", err);
@@ -130,6 +153,32 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleEditJob = (job: any) => {
+        // Populate form with job data
+        setJobData({
+            companyName: job.companyName || "",
+            position: job.position || "",
+            category: job.category || "",
+            jobType: job.jobType || "Full-time",
+            location: job.location || "",
+            description: job.description || "",
+            salary: job.salary || "",
+            experience: job.experience || "",
+            educationLevel: job.educationLevel || "",
+            aboutCompany: job.aboutCompany || "",
+            companyWebsite: job.companyWebsite || "",
+            noOfOpenings: job.noOfOpenings || "",
+            industry: job.industry || "",
+            vehicleLicense: job.vehicleLicense || "",
+            twoFourWheeler: job.twoFourWheeler || "",
+            skills: job.skills || "",
+            expiryDate: job.expiryDate ? new Date(job.expiryDate).toISOString().split('T')[0] : "",
+            desiredCandidate: job.desiredCandidate || ""
+        });
+        setEditingJobId(job._id);
+        setActiveTab("post-job");
+    };
+
     const handlePostJob = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -138,13 +187,26 @@ const AdminDashboard = () => {
         if (logo) formData.append("logo", logo);
 
         try {
-            await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                },
-            });
-            alert("Job Posted Successfully!");
+            if (editingJobId) {
+                // Update existing job
+                await axios.put(`${API_BASE_URL}/api/jobs/update/${editingJobId}`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    },
+                });
+                alert("Job Updated Successfully!");
+                setEditingJobId(null);
+            } else {
+                // Create new job
+                await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    },
+                });
+                alert("Job Posted Successfully!");
+            }
             setActiveTab("my-jobs");
             await fetchMyJobs();
             setJobData({
@@ -268,6 +330,20 @@ const AdminDashboard = () => {
                             </div>
                             <p className="text-3xl font-bold text-gray-800">{stats.totalJobs}</p>
                         </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Total Applicants</h3>
+                                <Users className="text-blue-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.totalApplicants}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Rejected Applicants</h3>
+                                <Users className="text-red-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.rejectedApplicants}</p>
+                        </div>
                     </div>
                 )}
 
@@ -310,7 +386,10 @@ const AdminDashboard = () => {
                                                     >
                                                         View Applicants
                                                     </button>
-                                                    <button onClick={() => handleDeleteJob(job._id)} className="text-red-500 hover:text-red-700 p-2">
+                                                    <button onClick={() => handleEditJob(job)} className="text-blue-500 hover:text-blue-700 p-2" title="Edit Job">
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button onClick={() => handleDeleteJob(job._id)} className="text-red-500 hover:text-red-700 p-2" title="Delete Job">
                                                         <Trash2 className="w-5 h-5" />
                                                     </button>
                                                 </td>
@@ -396,6 +475,7 @@ const AdminDashboard = () => {
                 {/* Post Job View */}
                 {activeTab === "post-job" && (
                     <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6">{editingJobId ? "Edit Job" : "Post New Job"}</h3>
                         <form onSubmit={handlePostJob} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -499,7 +579,7 @@ const AdminDashboard = () => {
                             </div>
 
                             <button type="submit" className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition">
-                                Post Job
+                                {editingJobId ? "Update Job" : "Post Job"}
                             </button>
                         </form>
                     </div>

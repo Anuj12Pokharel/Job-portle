@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const SuperAdminDashboard = () => {
-    const [activeTab, setActiveTab] = useState("users");
+    const [activeTab, setActiveTab] = useState("dashboard");
     const [users, setUsers] = useState([]);
     const [employers, setEmployers] = useState([]);
     const [jobs, setJobs] = useState([]);
@@ -14,6 +14,7 @@ const SuperAdminDashboard = () => {
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
 
 
 
@@ -58,7 +59,35 @@ const SuperAdminDashboard = () => {
 
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            if (activeTab === "users") {
+
+            if (activeTab === "dashboard") {
+                // Fetch all stats for dashboard
+                const [usersRes, employersRes, jobsRes] = await Promise.all([
+                    axios.get(`${API_BASE_URL}/api/admin/users`, config),
+                    axios.get(`${API_BASE_URL}/api/admin/employers`, config),
+                    axios.get(`${API_BASE_URL}/api/jobs/get`, config)
+                ]);
+
+                // Count rejected applications
+                let rejectedCount = 0;
+                const applicantPromises = jobsRes.data.map((job: any) =>
+                    axios.get(`${API_BASE_URL}/api/jobs/${job._id}/applicants`, config)
+                        .catch(() => ({ data: [] }))
+                );
+                const applicantResults = await Promise.all(applicantPromises);
+                applicantResults.forEach((result: any) => {
+                    if (result.data) {
+                        rejectedCount += result.data.filter((app: any) => app.status === 'rejected').length;
+                    }
+                });
+
+                setStats({
+                    totalJobs: jobsRes.data.length,
+                    totalJobseekers: usersRes.data.length,
+                    totalEmployers: employersRes.data.filter((e: any) => e.status === 'approved').length,
+                    rejectedApplications: rejectedCount
+                });
+            } else if (activeTab === "users") {
                 const res = await axios.get(`${API_BASE_URL}/api/admin/users`, config);
                 setUsers(res.data);
             } else if (activeTab === "employers") {
@@ -239,7 +268,7 @@ const SuperAdminDashboard = () => {
                                 <div className="flex justify-center mb-4">
                                     <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden relative">
                                         {selectedFile ? (
-                                            <img src={  URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
+                                            <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
                                         ) : editFormData.profilePicture ? (
                                             <img src={`${API_BASE_URL}/${editFormData.profilePicture}`} alt="Current" className="w-full h-full object-cover" />
                                         ) : (
@@ -456,6 +485,9 @@ const SuperAdminDashboard = () => {
                     <p className="text-slate-400 text-sm mt-1">Management Console</p>
                 </div>
                 <nav className="flex-1 p-4 space-y-2">
+                    <button onClick={() => setActiveTab("dashboard")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                        <LayoutDashboard className="w-5 h-5 mr-3" /> Dashboard
+                    </button>
                     <button onClick={() => setActiveTab("users")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Users className="w-5 h-5 mr-3" /> Jobseekers
                     </button>
@@ -481,10 +513,41 @@ const SuperAdminDashboard = () => {
 
             {/* Main Content */}
             <div className="flex-1 overflow-auto p-8 relative">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800 capitalize">Manage {activeTab}</h2>
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 capitalize">{activeTab === 'dashboard' ? 'Dashboard Overview' : `Manage ${activeTab}`}</h2>
 
                 {loading ? (
                     <div className="flex justify-center py-20"><div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div></div>
+                ) : activeTab === "dashboard" ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Total Jobs Posted</h3>
+                                <Briefcase className="text-teal-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.totalJobs}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Total Jobseekers</h3>
+                                <Users className="text-blue-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.totalJobseekers}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Total Employers</h3>
+                                <Building2 className="text-purple-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.totalEmployers}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Rejected Applications</h3>
+                                <XCircle className="text-red-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.rejectedApplications}</p>
+                        </div>
+                    </div>
                 ) : (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="overflow-x-auto">
