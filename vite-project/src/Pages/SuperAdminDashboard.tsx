@@ -38,6 +38,9 @@ const SuperAdminDashboard = () => {
         desiredCandidate: ""
     });
     const [jobLogo, setJobLogo] = useState<File | null>(null);
+    const [companies, setCompanies] = useState<any[]>([]);
+    const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
+    const [filteredCompanies, setFilteredCompanies] = useState<any[]>([]);
 
 
 
@@ -110,6 +113,10 @@ const SuperAdminDashboard = () => {
                     totalEmployers: employersRes.data.filter((e: any) => e.status === 'approved').length,
                     rejectedApplications: rejectedCount
                 });
+            } else if (activeTab === "post_job") {
+                // Fetch all employers for company name autocomplete
+                const res = await axios.get(`${API_BASE_URL}/api/admin/employers`, config);
+                setCompanies(res.data.filter((e: any) => e.status === 'approved'));
             } else if (activeTab === "users") {
                 const res = await axios.get(`${API_BASE_URL}/api/admin/users`, config);
                 setUsers(res.data);
@@ -611,9 +618,59 @@ const SuperAdminDashboard = () => {
                         <h3 className="text-2xl font-bold text-gray-800 mb-6">Post New Job</h3>
                         <form onSubmit={handlePostJob} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
+                                <div className="relative">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-                                    <input type="text" value={jobData.companyName} onChange={e => setJobData({ ...jobData, companyName: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                    <input
+                                        type="text"
+                                        value={jobData.companyName}
+                                        onChange={e => {
+                                            const value = e.target.value;
+                                            setJobData({ ...jobData, companyName: value });
+                                            if (value.length > 0) {
+                                                const filtered = companies.filter(c =>
+                                                    c.companyName.toLowerCase().includes(value.toLowerCase())
+                                                );
+                                                setFilteredCompanies(filtered);
+                                                setShowCompanySuggestions(true);
+                                            } else {
+                                                setShowCompanySuggestions(false);
+                                            }
+                                        }}
+                                        onFocus={() => {
+                                            if (jobData.companyName.length > 0) {
+                                                setShowCompanySuggestions(true);
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            // Delay to allow click on suggestion
+                                            setTimeout(() => setShowCompanySuggestions(false), 200);
+                                        }}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        required
+                                    />
+                                    {showCompanySuggestions && filteredCompanies.length > 0 && (
+                                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                                            {filteredCompanies.map((company) => (
+                                                <div
+                                                    key={company._id}
+                                                    className="px-4 py-2 hover:bg-blue-50 cursor-pointer"
+                                                    onMouseDown={() => {
+                                                        setJobData({
+                                                            ...jobData,
+                                                            companyName: company.companyName,
+                                                            location: company.companyLocation || jobData.location
+                                                        });
+                                                        setShowCompanySuggestions(false);
+                                                    }}
+                                                >
+                                                    <div className="font-medium text-gray-800">{company.companyName}</div>
+                                                    {company.companyLocation && (
+                                                        <div className="text-sm text-gray-500">{company.companyLocation}</div>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Position / Job Title</label>
