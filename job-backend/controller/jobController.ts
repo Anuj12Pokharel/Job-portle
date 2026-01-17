@@ -174,6 +174,10 @@ export const applyJob = async (req: Request, res: Response) => {
       await user.save();
     }
 
+    // Log history
+    const job = await Job.findById(jobId);
+    await logHistory("application", "applied", application._id, { ...application.toObject(), jobTitle: job?.position }, userId, req.user?.role || "user", `Applied for job: ${job?.position}`);
+
     res.status(201).json({ message: "Applied successfully", application });
   } catch (err) {
     console.error(err);
