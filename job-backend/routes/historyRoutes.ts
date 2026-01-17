@@ -26,7 +26,6 @@ router.get("/", protect, checkSuperAdmin, async (req, res) => {
         console.error("Error fetching history:", err);
         res.status(500).json({ message: "Failed to fetch history" });
     }
-}
 });
 
 // Get history for logged in employer (filter by targetOwnerId)
