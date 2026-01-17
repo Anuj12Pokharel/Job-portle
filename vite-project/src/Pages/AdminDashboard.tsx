@@ -11,7 +11,9 @@ import {
     Edit,
     MapPin,
     DollarSign,
-    Download
+    DollarSign,
+    Download,
+    History as HistoryIcon
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -55,9 +57,25 @@ const AdminDashboard = () => {
     });
     const [logo, setLogo] = useState<File | null>(null);
     const [editingJobId, setEditingJobId] = useState<string | null>(null);
+    const [history, setHistory] = useState<any[]>([]);
+    const [historyTotal, setHistoryTotal] = useState(0);
+    const [historyFilter, setHistoryFilter] = useState<string>("all");
 
     useEffect(() => {
-        fetchMyJobs();
+        const loadMyJobs = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+            try {
+                // Initial load of jobs
+                const res = await axios.get(`${API_BASE_URL}/api/jobs/myjobs`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setMyJobs(res.data);
+                setStats(prev => ({ ...prev, totalJobs: res.data.length }));
+            } catch (err) { console.error(err); }
+            setLoading(false);
+        };
+        loadMyJobs();
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             try {
@@ -207,8 +225,19 @@ const AdminDashboard = () => {
                 });
                 alert("Job Posted Successfully!");
             }
-            setActiveTab("my-jobs");
-            await fetchMyJobs();
+            if (activeTab === 'history') {
+                try {
+                    const res = await axios.get(`${API_BASE_URL}/api/history/my-history`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    setHistory(res.data.history || []);
+                    setHistoryTotal(res.data.total || 0);
+                } catch (err) {
+                    console.error("Failed to fetch history", err);
+                }
+            } else if (activeTab === 'my-jobs' || activeTab === 'dashboard') {
+                fetchMyJobs();
+            }
             setJobData({
                 companyName: "", position: "", category: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
@@ -303,7 +332,19 @@ const AdminDashboard = () => {
                     <button onClick={() => { setActiveTab("my-jobs"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'my-jobs' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> My Jobs
                     </button>
-                    <button onClick={() => { setActiveTab("history"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => {
+                        setActiveTab("history"); setViewApplicantsJobId(null);
+                        // Fetch history immediately when tab is clicked
+                        const token = localStorage.getItem("token");
+                        if (token) {
+                            axios.get(`${API_BASE_URL}/api/history/my-history`, { headers: { Authorization: `Bearer ${token}` } })
+                                .then(res => {
+                                    setHistory(res.data.history || []);
+                                    setHistoryTotal(res.data.total || 0);
+                                })
+                                .catch(err => console.error(err));
+                        }
+                    }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <HistoryIcon className="w-5 h-5 mr-3" /> History
                     </button>
                 </nav>
@@ -694,8 +735,8 @@ const AdminDashboard = () => {
                                 <button
                                     onClick={() => setHistoryFilter("all")}
                                     className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
-                                            ? "border-b-2 border-teal-500 text-teal-600"
-                                            : "text-gray-600 hover:text-gray-800"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
                                         }`}
                                 >
                                     All History
@@ -703,8 +744,8 @@ const AdminDashboard = () => {
                                 <button
                                     onClick={() => setHistoryFilter("application")}
                                     className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
-                                            ? "border-b-2 border-teal-500 text-teal-600"
-                                            : "text-gray-600 hover:text-gray-800"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
                                         }`}
                                 >
                                     Applicant History
@@ -712,8 +753,8 @@ const AdminDashboard = () => {
                                 <button
                                     onClick={() => setHistoryFilter("job")}
                                     className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
-                                            ? "border-b-2 border-teal-500 text-teal-600"
-                                            : "text-gray-600 hover:text-gray-800"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
                                         }`}
                                 >
                                     Job History
@@ -742,19 +783,19 @@ const AdminDashboard = () => {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap capitalize">
                                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
-                                                                record.entityType === 'application' ? 'bg-purple-100 text-purple-800' :
-                                                                    'bg-gray-100 text-gray-800'
+                                                            record.entityType === 'application' ? 'bg-purple-100 text-purple-800' :
+                                                                'bg-gray-100 text-gray-800'
                                                             }`}>
                                                             {record.entityType}
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap capitalize">
                                                         <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.action === 'created' ? 'bg-green-100 text-green-800' :
-                                                                record.action === 'deleted' ? 'bg-red-100 text-red-800' :
-                                                                    record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
-                                                                        record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
-                                                                            record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
-                                                                                'bg-gray-100 text-gray-800'
+                                                            record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                    record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                        record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                            'bg-gray-100 text-gray-800'
                                                             }`}>
                                                             {record.action}
                                                         </span>
