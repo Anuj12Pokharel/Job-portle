@@ -28,7 +28,8 @@ export const createJob = async (req: Request, res: Response) => {
     }
 
     // Log history
-    await logHistory("job", "created", job._id, job.toObject(), adminObjectId, req.user?.role || "admin", `Job created: ${job.position}`);
+    // Log history
+    await logHistory("job", "created", job._id, job.toObject(), adminObjectId, req.user?.role || "admin", adminObjectId, `Job created: ${job.position}`);
 
     res.status(201).json({ message: "Job posted successfully", job });
   } catch (err) {
@@ -55,7 +56,7 @@ export const updateJob = async (req: Request, res: Response) => {
 
     // Log history
     if (updatedJob) {
-      await logHistory("job", "updated", updatedJob._id, updatedJob.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", `Job updated: ${updatedJob.position}`);
+      await logHistory("job", "updated", updatedJob._id, updatedJob.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", updatedJob.postedBy, `Job updated: ${updatedJob.position}`);
     }
 
     res.json({ message: "Job updated successfully", job: updatedJob });
@@ -74,7 +75,7 @@ export const deleteJob = async (req: Request, res: Response) => {
       return res.status(403).json({ message: "Not authorized" });
 
     // Log history before deletion
-    await logHistory("job", "deleted", job._id, job.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", `Job deleted: ${job.position}`);
+    await logHistory("job", "deleted", job._id, job.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", job.postedBy, `Job deleted: ${job.position}`);
 
     await job.deleteOne();
     res.json({ message: "Job deleted successfully" });
@@ -176,7 +177,7 @@ export const applyJob = async (req: Request, res: Response) => {
 
     // Log history
     const job = await Job.findById(jobId);
-    await logHistory("application", "applied", application._id, { ...application.toObject(), jobTitle: job?.position }, userId, req.user?.role || "user", `Applied for job: ${job?.position}`);
+    await logHistory("application", "applied", application._id, { ...application.toObject(), jobTitle: job?.position }, userId, req.user?.role || "user", job?.postedBy, `Applied for job: ${job?.position}`);
 
     res.status(201).json({ message: "Applied successfully", application });
   } catch (err) {
@@ -308,6 +309,12 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
 
     application.status = status;
     await application.save();
+
+    // Log history for status changes (hired/rejected are most important)
+    const user = await User.findById(application.user);
+    if (status === "hired" || status === "rejected") {
+      await logHistory("application", status === "hired" ? "accepted" : "rejected", application._id, { ...application.toObject(), jobTitle: job.position, userName: user?.fullName }, userId, req.user?.role || "admin", job.postedBy, `Application ${status}: ${user?.fullName} for ${job.position}`);
+    }
 
     res.json({ message: "Status updated successfully", application });
   } catch (err) {
