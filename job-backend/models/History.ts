@@ -7,8 +7,8 @@ export interface IHistory extends Document {
     entityData: any;
     performedBy: Types.ObjectId;
     performedByRole: string;
-    timestamp: Date;
     details?: string;
+    createdAt: Date;
 }
 
 const historySchema = new Schema<IHistory>(
@@ -16,39 +16,40 @@ const historySchema = new Schema<IHistory>(
         entityType: {
             type: String,
             enum: ["company", "job", "application", "user"],
-            required: true,
+            required: true
         },
         action: {
             type: String,
             enum: ["created", "deleted", "updated", "applied", "accepted", "rejected"],
-            required: true,
+            required: true
         },
         entityId: {
             type: Schema.Types.ObjectId,
-            required: true,
+            required: true
         },
         entityData: {
             type: Schema.Types.Mixed,
-            required: true,
+            required: true
         },
         performedBy: {
             type: Schema.Types.ObjectId,
             ref: "User",
-            required: true,
+            required: true
         },
         performedByRole: {
             type: String,
-            required: true,
+            required: true
         },
         details: {
-            type: String,
-        },
+            type: String
+        }
     },
     { timestamps: true }
 );
 
-// Index for efficient querying
+// Index for faster queries
 historySchema.index({ entityType: 1, action: 1, createdAt: -1 });
-historySchema.index({ performedBy: 1 });
 
-export default model<IHistory>("History", historySchema);
+const History = model<IHistory>("History", historySchema);
+
+export default History;
