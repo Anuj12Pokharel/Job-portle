@@ -13,7 +13,11 @@ import {
     DollarSign,
     DollarSign,
     Download,
-    History as HistoryIcon
+    DollarSign,
+    Download,
+    History as HistoryIcon,
+    Menu,
+    X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -32,7 +36,9 @@ const AdminDashboard = () => {
     const [viewApplicantsJobId, setViewApplicantsJobId] = useState<string | null>(null);
     const [applicants, setApplicants] = useState<any[]>([]);
     const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
+    const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Form State for Post Job
     const [jobData, setJobData] = useState({
@@ -316,11 +322,14 @@ const AdminDashboard = () => {
             />
 
             {/* Sidebar */}
-            <aside className="w-64 bg-slate-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10 hidden md:flex">
-                <div className="p-6 border-b border-slate-800">
+            <aside className={`w-64 bg-slate-900 text-white flex flex-col fixed h-full transition-all duration-300 z-20 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
+                <div className="p-6 border-b border-slate-800 flex justify-between items-center">
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
                         Employer Hub
                     </h1>
+                    <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+                        <X size={24} />
+                    </button>
                 </div>
                 <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
                     <button onClick={() => { setActiveTab("dashboard"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
@@ -358,9 +367,14 @@ const AdminDashboard = () => {
             {/* Main Content */}
             <main className="flex-1 md:ml-64 p-8 transition-all">
                 <header className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800 capitalize">
-                        {viewApplicantsJobId ? "Job Applicants" : activeTab.replace("-", " ")}
-                    </h2>
+                    <div className="flex items-center gap-4">
+                        <button onClick={() => setIsSidebarOpen(true)} className="md:hidden text-gray-600 hover:text-gray-900">
+                            <Menu size={24} />
+                        </button>
+                        <h2 className="text-3xl font-bold text-gray-800 capitalize">
+                            {viewApplicantsJobId ? "Job Applicants" : activeTab.replace("-", " ")}
+                        </h2>
+                    </div>
                     {/* Profile section removed as per request */}
                 </header>
 
