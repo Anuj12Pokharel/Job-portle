@@ -5,6 +5,7 @@ export interface IHistory extends Document {
     action: "created" | "deleted" | "updated" | "applied" | "accepted" | "rejected";
     entityId: Types.ObjectId;
     entityData: any;
+    targetOwnerId?: Types.ObjectId; // Owner of the entity (e.g., employer who posted the job)
     performedBy: Types.ObjectId;
     performedByRole: string;
     details?: string;
@@ -30,6 +31,10 @@ const historySchema = new Schema<IHistory>(
         entityData: {
             type: Schema.Types.Mixed,
             required: true
+        },
+        targetOwnerId: {
+            type: Schema.Types.ObjectId,
+            ref: "Admin"
         },
         performedBy: {
             type: Schema.Types.ObjectId,
