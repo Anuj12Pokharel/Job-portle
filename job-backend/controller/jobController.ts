@@ -4,6 +4,7 @@ import Job from "../models/Job";
 import Application from "../models/Application";
 import Admin from "../models/Admin";
 import User from "../models/User";
+import { logHistory } from "../services/historyService";
 
 const ensureObjectId = (id: string) => new mongoose.Types.ObjectId(id);
 
@@ -25,6 +26,9 @@ export const createJob = async (req: Request, res: Response) => {
       admin.jobs.push(job._id as mongoose.Types.ObjectId);
       await admin.save();
     }
+
+    // Log history
+    await logHistory("job", "created", job._id, job.toObject(), adminObjectId, req.user?.role || "admin", `Job created: ${job.position}`);
 
     res.status(201).json({ message: "Job posted successfully", job });
   } catch (err) {
@@ -49,6 +53,11 @@ export const updateJob = async (req: Request, res: Response) => {
 
     const updatedJob = await Job.findByIdAndUpdate(req.params.id, updatedData, { new: true });
 
+    // Log history
+    if (updatedJob) {
+      await logHistory("job", "updated", updatedJob._id, updatedJob.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", `Job updated: ${updatedJob.position}`);
+    }
+
     res.json({ message: "Job updated successfully", job: updatedJob });
   } catch (err) {
     console.error(err);
@@ -63,6 +72,9 @@ export const deleteJob = async (req: Request, res: Response) => {
 
     if (job.postedBy.toString() !== String(req.user?._id || req.user?.id) && req.user?.role !== "superadmin")
       return res.status(403).json({ message: "Not authorized" });
+
+    // Log history before deletion
+    await logHistory("job", "deleted", job._id, job.toObject(), req.user?._id || req.user?.id, req.user?.role || "admin", `Job deleted: ${job.position}`);
 
     await job.deleteOne();
     res.json({ message: "Job deleted successfully" });
