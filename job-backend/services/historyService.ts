@@ -8,7 +8,10 @@ export const logHistory = async (
     entityData: any,
     performedBy: Types.ObjectId | string,
     performedByRole: string,
-    details?: string
+    performedBy: Types.ObjectId | string,
+    performedByRole: string,
+    details?: string,
+    targetOwnerId?: Types.ObjectId | string // Add optional targetOwnerId param
 ) => {
     try {
         await History.create({
@@ -18,7 +21,10 @@ export const logHistory = async (
             entityData,
             performedBy,
             performedByRole,
-            details
+            performedBy,
+            performedByRole,
+            details,
+            targetOwnerId // Include in creation
         });
     } catch (err) {
         console.error("Failed to log history:", err);
@@ -36,6 +42,10 @@ export const getHistory = async (filters: any = {}, limit: number = 100, skip: n
 
         if (filters.action) {
             query.action = filters.action;
+        }
+
+        if (filters.targetOwnerId) {
+            query.targetOwnerId = filters.targetOwnerId;
         }
 
         if (filters.startDate || filters.endDate) {
