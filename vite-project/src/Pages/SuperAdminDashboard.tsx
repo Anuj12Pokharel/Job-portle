@@ -43,6 +43,7 @@ const SuperAdminDashboard = () => {
     const [filteredCompanies, setFilteredCompanies] = useState<any[]>([]);
     const [history, setHistory] = useState<any[]>([]);
     const [historyTotal, setHistoryTotal] = useState(0);
+    const [historyFilter, setHistoryFilter] = useState<string>("all");
 
 
 
@@ -982,6 +983,54 @@ const SuperAdminDashboard = () => {
                                     {activeTab === "history" && (
                                         <tr>
                                             <td colSpan={6} className="px-6 py-4">
+                                                {/* Filter Tabs */}
+                                                <div className="flex gap-2 mb-4 border-b">
+                                                    <button
+                                                        onClick={() => setHistoryFilter("all")}
+                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                    >
+                                                        All History
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter("application")}
+                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                    >
+                                                        Applicant History
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter("company")}
+                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "company"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                    >
+                                                        Company History
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter("job")}
+                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                    >
+                                                        Job History
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setHistoryFilter("user")}
+                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "user"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                    >
+                                                        User History
+                                                    </button>
+                                                </div>
                                                 <div className="overflow-x-auto">
                                                     <table className="min-w-full">
                                                         <thead className="bg-gray-100">
@@ -994,26 +1043,26 @@ const SuperAdminDashboard = () => {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {history.length === 0 ? (
-                                                                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">No history records found</td></tr>
+                                                            {history.filter(record => historyFilter === "all" || record.entityType === historyFilter).length === 0 ? (
+                                                                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">No {historyFilter !== "all" ? historyFilter : ""} history records found</td></tr>
                                                             ) : (
-                                                                history.map((record: any) => (
+                                                                history.filter(record => historyFilter === "all" || record.entityType === historyFilter).map((record: any) => (
                                                                     <tr key={record._id} className="border-t hover:bg-gray-50">
                                                                         <td className="px-4 py-3 text-sm">{new Date(record.createdAt).toLocaleString()}</td>
                                                                         <td className="px-4 py-3 text-sm capitalize">
                                                                             <span className={`px-2 py-1 rounded text-xs font-medium ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
-                                                                                    record.entityType === 'company' ? 'bg-purple-100 text-purple-800' :
-                                                                                        record.entityType === 'user' ? 'bg-green-100 text-green-800' :
-                                                                                            'bg-yellow-100 text-yellow-800'
+                                                                                record.entityType === 'company' ? 'bg-purple-100 text-purple-800' :
+                                                                                    record.entityType === 'user' ? 'bg-green-100 text-green-800' :
+                                                                                        'bg-yellow-100 text-yellow-800'
                                                                                 }`}>{record.entityType}</span>
                                                                         </td>
                                                                         <td className="px-4 py-3 text-sm capitalize">
                                                                             <span className={`px-2 py-1 rounded text-xs font-medium ${record.action === 'created' ? 'bg-green-100 text-green-800' :
-                                                                                    record.action === 'deleted' ? 'bg-red-100 text-red-800' :
-                                                                                        record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
-                                                                                            record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
-                                                                                                record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
-                                                                                                    'bg-gray-100 text-gray-800'
+                                                                                record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                                    record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                                        record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                                            record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                                                'bg-gray-100 text-gray-800'
                                                                                 }`}>{record.action}</span>
                                                                         </td>
                                                                         <td className="px-4 py-3 text-sm text-gray-700">{record.details || 'N/A'}</td>
