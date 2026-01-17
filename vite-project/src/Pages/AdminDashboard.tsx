@@ -11,9 +11,6 @@ import {
     Edit,
     MapPin,
     DollarSign,
-    DollarSign,
-    Download,
-    DollarSign,
     Download,
     History as HistoryIcon,
     Menu,
@@ -35,7 +32,6 @@ const AdminDashboard = () => {
     // Applicants State
     const [viewApplicantsJobId, setViewApplicantsJobId] = useState<string | null>(null);
     const [applicants, setApplicants] = useState<any[]>([]);
-    const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
     const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
