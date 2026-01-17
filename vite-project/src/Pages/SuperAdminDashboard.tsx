@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -15,6 +15,29 @@ const SuperAdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
+
+    // Job Posting State
+    const [jobData, setJobData] = useState({
+        companyName: "",
+        position: "",
+        category: "",
+        jobType: "Full-time",
+        location: "",
+        description: "",
+        salary: "",
+        experience: "",
+        educationLevel: "",
+        aboutCompany: "",
+        companyWebsite: "",
+        noOfOpenings: "",
+        industry: "",
+        vehicleLicense: "",
+        twoFourWheeler: "",
+        skills: "",
+        expiryDate: "",
+        desiredCandidate: ""
+    });
+    const [jobLogo, setJobLogo] = useState<File | null>(null);
 
 
 
@@ -239,6 +262,38 @@ const SuperAdminDashboard = () => {
         } catch (err) {
             console.error("Delete failed", err);
             alert("Delete failed");
+        }
+    };
+
+    const handlePostJob = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const formData = new FormData();
+        Object.entries(jobData).forEach(([key, value]) => formData.append(key, value));
+        if (jobLogo) formData.append("logo", jobLogo);
+
+        try {
+            await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                },
+            });
+            alert("Job Posted Successfully!");
+            setActiveTab("jobs");
+            fetchData();
+            setJobData({
+                companyName: "", position: "", category: "", jobType: "Full-time",
+                location: "", description: "", salary: "", experience: "",
+                educationLevel: "", aboutCompany: "", companyWebsite: "",
+                noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
+                skills: "", expiryDate: "", desiredCandidate: ""
+            });
+            setJobLogo(null);
+        } catch (err) {
+            console.error(err);
+            const msg = err.response?.data?.message || "Failed to post job";
+            alert(msg);
         }
     };
 
@@ -494,6 +549,9 @@ const SuperAdminDashboard = () => {
                     <button onClick={() => setActiveTab("pending")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'pending' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Clock className="w-5 h-5 mr-3" /> Pending Requests
                     </button>
+                    <button onClick={() => setActiveTab("post_job")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post_job' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                        <PlusCircle className="w-5 h-5 mr-3" /> Post Job
+                    </button>
                     <button onClick={() => setActiveTab("employers")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'employers' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
                         <Building2 className="w-5 h-5 mr-3" /> Employers
                     </button>
@@ -547,6 +605,102 @@ const SuperAdminDashboard = () => {
                             </div>
                             <p className="text-3xl font-bold text-gray-800">{stats.rejectedApplications}</p>
                         </div>
+                    </div>
+                ) : activeTab === "post_job" ? (
+                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6">Post New Job</h3>
+                        <form onSubmit={handlePostJob} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                                    <input type="text" value={jobData.companyName} onChange={e => setJobData({ ...jobData, companyName: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Position / Job Title</label>
+                                    <input type="text" value={jobData.position} onChange={e => setJobData({ ...jobData, position: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                    <input type="text" value={jobData.location} onChange={e => setJobData({ ...jobData, location: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                                    <select value={jobData.jobType} onChange={e => setJobData({ ...jobData, jobType: e.target.value })} className="w-full border rounded-lg px-4 py-2">
+                                        <option>Full-time</option>
+                                        <option>Part-time</option>
+                                        <option>Contract</option>
+                                        <option>Internship</option>
+                                        <option>Remote</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                    <input type="text" value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
+                                    <input type="text" value={jobData.salary} onChange={e => setJobData({ ...jobData, salary: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">No. of Openings</label>
+                                    <input type="number" value={jobData.noOfOpenings} onChange={e => setJobData({ ...jobData, noOfOpenings: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                                    <input type="text" value={jobData.industry} onChange={e => setJobData({ ...jobData, industry: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Education Level</label>
+                                    <input type="text" value={jobData.educationLevel} onChange={e => setJobData({ ...jobData, educationLevel: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Experience (Required)</label>
+                                    <input type="text" value={jobData.experience} onChange={e => setJobData({ ...jobData, experience: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                    <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License</label>
+                                    <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Two/Four Wheeler</label>
+                                    <input type="text" value={jobData.twoFourWheeler} onChange={e => setJobData({ ...jobData, twoFourWheeler: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
+                                    <input type="text" value={jobData.skills} onChange={e => setJobData({ ...jobData, skills: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
+                                    <input type="text" value={jobData.companyWebsite} onChange={e => setJobData({ ...jobData, companyWebsite: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
+                                    <input type="text" value={jobData.aboutCompany} onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Desired Candidate</label>
+                                <textarea rows={3} value={jobData.desiredCandidate} onChange={e => setJobData({ ...jobData, desiredCandidate: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Logo (Optional)</label>
+                                <input type="file" onChange={e => setJobLogo(e.target.files ? e.target.files[0] : null)} className="w-full" accept="image/*" />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
+                                <textarea rows={5} value={jobData.description} onChange={e => setJobData({ ...jobData, description: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
+                            </div>
+
+                            <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                                Post Job
+                            </button>
+                        </form>
                     </div>
                 ) : (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
