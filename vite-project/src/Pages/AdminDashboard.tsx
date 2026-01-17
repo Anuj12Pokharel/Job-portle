@@ -584,6 +584,101 @@ const AdminDashboard = () => {
                         </form>
                     </div>
                 )}
+
+                {activeTab === 'history' && (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="p-6 border-b border-gray-100">
+                            <h2 className="text-xl font-semibold text-gray-800">Activity History</h2>
+                        </div>
+                        <div className="p-6">
+                            {/* Filter Tabs */}
+                            <div className="flex gap-2 mb-4 border-b">
+                                <button
+                                    onClick={() => setHistoryFilter("all")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
+                                            ? "border-b-2 border-teal-500 text-teal-600"
+                                            : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    All History
+                                </button>
+                                <button
+                                    onClick={() => setHistoryFilter("application")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
+                                            ? "border-b-2 border-teal-500 text-teal-600"
+                                            : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    Applicant History
+                                </button>
+                                <button
+                                    onClick={() => setHistoryFilter("job")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
+                                            ? "border-b-2 border-teal-500 text-teal-600"
+                                            : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    Job History
+                                </button>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {history.filter(record => historyFilter === "all" || record.entityType === historyFilter).length === 0 ? (
+                                            <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No {historyFilter !== "all" ? historyFilter : ""} history records found</td></tr>
+                                        ) : (
+                                            history.filter(record => historyFilter === "all" || record.entityType === historyFilter).map((record: any) => (
+                                                <tr key={record._id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {new Date(record.createdAt).toLocaleString()}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
+                                                                record.entityType === 'application' ? 'bg-purple-100 text-purple-800' :
+                                                                    'bg-gray-100 text-gray-800'
+                                                            }`}>
+                                                            {record.entityType}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.action === 'created' ? 'bg-green-100 text-green-800' :
+                                                                record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                    record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                        record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                            record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                                'bg-gray-100 text-gray-800'
+                                                            }`}>
+                                                            {record.action}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-sm text-gray-700">
+                                                        {record.details || 'N/A'}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {record.performedBy?.fullName || record.performedBy?.email || 'System'}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                                {history.length > 0 && (
+                                    <div className="mt-4 text-sm text-gray-600">Total: {historyTotal} records</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
             </main>
         </div>
     );
