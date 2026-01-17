@@ -8,8 +8,6 @@ export const logHistory = async (
     entityData: any,
     performedBy: Types.ObjectId | string,
     performedByRole: string,
-    performedBy: Types.ObjectId | string,
-    performedByRole: string,
     details?: string,
     targetOwnerId?: Types.ObjectId | string // Add optional targetOwnerId param
 ) => {
@@ -19,8 +17,6 @@ export const logHistory = async (
             action,
             entityId,
             entityData,
-            performedBy,
-            performedByRole,
             performedBy,
             performedByRole,
             details,
