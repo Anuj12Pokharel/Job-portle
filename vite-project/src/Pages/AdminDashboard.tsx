@@ -11,7 +11,10 @@ import {
     Edit,
     MapPin,
     DollarSign,
-    Download
+    Download,
+    History as HistoryIcon,
+    Menu,
+    X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -22,7 +25,7 @@ import ApplicationModal from "../components/ApplicationModal";
 const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard"); // dashboard, post-job, my-jobs, applications
     const [myJobs, setMyJobs] = useState([]);
-    const [stats, setStats] = useState({ totalJobs: 0, totalApplicants: 0 });
+    const [stats, setStats] = useState({ totalJobs: 0, totalApplicants: 0, rejectedApplicants: 0 });
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -31,6 +34,7 @@ const AdminDashboard = () => {
     const [applicants, setApplicants] = useState<any[]>([]);
     const [selectedApplication, setSelectedApplication] = useState<any | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     // Form State for Post Job
     const [jobData, setJobData] = useState({
@@ -38,7 +42,6 @@ const AdminDashboard = () => {
         position: "",
         category: "",
         jobType: "Full-time",
-        jobLevel: "Entry-level",
         location: "",
         description: "",
         salary: "",
@@ -55,9 +58,26 @@ const AdminDashboard = () => {
         desiredCandidate: ""
     });
     const [logo, setLogo] = useState<File | null>(null);
+    const [editingJobId, setEditingJobId] = useState<string | null>(null);
+    const [history, setHistory] = useState<any[]>([]);
+    const [historyTotal, setHistoryTotal] = useState(0);
+    const [historyFilter, setHistoryFilter] = useState<string>("all");
 
     useEffect(() => {
-        fetchMyJobs();
+        const loadMyJobs = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+            try {
+                // Initial load of jobs
+                const res = await axios.get(`${API_BASE_URL}/api/jobs/myjobs`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                setMyJobs(res.data);
+                setStats(prev => ({ ...prev, totalJobs: res.data.length }));
+            } catch (err) { console.error(err); }
+            setLoading(false);
+        };
+        loadMyJobs();
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             try {
@@ -89,8 +109,30 @@ const AdminDashboard = () => {
             });
             setMyJobs(res.data);
 
-            // Calculate total applicants roughly if API supports, for now just jobs
-            setStats({ totalJobs: res.data.length, totalApplicants: 0 });
+            // Calculate statistics
+            let totalApplicants = 0;
+            let rejectedApplicants = 0;
+
+            // Fetch applicants for each job to get counts
+            const applicantPromises = res.data.map((job: any) =>
+                axios.get(`${API_BASE_URL}/api/jobs/${job._id}/applicants`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                }).catch(() => ({ data: [] }))
+            );
+
+            const applicantResults = await Promise.all(applicantPromises);
+            applicantResults.forEach((result: any) => {
+                if (result.data) {
+                    totalApplicants += result.data.length;
+                    rejectedApplicants += result.data.filter((app: any) => app.status === 'rejected').length;
+                }
+            });
+
+            setStats({
+                totalJobs: res.data.length,
+                totalApplicants,
+                rejectedApplicants
+            });
             setLoading(false);
         } catch (err) {
             console.error("Failed to fetch jobs", err);
@@ -131,6 +173,32 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleEditJob = (job: any) => {
+        // Populate form with job data
+        setJobData({
+            companyName: job.companyName || "",
+            position: job.position || "",
+            category: job.category || "",
+            jobType: job.jobType || "Full-time",
+            location: job.location || "",
+            description: job.description || "",
+            salary: job.salary || "",
+            experience: job.experience || "",
+            educationLevel: job.educationLevel || "",
+            aboutCompany: job.aboutCompany || "",
+            companyWebsite: job.companyWebsite || "",
+            noOfOpenings: job.noOfOpenings || "",
+            industry: job.industry || "",
+            vehicleLicense: job.vehicleLicense || "",
+            twoFourWheeler: job.twoFourWheeler || "",
+            skills: job.skills || "",
+            expiryDate: job.expiryDate ? new Date(job.expiryDate).toISOString().split('T')[0] : "",
+            desiredCandidate: job.desiredCandidate || ""
+        });
+        setEditingJobId(job._id);
+        setActiveTab("post-job");
+    };
+
     const handlePostJob = async (e: React.FormEvent) => {
         e.preventDefault();
         const token = localStorage.getItem("token");
@@ -139,18 +207,42 @@ const AdminDashboard = () => {
         if (logo) formData.append("logo", logo);
 
         try {
-            await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    "Content-Type": "multipart/form-data"
-                },
-            });
-            alert("Job Posted Successfully!");
-            setActiveTab("my-jobs");
-            await fetchMyJobs();
+            if (editingJobId) {
+                // Update existing job
+                await axios.put(`${API_BASE_URL}/api/jobs/update/${editingJobId}`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    },
+                });
+                alert("Job Updated Successfully!");
+                setEditingJobId(null);
+            } else {
+                // Create new job
+                await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data"
+                    },
+                });
+                alert("Job Posted Successfully!");
+            }
+            if (activeTab === 'history') {
+                try {
+                    const res = await axios.get(`${API_BASE_URL}/api/history/my-history`, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    setHistory(res.data.history || []);
+                    setHistoryTotal(res.data.total || 0);
+                } catch (err) {
+                    console.error("Failed to fetch history", err);
+                }
+            } else if (activeTab === 'my-jobs' || activeTab === 'dashboard') {
+                fetchMyJobs();
+            }
             setJobData({
                 companyName: "", position: "", category: "", jobType: "Full-time",
-                jobLevel: "" , location: "", description: "", salary: "", experience: "",
+                location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
                 skills: "", expiryDate: "", desiredCandidate: ""
@@ -226,11 +318,14 @@ const AdminDashboard = () => {
             />
 
             {/* Sidebar */}
-            <aside className="w-64 bg-slate-900 text-white flex flex-col fixed h-full transition-all duration-300 z-10 hidden md:flex">
-                <div className="p-6 border-b border-slate-800">
+            <aside className={`w-64 bg-slate-900 text-white flex flex-col fixed h-full transition-all duration-300 z-20 ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
+                <div className="p-6 border-b border-slate-800 flex justify-between items-center">
                     <h1 className="text-2xl font-bold bg-gradient-to-r from-teal-400 to-cyan-500 bg-clip-text text-transparent">
                         Employer Hub
                     </h1>
+                    <button onClick={() => setIsSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white">
+                        <X size={24} />
+                    </button>
                 </div>
                 <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
                     <button onClick={() => { setActiveTab("dashboard"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
@@ -241,6 +336,21 @@ const AdminDashboard = () => {
                     </button>
                     <button onClick={() => { setActiveTab("my-jobs"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'my-jobs' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> My Jobs
+                    </button>
+                    <button onClick={() => {
+                        setActiveTab("history"); setViewApplicantsJobId(null);
+                        // Fetch history immediately when tab is clicked
+                        const token = localStorage.getItem("token");
+                        if (token) {
+                            axios.get(`${API_BASE_URL}/api/history/my-history`, { headers: { Authorization: `Bearer ${token}` } })
+                                .then(res => {
+                                    setHistory(res.data.history || []);
+                                    setHistoryTotal(res.data.total || 0);
+                                })
+                                .catch(err => console.error(err));
+                        }
+                    }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                        <HistoryIcon className="w-5 h-5 mr-3" /> History
                     </button>
                 </nav>
                 <div className="p-4 border-t border-slate-800">
@@ -253,9 +363,14 @@ const AdminDashboard = () => {
             {/* Main Content */}
             <main className="flex-1 md:ml-64 p-8 transition-all">
                 <header className="flex justify-between items-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-800 capitalize">
-                        {viewApplicantsJobId ? "Job Applicants" : activeTab.replace("-", " ")}
-                    </h2>
+                    <div className="flex items-center gap-4">
+                        <button onClick={() => setIsSidebarOpen(true)} className="md:hidden text-gray-600 hover:text-gray-900">
+                            <Menu size={24} />
+                        </button>
+                        <h2 className="text-3xl font-bold text-gray-800 capitalize">
+                            {viewApplicantsJobId ? "Job Applicants" : activeTab.replace("-", " ")}
+                        </h2>
+                    </div>
                     {/* Profile section removed as per request */}
                 </header>
 
@@ -268,6 +383,20 @@ const AdminDashboard = () => {
                                 <Briefcase className="text-teal-500 w-6 h-6" />
                             </div>
                             <p className="text-3xl font-bold text-gray-800">{stats.totalJobs}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Total Applicants</h3>
+                                <Users className="text-blue-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.totalApplicants}</p>
+                        </div>
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-gray-500 text-sm font-medium">Rejected Applicants</h3>
+                                <Users className="text-red-500 w-6 h-6" />
+                            </div>
+                            <p className="text-3xl font-bold text-gray-800">{stats.rejectedApplicants}</p>
                         </div>
                     </div>
                 )}
@@ -311,7 +440,10 @@ const AdminDashboard = () => {
                                                     >
                                                         View Applicants
                                                     </button>
-                                                    <button onClick={() => handleDeleteJob(job._id)} className="text-red-500 hover:text-red-700 p-2">
+                                                    <button onClick={() => handleEditJob(job)} className="text-blue-500 hover:text-blue-700 p-2" title="Edit Job">
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button onClick={() => handleDeleteJob(job._id)} className="text-red-500 hover:text-red-700 p-2" title="Delete Job">
                                                         <Trash2 className="w-5 h-5" />
                                                     </button>
                                                 </td>
@@ -397,6 +529,7 @@ const AdminDashboard = () => {
                 {/* Post Job View */}
                 {activeTab === "post-job" && (
                     <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6">{editingJobId ? "Edit Job" : "Post New Job"}</h3>
                         <form onSubmit={handlePostJob} className="space-y-6">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
@@ -435,20 +568,6 @@ const AdminDashboard = () => {
                                         <option>Remote</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Level</label>
-                                <select
-  value={jobData.jobLevel}
-  onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })}
-  className="w-full border rounded-lg px-4 py-2"
->
- <option value="Entry-level">Entry-level</option>
-  <option value="Mid-level">Mid-level</option>
-  <option value="Senior-level">Senior-level</option>
-  <option value="Junior">Junior</option>
-  <option value="Executive">Executive</option>
-</select>
-                                </div>  
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                                     <input type="text" value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
@@ -514,11 +633,108 @@ const AdminDashboard = () => {
                             </div>
 
                             <button type="submit" className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition">
-                                Post Job
+                                {editingJobId ? "Update Job" : "Post Job"}
                             </button>
                         </form>
                     </div>
                 )}
+
+                {activeTab === 'history' && (
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="p-6 border-b border-gray-100">
+                            <h2 className="text-xl font-semibold text-gray-800">Activity History</h2>
+                        </div>
+                        <div className="p-6">
+                            {/* Filter Tabs */}
+                            <div className="flex gap-2 mb-4 border-b">
+                                <button
+                                    onClick={() => setHistoryFilter("all")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    All History
+                                </button>
+                                <button
+                                    onClick={() => setHistoryFilter("application")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    Applicant History
+                                </button>
+                                <button
+                                    onClick={() => setHistoryFilter("job")}
+                                    className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
+                                        ? "border-b-2 border-teal-500 text-teal-600"
+                                        : "text-gray-600 hover:text-gray-800"
+                                        }`}
+                                >
+                                    Job History
+                                </button>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full">
+                                    <thead className="bg-gray-50">
+                                        <tr>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performed By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {history.filter(record => historyFilter === "all" || record.entityType === historyFilter).length === 0 ? (
+                                            <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No {historyFilter !== "all" ? historyFilter : ""} history records found</td></tr>
+                                        ) : (
+                                            history.filter(record => historyFilter === "all" || record.entityType === historyFilter).map((record: any) => (
+                                                <tr key={record._id} className="hover:bg-gray-50">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {new Date(record.createdAt).toLocaleString()}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
+                                                            record.entityType === 'application' ? 'bg-purple-100 text-purple-800' :
+                                                                'bg-gray-100 text-gray-800'
+                                                            }`}>
+                                                            {record.entityType}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap capitalize">
+                                                        <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${record.action === 'created' ? 'bg-green-100 text-green-800' :
+                                                            record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                    record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                        record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                            'bg-gray-100 text-gray-800'
+                                                            }`}>
+                                                            {record.action}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 text-sm text-gray-700">
+                                                        {record.details || 'N/A'}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {record.performedBy?.fullName || record.performedBy?.email || 'System'}
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                                {history.length > 0 && (
+                                    <div className="mt-4 text-sm text-gray-600">Total: {historyTotal} records</div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
             </main>
         </div>
     );

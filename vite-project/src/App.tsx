@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route,useLocation } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import EmployeerRegister from "./Pages/EmployeerRegister";
@@ -36,6 +36,12 @@ import Payrollmanagement from "./Pages/Services/Payrollmanagement";
 import Jobposting from "./Pages/Services/Jobposting";
 
 function App() {
+  const location = useLocation();
+  const hideFooter = 
+    location.pathname.startsWith("/admin-dashboard") || 
+    location.pathname.startsWith("/super-admin-dashboard")  
+    
+
   return (
     <>
       <Navbar />
@@ -91,7 +97,7 @@ function App() {
         <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
         <Route path="/registration-pending" element={<RegistrationPending />}></Route>
       </Routes>
-      <Footer />
+      {!hideFooter && <Footer />}
     </>
   );
 }

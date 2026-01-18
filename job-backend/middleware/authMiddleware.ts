@@ -47,4 +47,12 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
   return res.status(401).json({ message: "Not authorized, no token" });
 };
 
+export const checkSuperAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user && req.user.role === "superadmin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Not authorized as super admin" });
+  }
+};
+
 export default protect;

@@ -24,7 +24,4 @@ const trainingSchema = new Schema<ITraining>(
 );
 
 const Training = model<ITraining>("Training", trainingSchema);
-
-
-
 export default Training;
