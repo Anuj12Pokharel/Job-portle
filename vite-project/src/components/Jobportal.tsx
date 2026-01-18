@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Form from "./Form";
+import { div } from "framer-motion/client";
 export default function JobPortal() {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -34,8 +35,9 @@ export default function JobPortal() {
   }
 
   return (
-    <div className=" bg-gradient-to-r bg-cyan-100 p-6 flex flex-col items-center rounded-xl">
-      <div className="text-center mb-6">
+   <div className="p-6">
+     <div className=" p-6 rounded-xl border-2 border-cyan-500 bg-white shadow-lg ring-2 ring-cyan-300 animate-pulse">
+     <div className="text-center mb-6">
         <p className="text-2xl  mb-4 text-cyan-600 font-bold">
           Looking for new opportunity?
         </p>
@@ -43,7 +45,7 @@ export default function JobPortal() {
           className="border border-gray-400 text-cyan-600 px-6 py-2 rounded hover:bg-gray-300 transition"
           onClick={() => setShowForm((prev) => !prev)}
         >
-          {showForm ? "Close form G��" : "Open to new role G��"}
+          {showForm ? "Close form " : "Open to new roles"}
         </button>
       </div>
 
@@ -64,5 +66,6 @@ export default function JobPortal() {
       {/* Jobcard section always visible */}
       <div className="w-full max-w-6xl"></div>
     </div>
+   </div>
   );
 }

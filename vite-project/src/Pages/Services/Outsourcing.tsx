@@ -13,9 +13,10 @@ const Outsourcing = () => {
             Reliable Outsourcing for Better Productivity
           </h2>
           <p className="text-black mt-2 text-justify">
-            Delegate time-consuming tasks to trusted professionals through our
-            outsourcing services. Reduce your workload and operational stress
-            while maintaining high-quality performance.
+           We facilities right from recruitment processes
+          and induction to payroll management, and exit management, our
+          HR outsourcing services streamline procedures and reduce
+          administrative burdens on your organization.
           </p>
         </div>
 

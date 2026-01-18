@@ -4,18 +4,18 @@ import LogoSlider from "../../components/LogoSlider";
 import Benefitservice from "../../components/Benefitservice";
 import FQ from "../../components/FQ";
 
-const Hiring = () => {
+const Outsourcing = () => {
   return (
     <div className="">
       <div className="flex flex-col lg:flex-row items-center md:gap-8  p-8">
         <div className="flex-1">
           <h2 className="font-bold  text-teal-600 text-3xl">
-            Simplify Hiring and Workforce Management
+            Job Posting Platform
           </h2>
           <p className="text-black mt-2 text-justify">
-            JobLink Job provides user-friendly tools to help you manage job
-            postings, review applicants, and oversee employee progress, all from
-            a single platform designed for smooth hiring experiences.
+          We allow employers to reach a wide range
+of possible candidates, increasing visibility and improving the
+effectiveness of the hiring process through our job portal.
           </p>
         </div>
 
@@ -35,4 +35,4 @@ const Hiring = () => {
   );
 };
 
-export default Hiring;
+export default Outsourcing;

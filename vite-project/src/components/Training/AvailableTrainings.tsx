@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Clock, Calendar, DollarSign, User } from "lucide-react";
+import { Clock, Calendar,User } from "lucide-react";
 
 interface Training {
     id: number;
@@ -51,13 +51,18 @@ const AvailableTrainings = () => {
     }
 
     return (
-        <section className="py-16 bg-gray-50">
-            <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
-                    Available Training Courses
-                </h2>
+        <section className="p-6 bg-gray-50">
+             <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent ">
+              Training Gallery
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+              Explore our comprehensive training programs designed to accelerate
+              your career growth.
+            </p>
+          
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {trainings.map((training) => (
                         <div
                             key={training.id}
@@ -81,25 +86,25 @@ const AvailableTrainings = () => {
 
                                 <div className="space-y-2 mb-4">
                                     <div className="flex items-center text-gray-600">
-                                        <User className="h-4 w-4 mr-2 text-blue-500" />
+                                        <User className="h-4 w-4 mr-2 text-cyan-500" />
                                         <span className="text-sm">{training.instructor}</span>
                                     </div>
                                     <div className="flex items-center text-gray-600">
-                                        <Clock className="h-4 w-4 mr-2 text-blue-500" />
+                                        <Clock className="h-4 w-4 mr-2 text-cyan-500" />
                                         <span className="text-sm">{training.duration}</span>
                                     </div>
                                     <div className="flex items-center text-gray-600">
-                                        <Calendar className="h-4 w-4 mr-2 text-blue-500" />
+                                        <Calendar className="h-4 w-4 mr-2 text-cyan-500" />
                                         <span className="text-sm">Starts: {training.startDate}</span>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                    <div className="flex items-center font-bold text-blue-600 text-lg">
-                                        <DollarSign className="h-5 w-5" />
-                                        <span>{training.price.replace('$', '')}</span>
+                                    <div className="flex items-center font-bold text-cyan-600 text-lg">
+                                       <span className="font-semibold"> Rs {training.price} </span>
+
                                     </div>
-                                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                    <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors">
                                         Enroll Now
                                     </button>
                                 </div>
