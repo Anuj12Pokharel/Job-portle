@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
@@ -8,3 +9,15 @@ router.post("/login", AdminController_1.loginAdmin);
 router.post("/forgot-password", AdminController_1.forgotPasswordAdmin);
 router.post("/reset-password", AdminController_1.resetPasswordAdmin);
 exports.default = router;
+=======
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const AdminController_1 = require("../controller/AdminController");
+const router = (0, express_1.Router)();
+router.post("/register", AdminController_1.registerAdmin);
+router.post("/login", AdminController_1.loginAdmin);
+router.post("/forgot-password", AdminController_1.forgotPasswordAdmin);
+router.post("/reset-password", AdminController_1.resetPasswordAdmin);
+exports.default = router;
+>>>>>>> origin/job

@@ -16,6 +16,7 @@ import blogRoutes from "./routes/BlogRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
 import clientLogoRoutes from "./routes/clientLogoRoutes"; 
 import teamRoutes from "./routes/teamRoutes";
+import historyRoutes from "./routes/historyRoutes";
 
 
 import userRoutes from "./routes/userRoutes";
@@ -42,6 +43,7 @@ app.use("/api/blog", blogRoutes);
 app.use("/api/training", trainingRoutes);
 app.use("/api/client-logos", clientLogoRoutes);
 app.use("/api/team",teamRoutes);
+app.use("/api/history", historyRoutes);
 
 
 const logsDir = path.join(__dirname, "logs");
