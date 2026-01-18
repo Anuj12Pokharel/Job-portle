@@ -14,7 +14,7 @@ export default function Form({
       onSubmit={onSubmit}
       className="bg-white rounded-lg shadow-lg overflow-hidden"
     >
-      <div className="bg-blue-600 text-white text-center py-4">
+      <div className="bg-cyan-600 text-white text-center py-4">
         <h2 className="text-xl font-semibold">
           Join Our Exclusive Talent Network
         </h2>
@@ -197,7 +197,7 @@ export default function Form({
             />
             <button
               type="button"
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded inline-flex items-center justify-center mx-auto"
+              className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded inline-flex items-center justify-center mx-auto"
               onClick={() => document.getElementById("fileInput").click()}
             >
               <Upload className="mr-2 h-4 w-4" /> Choose File
@@ -215,7 +215,7 @@ export default function Form({
           <button
             type="submit"
             disabled={isSubmitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-3 text-lg rounded"
+            className="bg-cyan-600 hover:bg-cyan-700 text-white px-12 py-3 text-lg rounded"
           >
             {isSubmitting ? "Submitting..." : "Submit Application"}
           </button>

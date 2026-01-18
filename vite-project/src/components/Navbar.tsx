@@ -1,7 +1,7 @@
 "use client";
 import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase, LayoutDashboard } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import Categories from "./Job/Categories";
 
@@ -63,13 +63,15 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Left: Logo */}
           <div className="flex items-center flex-shrink-0">
-            <Link to="/" className="w-[60px] h-[60px] rounded-full overflow-hidden border border-gray-200 block">
-              <img
-                src={logo}
-                alt="Logo"
-                className="w-full h-full object-cover"
-              />
-            </Link>
+             <Link to="/" className="flex items-center gap-2">
+    {/* Circular Logo */}
+    <img
+      src={logo}
+      alt="JobLink 360 Logo"
+      className="h-full w-48"
+    />
+  </Link>
+
           </div>
 
           {/* Center: Navigation Links */}
@@ -127,34 +129,29 @@ export default function Navbar() {
 
               {servicesOpen && (
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                  <Link
-                    to="/services/hiring-tools"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
-                    onClick={() => setServicesOpen(false)}
-                  >
-                    Hiring & Management Tools
-                  </Link>
+                 
                   <Link
                     to="/services/recruitment"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
                     onClick={() => setServicesOpen(false)}
                   >
-                    Recruitment
+                    Recruitment and Staffing Services
                   </Link>
                   <Link
                     to="/services/outsourcing"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
                     onClick={() => setServicesOpen(false)}
                   >
-                    Outsourcing
+                    Staff Outsourcing
                   </Link>
-                  <Link
-                    to="/services/corporate&eventmanagement"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
+                   <Link
+                    to="/services/payroll-management"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     onClick={() => setServicesOpen(false)}
                   >
-                    Corporate Event Management
+                    Payroll Management
                   </Link>
+                 
                   <Link
                     to="/services/hr-consulting"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
@@ -168,6 +165,21 @@ export default function Navbar() {
                     onClick={() => setServicesOpen(false)}
                   >
                     Training and Development
+                  </Link>
+                  
+                     <Link
+                    to="/services/job-posting"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                    Job Posting Platform
+                  </Link>
+                   <Link
+                    to="/services/corporate&eventmanagement"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
+                    onClick={() => setServicesOpen(false)}
+                  >
+                    Corporate Event Management
                   </Link>
                 </div>
               )}
@@ -270,7 +282,7 @@ export default function Navbar() {
   </button>
 
   {jobseekerOpen && (
-    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+    <div className="absolute top-full right-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
       <Link
         to="/Jobseeker-Login"
         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -289,27 +301,32 @@ export default function Navbar() {
 
 
                 {/* For Employers */}
-                <div className="relative">
-                  <button
-                    onClick={() => setEmployerOpen(!employerOpen)}
-                    className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium"
-                  >
-                    For Employers <ChevronDown className="w-4 h-4" />
-                  </button>
+                <div className="relative h-full flex items-center"
+                  onMouseEnter={() => setEmployerOpen(true)}
+                  onMouseLeave={() => setEmployerOpen(false)}
+                >
+                  <button className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium py-2">
+    For Employers
+    <ChevronDown
+      className={`w-4 h-4 transition-transform ${
+        employerOpen ? "rotate-180" : ""
+      }`}
+    />
+  </button>
 
                   {employerOpen && (
-                    <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                    <div className="absolute top-full right-0  w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                       <Link
                         to="/Employeer-Login"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setEmployerOpen(false)}
+                        
                       >
                         Login
                       </Link>
                       <Link
                         to="/Employeer-Register"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        onClick={() => setEmployerOpen(false)}
+            
                       >
                         Register
                       </Link>
@@ -392,7 +409,7 @@ export default function Navbar() {
                   className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
                 >
                   For Jobseekers
-                  <span>{jobseekerOpen ? "G��" : "G�+"}</span>
+                  <span>{jobseekerOpen ? "−" : "+"}</span>
                 </button>
                 {jobseekerOpen && (
                   <div className="mt-2 space-y-2 pl-4">
@@ -421,7 +438,7 @@ export default function Navbar() {
                   className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
                 >
                   For Employers
-                  <span>{employerOpen ? "G��" : "G�+"}</span>
+                  <span>{employerOpen ? "−" : "+"}</span>
                 </button>
                 {employerOpen && (
                   <div className="mt-2 space-y-2 pl-4">

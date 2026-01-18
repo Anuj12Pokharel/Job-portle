@@ -29,7 +29,7 @@ const LogoSlider = () => {
   return (
     <div className="px-20">
       <h1 className=" text-center mt-9 font-bold text-3xl text-cyan-600">
-        Some of our happy clients
+        Top Employees
       </h1>
       <div className="flex overflow-hidden py-12 px-14">
         <div className="flex space-x-16 animate-marquee ">

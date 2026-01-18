@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { CheckCircle, ArrowRight, Users } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+import jobseekerImg from "../../assets/Jobseeker.jpg";
 
 const features = [
   "Joblink360 provides free one-on-one career counseling to help individuals plan their career path effectively. ",
@@ -32,7 +33,7 @@ const Jobseeker = () => {
   const isInView = useInView(ref, { once: true }); // animate only once when visible
 
   return (
-    <section className="py-10 px-10 " ref={ref}>
+    <section ref={ref} className=" px-6 ">
       <div className="container px-4 mx-auto">
         <div className="flex flex-col lg:flex-row gap-12 items-center">
           <div className="lg:w-1/2">
@@ -58,27 +59,14 @@ const Jobseeker = () => {
               ))}
             </motion.div>
           </div>
-          <div className="lg:w-1/2 ">
-            <div className="border border-gray-300 rounded-lg hover:shadow-lg transition-shadow duration-200">
-              <div className="p-8 text-center">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Users className="h-16 w-16 text-cyan-600" />
-                </div>
+         <div className="lg:w-1/2 flex justify-center items-center">
+  <img
+    src={jobseekerImg}
+    alt="Job Seeker Illustration"
+    className="w-full max-w-md mx-auto object-contain"
+  />
+</div>
 
-                <h3 className="text-xl font-semibold mb-4">For Job Seekers</h3>
-
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  Create your profile, showcase your skills, and get discovered
-                  by top employers in Nepal.
-                </p>
-
-                <button className="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">
-                  Create Your Profile
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>

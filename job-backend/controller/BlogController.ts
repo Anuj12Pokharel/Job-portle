@@ -43,4 +43,56 @@ export const createBlog = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// export const updateBlog = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const { title, body, author } = req.body;
 
+//     const blog = await Blog.findById(id);
+//     if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+//     // delete old image if new uploaded
+//     if (req.file && blog.image) {
+//       const oldImagePath = path.resolve(blog.image);
+//       if (fs.existsSync(oldImagePath)) {
+//         fs.unlinkSync(oldImagePath);
+//       }
+//       blog.image = `uploads/blog/${req.file.filename}`;
+//     }
+
+//     blog.title = title ?? blog.title;
+//     blog.body = body ?? blog.body;
+//     blog.author = author ?? blog.author;
+
+//     await blog.save();
+//     res.status(200).json(blog);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+
+// // Delete blog (only superadmin)
+// export const deleteBlog = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const blog = await Blog.findById(id);
+//     if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+//     // Delete image if exists
+//     if (blog.image) {
+//       const imagePath = path.resolve(blog.image);
+//       if (fs.existsSync(imagePath)) {
+//         fs.unlinkSync(imagePath);
+//       }
+//     }
+
+//     await Blog.findByIdAndDelete(id);
+//     res.status(200).json({ message: "Blog deleted successfully" });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
