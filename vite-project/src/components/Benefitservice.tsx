@@ -25,7 +25,7 @@ const Benefitservice = () => {
           </div>
           <div>
             <h1 className="text-cyan-600 text-xl font-bold mt-4">
-              03G�� Proven Hiring Success{" "}
+              03 Proven Hiring Success{" "}
             </h1>
             <p className="mt-2">
               More than 1000+ candidates have been successfully placed across
@@ -34,16 +34,16 @@ const Benefitservice = () => {
           </div>
           <div>
             <h1 className="text-cyan-600 text-xl font-bold mt-4">
-              04G�� Trusted by Employers
+              04 Trusted by Employers
             </h1>{" "}
             <p className="mt-2">
-              WeG��ve collaborated with 100+ companies across multiple
+              We've collaborated with 100+ companies across multiple
               industries, earning their trust and satisfaction.
             </p>
           </div>
           <div>
             <h1 className="text-cyan-600 text-xl font-bold mt-4 ">
-              05G�� Industry Expertise{" "}
+              05 Industry Expertise{" "}
             </h1>
             <p className="mt-2">
               With over a decade of hands-on experience, we bring expert

@@ -13,7 +13,7 @@ const faqs = [
       "Service charges vary depending on the number of employees, the level of service required, and future collaboration opportunities.",
   },
   {
-    question: " WhatG��s the cost structure for HR consulting?",
+    question: " What is the cost structure for HR consulting?",
     answer:
       "Our pricing is flexible and depends on your business needs and the scope of work. Reach out to us for a personalized quote. ",
   },
@@ -35,7 +35,7 @@ const faqs = [
   {
     question: "What outsourcing services do you offer?",
     answer:
-      "We handle end-to-end employee lifecycle managementG��recruitment, onboarding, payroll, SSF/CIT deposits, compliance documentation, and exit settlements.",
+      "We handle end-to-end employee lifecycle management,recruitment, onboarding, payroll, SSF/CIT deposits, compliance documentation, and exit settlements.",
   },
   {
     question: " How does outsourcing benefit my business?",
@@ -82,33 +82,37 @@ export default function FQ() {
   };
 
   return (
-    <div className=" mx-auto p-9">
-      <h2 className="text-3xl font-bold text-center mb-8 text-cyan-600">
-        Frequently Asked Questions
-      </h2>
-      <div className="grid md:grid-cols-2 gap-5 max-h-[50vh] overflow-y-auto md:max-h-full ">
-        {faqs.map((faq, index) => (
-          <div
-            key={index}
-            className="border rounded-lg shadow-sm overflow-y-auto"
-          >
-            <button
-              onClick={() => toggleFAQ(index)}
-              className="flex justify-between items-center w-full text-left p-4 font-medium text-gray-900 hover:bg-gray-100"
-            >
-              {faq.question}
-              {openIndex === index ? (
-                <ChevronUp className="h-5 w-5 text-black" />
-              ) : (
-                <ChevronDown className="h-5 w-5 text-gray-800" />
-              )}
-            </button>
-            {openIndex === index && (
-              <div className="p-4 border-t text-gray-600">{faq.answer}</div>
-            )}
+    <div className="mx-auto p-9 max-w-6xl">
+  <h2 className="text-3xl font-bold text-center mb-8 text-cyan-600">
+    Frequently Asked Questions
+  </h2>
+
+  <div className="columns-1 md:columns-2 gap-6">
+    {faqs.map((faq, index) => (
+      <div
+        key={index}
+        className="mb-6 break-inside-avoid border rounded-lg shadow-sm bg-white"
+      >
+        <button
+          onClick={() => toggleFAQ(index)}
+          className="flex justify-between items-center w-full text-left p-4 font-medium text-gray-900 hover:bg-gray-100"
+        >
+          {faq.question}
+          {openIndex === index ? (
+            <ChevronUp className="h-5 w-5" />
+          ) : (
+            <ChevronDown className="h-5 w-5" />
+          )}
+        </button>
+
+        {openIndex === index && (
+          <div className="p-4 border-t text-gray-600">
+            {faq.answer}
           </div>
-        ))}
+        )}
       </div>
-    </div>
+    ))}
+  </div>
+</div>
   );
 }

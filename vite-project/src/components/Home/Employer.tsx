@@ -1,13 +1,14 @@
 import React, { useRef } from "react";
 import { CheckCircle, ArrowRight, Users, Building } from "lucide-react";
 import { motion, useInView } from "framer-motion";
+import jobseekerImg from "../../assets/Employeer.jpg";
 
 const features = [
   "Joblink360 uses smart technology to quickly suggest the best candidates for job openings.  ",
   "Employers can access a verified database of jobseekers with pre-screened and background-checked profiles. ",
   "The platform includes an interview scheduling tool that helps employers manage interviews efficiently.  ",
   "A custom employer dashboard provides real-time data on hiring stats, applicant flow, and recruitment performance. ",
-  "Job openings are promoted across Joblink360G��s social media channels to increase visibility and reach.",
+  "Job openings are promoted across Joblink360 social media channels to increase visibility and reach.",
   "Employers gain access to a pool of verified jobseekers with reliable and background-checked profiles.",
 ];
 
@@ -58,27 +59,15 @@ const Employer = () => {
               ))}
             </motion.div>
           </div>
-          <div className="lg:w-1/2 ">
-            <div className="border border-gray-300 rounded-lg hover:shadow-lg transition-shadow duration-200">
-              <div className="p-8 text-center">
-                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Building className="h-16 w-16 text-teal-600" />
-                </div>
+         <div className="lg:w-1/2 flex justify-center items-center">
+  <img
+    src={jobseekerImg}
+    alt="Job Seeker Illustration"
+    className="w-full max-w-md mx-auto object-contain"
+  />
+</div>
 
-                <h3 className="text-xl font-semibold mb-4">For Employers</h3>
-
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  Get a qualified candidates and find the perfect match for your
-                  team.
-                </p>
-
-                <button className="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 text-white py-2 px-4 rounded-md">
-                  Post a Job
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
+            
         </div>
       </div>
     </section>

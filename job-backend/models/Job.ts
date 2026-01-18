@@ -6,7 +6,7 @@ export interface IJob extends Document {
   position: string;
   category: string;
   location: string;
-  jobLevel?: string;
+  jobLevel?: string; 
   jobType: "Full-time" | "Part-time" | "Internship" | "Contract" | "Remote";
   salary?: string;
   educationLevel?: string;
@@ -31,7 +31,10 @@ const jobSchema = new Schema<IJob>(
     position: { type: String, required: true },
     category: { type: String, required: true },
     location: { type: String, required: true },
-    jobLevel: { type: String },
+    jobLevel: { type: String,
+      enum: ["Entry-level", "Mid-level", "Senior-level", "Junior", "Executive"],
+
+     },
     jobType: {
       type: String,
       enum: ["Full-time", "Part-time", "Internship", "Contract", "Remote"],

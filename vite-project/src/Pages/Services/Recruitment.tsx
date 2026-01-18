@@ -13,9 +13,11 @@ const Recruitment = () => {
             Effective Recruitment That Delivers Results
           </h2>
           <p className="text-black mt-2 text-justify">
-            Our recruitment services connect you with the best-fit candidates
-            quickly and efficiently. We handle the sourcing, screening, and
-            shortlisting so you can focus on choosing the perfect hire.
+           Our comprehensive
+recruitment services are crafted exclusively for local hiring all
+over Nepal. Recruitment process (screening, shortlisting,
+selecting, initial interview, interview scheduling, and follow up to
+the candidates).
           </p>
         </div>
 

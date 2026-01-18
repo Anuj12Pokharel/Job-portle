@@ -13,10 +13,10 @@ const Training = () => {
             Strategic HR Consulting for Better Business Practices{" "}
           </h2>
           <p className="text-black mt-2 text-justify">
-            Enhance your HR operations with guidance from our expert
-            consultants. From improving workplace policies to boosting employee
-            satisfaction, we help align your HR practices with your companyG��s
-            goals.
+           We assist to design people and culture policies of
+the organizations, conduct HR audits, and develop efficient
+organizational structures that optimize business development
+and regulatory adherence. 
           </p>
         </div>
 

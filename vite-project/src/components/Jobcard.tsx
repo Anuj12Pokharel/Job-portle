@@ -1,100 +1,124 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-function CardBlock({ title, note, items }) {
-  const [isHovered, setIsHovered] = useState(false);
+// Tabs for UI
+const LEVELS_UI = ["Senior", "Mid", "Junior"];
 
-  const toggleList = () => {
-    // Toggle for mobile (tap support)
-    setIsHovered((prev) => !prev);
+// Mapping from UI tab to backend enum
+const LEVELS_MAP: Record<string, string> = {
+  Senior: "Senior-level",
+  Mid: "Mid-level",
+  Junior: "Junior",
+};
+
+interface Job {
+  _id: string;
+  position: string;
+  companyName: string;
+  logo?: string;
+  jobLevel: string;
+}
+
+
+export default function Jobcard() {
+  const [activeLevel, setActiveLevel] = useState("Senior");
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(false);
+  const backendBase =
+    import.meta.env.VITE_API_BASE_URL ||
+    "http://localhost:5000";
+
+const buildLogoUrl = (logo?: string) => {
+    if (!logo) return "";
+    const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
+    return cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
+  };
+
+  useEffect(() => {
+    fetchJobs(activeLevel);
+  }, [activeLevel]);
+
+  const fetchJobs = async (level: string) => {
+    try {
+      setLoading(true);
+      const backendLevel = LEVELS_MAP[level]; // Map UI tab to backend enum
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_BASE_URL}/api/jobs/by-level`,
+        { params: { level: backendLevel } }
+      );
+      // Ensure jobs is always an array
+      setJobs(response.data || []);
+    } catch (err) {
+      console.error("Failed to fetch jobs:", err);
+      setJobs([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="flex flex-col">
-      <div
-        className="border-2 border-gray-200 relative cursor-pointer rounded-lg"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onClick={toggleList}
+   <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 w-full max-w-sm mx-auto lg:mx-0">
+  <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
+    Explore Jobs By Level
+  </h2>
+
+  {/* Tabs */}
+  <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
+    {LEVELS_UI.map((level) => (
+      <button
+        key={level}
+        onClick={() => setActiveLevel(level)}
+        className={`px-3 sm:px-4 py-1.5 rounded-full border text-xs sm:text-sm transition ${
+          activeLevel === level
+            ? "bg-blue-600 text-white border-blue-600"
+            : "border-gray-300 text-gray-600"
+        }`}
       >
-        {/* Header */}
-        <div className="p-4">
-          <h2 className="text-xl font-semibold text-cyan-500">{title}</h2>
-          {note && (
-            <p className="text-sm text-gray-600">
-              {isHovered ? "Release to close list" : note}
-            </p>
-          )}
-        </div>
+        {level}
+      </button>
+    ))}
+  </div>
 
-        {/* Content */}
+  {/* Job Cards */}
+  {loading ? (
+    <p className="text-center text-gray-500">Loading...</p>
+  ) : jobs.length === 0 ? (
+    <p className="text-center text-gray-400">No jobs found</p>
+  ) : (
+    <div className="flex flex-col gap-3">
+      {jobs.slice(0, 4).map((job) => (
         <div
-          className={`${
-            isHovered
-              ? "bg-white border border-cyan-500 rounded shadow-lg w-full max-h-64 overflow-auto transition-all duration-300 ease-in-out"
-              : "hidden"
-          }`}
+          key={job._id}
+          className="flex items-start sm:items-center gap-3 bg-white p-3 sm:p-4 rounded-xl shadow-sm"
         >
-          <ol className="flex flex-row flex-wrap gap-4 text-black p-4">
-            {items.map((item, idx) => (
-              <li
-                key={idx}
-                className="text-base hover:text-cyan-600 hover:font-semibold transition-colors duration-200"
-              >
-                {item}
-              </li>
-            ))}
-          </ol>
+          <img
+            src={buildLogoUrl(job.logo)}
+            alt={job.companyName}
+            className="w-10 h-10 object-contain flex-shrink-0"
+          />
+          <div>
+            <p className="font-medium text-sm sm:text-base">
+              {job.position}
+            </p>
+            <p className="text-xs sm:text-sm text-gray-500">
+              {job.companyName}
+            </p>
+          </div>
         </div>
-      </div>
-    </div>
-  );
-}
-
-export default function Jobcard() {
-  const jobCategories = [
-    {
-      title: "JOBS BY EMPLOYMENT TYPE:",
-      note: "(hover to see list)",
-      items: [
-        "Full time",
-        "Part time",
-        "Contract",
-        "Freelance",
-        "Internship",
-        "Traineeship",
-      ],
-    },
-    {
-      title: "JOBS BY SECTOR TYPE:",
-      note: "(hover to see list)",
-      items: [
-        "Government",
-        "Banking & Insurance",
-        "NGOs & INGOs",
-        "Industry",
-        "Hospitality",
-        "IT",
-      ],
-    },
-    {
-      title: "JOBS BY LOCATION:",
-      note: "(hover to see list)",
-      items: [
-        "Kathmandu",
-        "Lalitpur",
-        "Pokhara",
-        "Birjung",
-        "Kanchanpur",
-        "more",
-      ],
-    },
-  ];
-
-  return (
-    <div className="flex flex-col gap-6">
-      {jobCategories.map((cat, idx) => (
-        <CardBlock key={idx} {...cat} />
       ))}
     </div>
+  )}
+
+  {/* View All */}
+  <div className="text-center mt-6">
+    <a
+      href={`/jobs?level=${LEVELS_MAP[activeLevel]}`}
+      className="text-blue-600 font-medium hover:underline text-sm"
+    >
+      View All →
+    </a>
+  </div>
+</div>
+
   );
 }

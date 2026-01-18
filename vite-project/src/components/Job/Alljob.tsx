@@ -28,8 +28,10 @@ const Alljob = () => {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {jobs
-          .slice(-15)
-          .reverse()
+           .filter((job) => {
+    if (!job.expiryDate) return true;
+    return new Date(job.expiryDate) >= new Date();
+  })
           .map((job) => (
             <div
               key={job._id}
@@ -63,14 +65,16 @@ const Alljob = () => {
 
                 <div className="flex items-center gap-1">
                   <Calendar className="w-5 h-5 text-gray-500" />
-                <span>
-                  {job.expiryDate
-                    ? `${Math.ceil(
-                        (new Date(job.expiryDate).getTime() - Date.now()) /
-                          (1000 * 60 * 60 * 24),
-                      )} days left`
-                    : "No expiry"}
-                </span>
+               <span>
+  {job.expiryDate
+    ? (() => {
+        const diff = new Date(job.expiryDate).getTime() - Date.now();
+        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+        return days <= 0 ? "Closing today" : `${days} days left`;
+      })()
+    : "No expiry"}
+</span>
+                
                 </div>
               </div>
 

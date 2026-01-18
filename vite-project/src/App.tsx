@@ -14,7 +14,6 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Services from "./Pages/Services/Services";
 import Corporate from "./Pages/Services/Corporate";
-import Hiring from "./Pages/Services/Hiring";
 import Outsourcing from "./Pages/Services/Outsourcing";
 import Recruitment from "./Pages/Services/Recruitment";
 import Resource from "./Pages/Services/Resource";
@@ -33,6 +32,8 @@ import RegistrationPending from "./Pages/RegistrationPending";
 import Jobs from "./Pages/Jobs";
 import BlogDetails from "./Pages/BlogDetails";
 import Createblog from "./Pages/Createblog";
+import Payrollmanagement from "./Pages/Services/Payrollmanagement";
+import Jobposting from "./Pages/Services/Jobposting";
 
 function App() {
   return (
@@ -63,10 +64,11 @@ function App() {
           path="/services/corporate&eventmanagement"
           element={<Corporate />}
         ></Route>
-        <Route path="/services/hiring-tools" element={<Hiring />}></Route>
         <Route path="/services/outsourcing" element={<Outsourcing />}></Route>
         <Route path="/services/recruitment" element={<Recruitment />}></Route>
         <Route path="/services/hr-consulting" element={<Resource />}></Route>
+        <Route path="/services/payroll-management" element={<Payrollmanagement />}></Route>
+        <Route path="/services/job-posting" element={<Jobposting />}></Route>
         <Route
           path="/services/training_and_development"
           element={<Training />}

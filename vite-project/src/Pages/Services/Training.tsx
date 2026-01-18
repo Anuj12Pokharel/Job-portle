@@ -10,13 +10,13 @@ const Training = () => {
       <div className="flex flex-col lg:flex-row items-center md:gap-8  p-8">
         <div className="flex-1">
           <h2 className="font-bold  text-teal-600 text-3xl">
-            Simplify Hiring and <br />
-            Workforce Management
+           Training and Development
           </h2>
           <p className="text-black mt-2 text-justify">
-            JobLink Job provides user-friendly tools to help you manage job
-            postings, review applicants, and oversee employee progress, all from
-            a single platform designed for smooth hiring experiences.
+            Our soft skills training is designed to
+strengthen communication, leadership, teamwork, and other vital
+interpersonal abilities, thereby strengthening company growth as
+well as individual’s professional growth and career success. 
           </p>
         </div>
 

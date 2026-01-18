@@ -1,10 +1,13 @@
 import React from "react";
 import backgroundImage from "../assets/back.jpeg";
 import Ourteam from "./Ourteam";
-import Joblink from "../assets/JobLink.jpeg";
-import mission from "../assets/Mission.jpeg";
-import vision from "../assets/Vision.jpeg";
-import whychoose from "../assets/Choose.jpeg";
+import Joblink from "../assets/About.jpg";
+import mission from "../assets/Mission.jpg";
+import vision from "../assets/Vision.jpg";
+import whychoose from "../assets/Choose.jpg";
+import { LeadershipProfile } from "../components/LeadershipProfile";
+import managerImg from "../assets/Tirtha.jpeg"
+import photo from "../assets/depraaj.jpeg"
 
 export default function Aboutus() {
   return (
@@ -16,9 +19,50 @@ export default function Aboutus() {
         {" "}
         <p className="text-white font-bold text-2xl"> About us </p>
       </div>
-      <section className="bg-white px-6 lg:px-20 py-12 space-y-12">
+       <LeadershipProfile
+        role="Chairman"
+        name="Diparaj kulung Rai"
+        image={photo}
+        message="From my professional experience, I have realized that people
+are the foundation of any organizational progress. we are
+trying to connect the gap between talent and opportunities in
+Nepal. Our mission has always been to establish a reliable,
+ethical, and professional platform where job seekers can find
+the opportunities and employers can get the right individuals
+to develop their organizations. As we move forward and
+diversify our services, we remain rooted in our vision of
+connecting Nepali workforce. With your continued trust and
+support, we are confident in our path to becoming a leading
+force in HR and recruitment solutions in Nepal."
+        personalTouch="We grow together as one team."
+        alignment="left"
+      />
+       <LeadershipProfile
+        role="Managing Director"
+        name="Tirth Purbachhane"
+        image={managerImg}
+        message="I am truly delighted to welcome you all to JobLink360, and
+words cannot fully express how thrilled I am to have you here. In
+a setting where human capital is the real growth driver, we felt
+there was a gap between job seekers and job providers in
+Nepalese job market. We've constructed a quality-driven,
+people-oriented team over the years. Whether you're a job
+seeker looking for the right opportunity or an employer looking
+for the right talent, we're dedicated to serving and supporting
+you every step of the way. We believe that the right job can
+transform a life and the right employee can take an organization
+to the next level. We are proud to be connecting Nepal’s work
+force in right place at a right time. With your trust and
+cooperation, we look forward to broadening our scope,
+enriching our services, and becoming Nepal's preferred brand
+name in HR solutions. We appreciate you joining us on our path.
+"
+        personalTouch="Excellence is built through discipline."
+        alignment="right"
+      />
+      <section className="bg-white px-6 lg:px-10 py-6 space-y-10">
         {/* Intro */}
-        <div className="flex flex-col lg:flex-row items-center gap-8  p-6">
+        <div className="flex flex-col lg:flex-row items-center gap-5 p-2">
           <div className="flex-1 ">
             <h2 className="font-bold text-lg text-teal-600">
               JobLink360 | Linking Talent and Opportunity
@@ -37,13 +81,13 @@ export default function Aboutus() {
             <img
               src={Joblink}
               alt="Intro"
-              className="rounded-full object-cover  h-72  shadow-md"
+              className="  h-72 hidden md:block "
             />
           </div>
         </div>
 
         {/* Mission */}
-        <div className="flex flex-col lg:flex-row-reverse items-center md:gap-8  p-6">
+        <div className="flex flex-col lg:flex-row-reverse items-center md:gap-5  p-2">
           <div className="flex-1">
             <h2 className="font-bold text-lg text-teal-600">Our Mission</h2>
             <p className="text-black mt-2 text-justify">
@@ -60,13 +104,13 @@ export default function Aboutus() {
             <img
               src={mission}
               alt="Mission"
-              className="rounded-lg shadow-md h-72 hidden md:block"
+              className=" h-72 hidden md:block"
             />
           </div>
         </div>
 
         {/* Vision */}
-        <div className="flex flex-col lg:flex-row items-center md:gap-8 p-6">
+        <div className="flex flex-col lg:flex-row items-center md:gap-5 p-2">
           <div className="flex-1">
             <h2 className="font-bold text-lg text-teal-600">Our Vision</h2>
             <p className="text-black mt-2 text-justify">
@@ -81,14 +125,14 @@ export default function Aboutus() {
             <img
               src={vision}
               alt="Vision"
-              className="rounded-2xl shadow-lg  h-72  object-contain hidden md:block "
+              className=" h-72   hidden md:block "
             />
           </div>
         </div>
 
        
         {/* Why Choose Us */}
-        <div className="flex flex-col lg:flex-row items-center p-6">
+        <div className="flex flex-col lg:flex-row-reverse items-center  p-2  md:gap-5">
           <div className="flex-1 ">
             <h2 className="font-bold text-lg text-teal-600">
               Why Choose JobLink360?
@@ -105,11 +149,12 @@ export default function Aboutus() {
             <img
               src={whychoose}
               alt="Why Choose Us"
-              className=" hidden md:block rounded-full object-cover  h-72 "
+              className=" hidden md:block h-72"
             />
           </div>
         </div>
       </section>
+      <h1 className="text-center p-6 font-bold text-lg text-teal-600 mb-4">Our Team</h1>
       <Ourteam />
     </>
   );

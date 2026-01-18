@@ -38,6 +38,7 @@ const AdminDashboard = () => {
         position: "",
         category: "",
         jobType: "Full-time",
+        jobLevel: "Entry-level",
         location: "",
         description: "",
         salary: "",
@@ -149,7 +150,7 @@ const AdminDashboard = () => {
             await fetchMyJobs();
             setJobData({
                 companyName: "", position: "", category: "", jobType: "Full-time",
-                location: "", description: "", salary: "", experience: "",
+                jobLevel: "" , location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
                 skills: "", expiryDate: "", desiredCandidate: ""
@@ -434,6 +435,20 @@ const AdminDashboard = () => {
                                         <option>Remote</option>
                                     </select>
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Level</label>
+                                <select
+  value={jobData.jobLevel}
+  onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })}
+  className="w-full border rounded-lg px-4 py-2"
+>
+ <option value="Entry-level">Entry-level</option>
+  <option value="Mid-level">Mid-level</option>
+  <option value="Senior-level">Senior-level</option>
+  <option value="Junior">Junior</option>
+  <option value="Executive">Executive</option>
+</select>
+                                </div>  
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                                     <input type="text" value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />

@@ -15,6 +15,13 @@ export default {
       animation: {
         marquee: 'marquee 20s linear infinite', // Adjust duration as needed
       },
+     colors: {
+    primary: "#0d9488",
+    accent: "#10b981",
+    background: "#ffffff",
+    foreground: "#0f172a",
+    secondary: "#f0fdfa",
+  },
     },
     
   },

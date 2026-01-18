@@ -299,3 +299,24 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Failed to update status" });
   }
 };
+// GET /jobs/by-level?level=Senior
+export const getJobsByLevel = async (req: Request, res: Response) => {
+  try {
+    let { level } = req.query;
+
+    if (!level) return res.status(400).json({ message: "Job level is required" });
+
+    // Trim and remove extra spaces/newlines
+    level = String(level).trim();
+
+    const jobs = await Job.find({ jobLevel: level })
+      .sort({ createdAt: -1 })
+      .select("companyName logo position jobLevel")
+      .limit(10);
+
+    res.status(200).json(jobs);
+  } catch (err) {
+    console.error("getJobsByLevel error:", err);
+    res.status(500).json({ message: "Failed to fetch jobs by level" });
+  }
+};
