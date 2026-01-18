@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import Admin, { IAdmin } from "../models/Admin";
 import User from "../models/User";
 import { sendEmail } from "../utils/mailer";
+import { logHistory } from "../services/historyService";
 
 const jwtSecret = process.env.JWT_SECRET;
 const ensureSecret = () => {
@@ -229,6 +230,12 @@ export const deleteUser = async (req: Request, res: Response) => {
     if (req.user?.role !== "superadmin") {
       return res.status(403).json({ message: "Access denied. SuperAdmin only." });
     }
+
+    const user = await User.findById(req.params.id);
+    if (user) {
+      await logHistory("user", "deleted", user._id, user.toObject(), req.user?._id || req.user?.id, req.user?.role || "superadmin", `User deleted: ${user.fullName}`);
+    }
+
     await User.findByIdAndDelete(req.params.id);
     res.json({ message: "User deleted successfully" });
   } catch (err) {
@@ -242,6 +249,12 @@ export const deleteEmployer = async (req: Request, res: Response) => {
     if (req.user?.role !== "superadmin") {
       return res.status(403).json({ message: "Access denied. SuperAdmin only." });
     }
+
+    const employer = await Admin.findById(req.params.id);
+    if (employer) {
+      await logHistory("company", "deleted", employer._id, employer.toObject(), req.user?._id || req.user?.id, req.user?.role || "superadmin", `Company deleted: ${employer.companyName}`);
+    }
+
     await Admin.findByIdAndDelete(req.params.id);
     res.json({ message: "Employer deleted successfully" });
   } catch (err) {

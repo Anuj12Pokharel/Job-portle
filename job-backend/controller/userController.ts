@@ -37,7 +37,7 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
 export const updateProfile = async (req: AuthRequest, res: Response) => {
     try {
         const userId = req.user.id;
-        const { fullName, email, mobileNumber,  location } = req.body;
+        const { fullName, email, mobileNumber, preferredJobCategory, location } = req.body;
 
         const user = await User.findById(userId);
         if (!user) {
@@ -46,6 +46,7 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 
         if (fullName) user.fullName = fullName;
         if (mobileNumber) user.mobileNumber = mobileNumber;
+        if (preferredJobCategory) user.preferredJobCategory = preferredJobCategory;
         if (location) user.location = location;
 
         // Handle profile picture upload

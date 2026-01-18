@@ -96,3 +96,4 @@ export const deleteTraining = async (req: Request, res: Response) => {
   }
 };
 
+
