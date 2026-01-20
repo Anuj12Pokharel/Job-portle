@@ -154,7 +154,7 @@ name in HR solutions. We appreciate you joining us on our path.
           </div>
         </div>
       </section>
-      <h1 className="text-center p-6 font-bold text-lg text-teal-600 mb-4">Our Team</h1>
+      <h1 className="text-center font-bold text-2xl text-teal-600 p-6">Our Team</h1>
       <Ourteam />
     </>
   );

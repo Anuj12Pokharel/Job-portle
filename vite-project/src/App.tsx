@@ -34,6 +34,10 @@ import BlogDetails from "./Pages/BlogDetails";
 import Createblog from "./Pages/Createblog";
 import Payrollmanagement from "./Pages/Services/Payrollmanagement";
 import Jobposting from "./Pages/Services/Jobposting";
+import ProtectedRoute from "./components/routes/ProtectedRoute";
+import CreateTeam from "./Pages/CreateTeam";
+import { ToastContainer } from "react-toastify";    
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const location = useLocation();
@@ -46,7 +50,14 @@ function App() {
     <>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
+        <Route element={<ProtectedRoute />}>
+         
+          <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+        <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
+        <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
+        </Route>
+
+         <Route path="/" element={<Home />} />
         <Route path="/jobs" element={<Jobs />}></Route>
         <Route path="/saved-jobs" element={<SavedJobs />}></Route>
         <Route
@@ -59,8 +70,7 @@ function App() {
           path="/Jobseeker-Register"
           element={<JobseekerRegister />}
         ></Route>
-        <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
-        <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
+       
         <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
         <Route path="/super-admin/create-blog"element={<Createblog />}/>
         <Route path="/contact" element={<Contactus />}></Route>
@@ -86,7 +96,7 @@ function App() {
         ></Route>
         <Route path="/profile-settings" element={<ProfileSettings />}></Route>
         <Route path="/blogs" element={<Blog />}></Route>
-        <Route path="/blogs/:id" element={<BlogDetails />}></Route>
+        <Route path="/blog/:id" element={<BlogDetails />}></Route>
         <Route path="/forgot-password" element={<ForgotPassword />}></Route>
         <Route
           path="/forgot-password-employer"
@@ -97,6 +107,7 @@ function App() {
         <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
         <Route path="/registration-pending" element={<RegistrationPending />}></Route>
       </Routes>
+               <ToastContainer position="top-right" autoClose={3000} />
       {!hideFooter && <Footer />}
     </>
   );

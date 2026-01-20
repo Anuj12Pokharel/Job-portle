@@ -1,5 +1,5 @@
 import Jobsearchbanner from "../components/Jobsearchbanner";
-import Jobportal from "../components/Jobportal";
+import Jobportal from "../components/Jobform";
 import LogoSlider from "../components/LogoSlider";
 import HeroSection from "../components/Home/HeroSection";
 import Workingmethod from "../components/Home/Workingmethod";
@@ -13,6 +13,7 @@ import JobList from "../components/Job/JobList";
 import Jobcard from "../components/Jobcard";
 
 import { useSearchParams } from "react-router-dom";
+import Jobform from "../components/Jobform";
 
 function Home() {
   const [searchParams] = useSearchParams();
@@ -36,7 +37,7 @@ function Home() {
             <JobList category={category} search={search} />
           </div>
         </div>
-         <Jobportal />
+         <Jobform />
         <Topjob category={category} search={search} />
         <HeroSection />
         <div className="py-7">

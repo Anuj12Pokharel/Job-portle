@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useParams } from "react-router-dom";
-
 interface Blog {
   title: string;
   body: string;
@@ -17,25 +16,30 @@ const BlogDetails = () => {
 
   useEffect(() => {
     const fetchBlog = async () => {
-      const res = await axios.get(`${API_BASE_URL}/api/blogs/${id}`);
+      const res = await axios.get(`${API_BASE_URL}/api/blog/${id}`);
       setBlog(res.data);
+      console.log(res.data);  
     };
 
     fetchBlog();
   }, [id]);
+  const buildLogoUrl = (logo?: string) => {
+  if (!logo) return "/placeholder.png";
+  return `${API_BASE_URL}/uploads/blogs/${logo.replace(/\\/g, "/")}`;
+};
 
   if (!blog) return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <section className="max-w-4xl mx-auto p-6">
       <img
-        src={`${API_BASE_URL}${blog.image}`}
+        src={buildLogoUrl(blog.image)}
         alt={blog.title}
         className="w-full h-72 object-cover rounded-xl mb-6"
       />
 
       <div className="text-sm text-gray-500 mb-2">
-        {new Date(blog.createdAt).toDateString()} • {blog.author}
+        {new Date(blog.createdAt).toDateString()} {blog.author}
       </div>
 
       <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>
