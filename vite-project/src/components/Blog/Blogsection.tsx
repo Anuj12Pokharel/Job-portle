@@ -27,9 +27,9 @@ const Blogsection: React.FC<Props> = ({
   useEffect(() => {
     const fetchBlogs = async () => {
       const res = await axios.get(
-        `${API_BASE_URL}/api/blogs?page=${currentPage}&limit=${itemsPerPage}`
+        `${API_BASE_URL}/api/blog?page=${currentPage}&limit=${itemsPerPage}`
       );
-      setBlogs(res.data.blogs);
+      setBlogs(res.data);
     };
 
     fetchBlogs();
@@ -44,7 +44,7 @@ const Blogsection: React.FC<Props> = ({
             className="bg-white border rounded-2xl shadow-md overflow-hidden"
           >
             <img
-              src={`${API_BASE_URL}${blog.image}`}
+              src={blog.image}
               alt={blog.title}
               className="w-full h-48 object-cover"
             />
@@ -63,7 +63,7 @@ const Blogsection: React.FC<Props> = ({
               </p>
 
               <button
-                onClick={() => navigate(`/blogs/${blog._id}`)}
+                onClick={() => navigate(`/blog/${blog._id}`)}
                 className="mt-3 text-cyan-600 font-medium hover:underline"
               >
                 Read More →

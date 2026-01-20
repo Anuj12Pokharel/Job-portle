@@ -1,6 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-const blogSchema = new mongoose.Schema({
+export interface IBlog extends Document {
+  title: string;
+  body: string;
+  author: string;
+  date: Date;
+  image?: string;
+}
+
+const blogSchema = new Schema<IBlog>({
   title: { type: String, required: true },
   body: { type: String, required: true },
   author: { type: String, required: true },
@@ -8,6 +16,6 @@ const blogSchema = new mongoose.Schema({
   image: { type: String },
 });
 
-const Blog = mongoose.model("Blog", blogSchema);
+const Blog = mongoose.model<IBlog>("Blog", blogSchema);
 
 export default Blog;

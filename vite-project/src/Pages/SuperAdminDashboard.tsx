@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle, History as HistoryIcon,BookOpen } from "lucide-react";
+import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle, History as HistoryIcon,BookOpen,UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import CreateTraining from "./Training/TrainingCreate";
-import { a } from "framer-motion/client";
+import Createblog from "./Createblog";
+import CreateTeam from "./CreateTeam";
+
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -13,7 +15,7 @@ const SuperAdminDashboard = () => {
     const [users, setUsers] = useState([]);
     const [employers, setEmployers] = useState([]);
     const [jobs, setJobs] = useState([]);
-      const [trainings, setTrainings] = useState([]);
+    const [trainings, setTrainings] = useState([]);
     const [clientLogos, setClientLogos] = useState([]);
     const [logoFile, setLogoFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(true);
@@ -49,6 +51,7 @@ const SuperAdminDashboard = () => {
     const [historyTotal, setHistoryTotal] = useState(0);
     const [historyFilter, setHistoryFilter] = useState<string>("all");
     const [viewingEmployer, setViewingEmployer] = useState<any>(null);
+   
 
     // Edit State
     const [editingItem, setEditingItem] = useState<any>(null);
@@ -56,6 +59,7 @@ const SuperAdminDashboard = () => {
     const [editFormData, setEditFormData] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
      const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
+
 
     useEffect(() => {
         fetchData();
@@ -122,29 +126,12 @@ const SuperAdminDashboard = () => {
             } else if (activeTab === "partner_logos") {
                 const res = await axios.get(`${API_BASE_URL}/api/client-logos/get`);
                 setClientLogos(res.data);
-            } else if (activeTab === "history") {
+            } 
+                else if (activeTab === "history") {
                 const res = await axios.get(`${API_BASE_URL}/api/history`, config);
                 setHistory(res.data.history || []);
                 setHistoryTotal(res.data.total || 0);
             }
-             else if (activeTab === "trainings") {
-    try {
-        // MUST include config (headers) for the backend to allow the request
-        const res = await axios.get(`${API_BASE_URL}/api/training`, config);
-        
-        // If your API returns { trainings: [...] }, use res.data.trainings
-        // If it returns just [...], use res.data
-        // The check below ensures it is always an array
-        const data = Array.isArray(res.data) ? res.data : (res.data.trainings || []);
-        setTrainings(data);
-    }
-    
-     catch (err) {
-        console.error("Training fetch failed", err);
-        setTrainings([]); // Reset to empty array on error to prevent crash
-    }
-}
-
         } catch (err) {
             console.error("Failed to fetch data", err);
         } finally {
@@ -565,41 +552,47 @@ const SuperAdminDashboard = () => {
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
             {/* Sidebar */}
-            <div className="w-64 bg-slate-900 text-white flex flex-col">
+            <div className="w-64 bg-cyan-600 text-white flex flex-col h-full">
                 <div className="p-6 border-b border-slate-800">
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                         Super Admin
                     </h1>
                     <p className="text-slate-400 text-sm mt-1">Management Console</p>
                 </div>
-                <nav className="flex-1 p-4 space-y-2">
-                    <button onClick={() => setActiveTab("dashboard")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                <nav className="flex-1 overflow-y-auto p-4 space-y-2">
+                    <button onClick={() => setActiveTab("dashboard")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'dashboard' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <LayoutDashboard className="w-5 h-5 mr-3" /> Dashboard
                     </button>
-                    <button onClick={() => setActiveTab("users")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("users")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'users' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <Users className="w-5 h-5 mr-3" /> Jobseekers
                     </button>
-                    <button onClick={() => setActiveTab("pending")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'pending' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("pending")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'pending' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <Clock className="w-5 h-5 mr-3" /> Pending Requests
                     </button>
-                    <button onClick={() => setActiveTab("post_job")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post_job' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("post_job")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post_job' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <PlusCircle className="w-5 h-5 mr-3" /> Post Job
                     </button>
-                    <button onClick={() => setActiveTab("employers")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'employers' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("employers")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'employers' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <Building2 className="w-5 h-5 mr-3" /> Employers
                     </button>
-                    <button onClick={() => setActiveTab("jobs")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'jobs' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("jobs")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'jobs' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> All Jobs
                     </button>
-                    <button onClick={() => setActiveTab("trainings")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'trainings' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("trainings")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'trainings' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
 
                         < BookOpen className="w-5 h-5 mr-3" /> Trainings
                     </button>
-                              
-                    <button onClick={() => setActiveTab("partner_logos")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'partner_logos' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("blogs")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'blogs' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
+                        < BookOpen className="w-5 h-5 mr-3" /> Blogs
+                    </button>
+                    <button onClick={() => setActiveTab("create_team")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'create_team' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
+                        <UserPlus className="w-5 h-5 mr-3" /> Create Team
+                    </button>
+
+                            <button onClick={() => setActiveTab("partner_logos")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'partner_logos' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <ImageIcon className="w-5 h-5 mr-3" /> Partner Logos
                     </button>
-                    <button onClick={() => setActiveTab("history")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-blue-600' : 'hover:bg-slate-800'}`}>
+                    <button onClick={() => setActiveTab("history")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <HistoryIcon className="w-5 h-5 mr-3" /> History
                     </button>
                 </nav>
@@ -799,8 +792,16 @@ const SuperAdminDashboard = () => {
                         {<CreateTraining />}
                     </div>
                 ) :
-
-
+                activeTab === "blogs" ? (
+                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        {<Createblog />}
+                    </div>
+                ) :
+                activeTab === "create_team" ? (
+                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        {<CreateTeam />}
+                    </div>
+                ) :
                  (
                     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                         <div className="overflow-x-auto">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
@@ -69,16 +69,7 @@ const LoginForm = () => {
         window.dispatchEvent(new Event("storage"));
 
         const from = location.state?.from || "/";
-        if (from === "/") {
-          window.location.assign("/");
-        } else {
-          // For specific redirect, we can use navigate, but might need forced update for Navbar. 
-          // Ideally App should listen to storage event or use Context. 
-          // Given existing code uses window.location.assign, let's stick to it for reliability or navigate if just route change.
-          // We'll use navigate for smoother transition if possible, but dispatch helper might be needed.
-          // Let's use window.location.assign to be safe with existing "reload" pattern, but pointing to 'from'.
-          window.location.assign(from);
-        }
+        navigate(from, { replace: true });
         return;
       }
 
