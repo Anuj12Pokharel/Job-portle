@@ -26,7 +26,7 @@ const Contactus = () => {
     setStatus("Sending...");
 
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/contact`, formData, {
+      const res = await axios.post(`${API_BASE_URL}/api/contact/submit`, formData, {
         headers: {
           "Content-Type": "application/json",
         },

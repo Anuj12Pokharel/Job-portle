@@ -54,9 +54,9 @@ const EmployerLogin = () => {
         window.dispatchEvent(new Event("storage"));
 
         if (res.data.admin?.role === "superadmin") {
-          window.location.assign("/super-admin-dashboard");
+          window.location.replace("/super-admin-dashboard");
         } else {
-          window.location.assign("/admin-dashboard");
+          window.location.replace("/admin-dashboard");
         }
       }
     } catch (err) {

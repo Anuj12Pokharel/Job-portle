@@ -19,3 +19,11 @@ export const createContact = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 };
+export const getContacts = async (req: Request, res: Response) => {
+  try {
+    const contacts = await Contact.find().sort({ createdAt: -1 }); // latest first
+    res.status(200).json(contacts);
+  } catch (error: any) {
+    res.status(500).json({ message: "Server Error", error: error.message });
+  }
+};

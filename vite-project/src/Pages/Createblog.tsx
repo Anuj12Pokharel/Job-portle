@@ -28,7 +28,7 @@ const Createblog = () => {
     try {
       setLoading(true);
 
-      await axios.post(`${API_BASE_URL}/api/blogs/createBlog`, formData, {
+      await axios.post(`${API_BASE_URL}/api/blog`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

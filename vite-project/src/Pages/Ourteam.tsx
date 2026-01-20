@@ -1,85 +1,57 @@
 import { useEffect, useState } from "react";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-/* ===============================
-   1️⃣ TYPES (TypeScript Interface)
-================================ */
+
 interface TeamMember {
   id: number;
   name: string;
   designation: string;
   image: string;
-  description: string;
+  bio: string;
 }
-
-/* ===============================
-   2️⃣ DUMMY API (Mock Backend)
-================================ */
-const fetchTeamMembers = (): Promise<TeamMember[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve([
-        {
-          id: 1,
-          name: "Singh Bahadur Moktan",
-          designation: "Executive Chairman",
-          image: "/images/chairman.jpg",
-          description:
-            "With more than 20 years of experience in Sales, HR, and operation.",
-        },
-        {
-          id: 2,
-          name: "Ramesh Adhikari",
-          designation: "Managing Director",
-          image: "/images/director.jpg",
-          description:
-            "Experienced leader with strong business and operational skills.",
-        },
-      ]);
-    }, 800);
-  });
-};
-
-/* ===============================
-   3️⃣ TEAM CARD COMPONENT
-================================ */
+/*Team card*/
 const TeamCard = ({
   name,
   designation,
   image,
-  description,
+  bio,
 }: Omit<TeamMember, "id">) => {
   return (
-    <div className="w-[300px] h-[420px] perspective-1000 group">
-      {/* 👆 group added here */}
-
+    <div className="w-72 h-[420px] perspective group">
       <div
         className="
           relative w-full h-full
-          transform-style-preserve-3d
           transition-transform duration-700 ease-in-out
+          transform-style-3d
           group-hover:rotate-y-180
         "
+        style={{ transformStyle: "preserve-3d" }}
       >
         {/* FRONT */}
-        <div className="absolute inset-0 backface-hidden border-2 border-cyan-500 rounded-lg bg-white text-center p-5">
+        <div
+          className="absolute inset-0 border-2 border-cyan-500 rounded-lg bg-white text-center p-5"
+          style={{ backfaceVisibility: "hidden" }}
+        >
           <img
             src={image}
             alt={name}
-            className="w-[120px] h-[120px] mx-auto mt-5 rounded-lg object-cover"
+            className="w-32 h-32 mx-auto mt-5 rounded-lg object-cover"
           />
-          <h3 className="mt-4 text-xl font-semibold text-cyan-500">
-            {name}
-          </h3>
-          <p className="mt-2 text-gray-700">{designation}</p>
+          <h3 className="mt-4 text-2xl font-bold text-cyan-500">{name}</h3>
+          <p className="mt-2 text-gray-700">{bio}</p>
         </div>
 
         {/* BACK */}
-        <div className="absolute inset-0 backface-hidden rotate-y-180 border-2 border-cyan-500 rounded-lg bg-white text-center p-5">
-          <h3 className="text-xl font-semibold text-cyan-500">About</h3>
-          <p className="mt-4 text-gray-700 text-sm">
-            {description}
-          </p>
-          <button className="mt-6 w-11 h-11 bg-cyan-500 text-white text-2xl rounded-md">
+        <div
+          className="absolute inset-0 rotate-y-180 border-2 border-cyan-500 rounded-lg bg-white text-center p-5"
+          style={{
+            transform: "rotateY(180deg)",
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <h3 className="text-2xl font-bold text-cyan-500">About</h3>
+          <p className="mt-4 text-gray-700 text-sm">{bio}</p>
+          <button className="mt-6 w-12 h-12 bg-cyan-500 text-white text-2xl rounded-md">
             +
           </button>
         </div>
@@ -88,18 +60,21 @@ const TeamCard = ({
   );
 };
 
-/* ===============================
-   4️⃣ MAIN TEAM COMPONENT
-================================ */
+/*Fetch team members from API*/
 const OurTeam = () => {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchTeamMembers().then((data) => {
+     const fetchTeam = async () => {
+      const res = await fetch(`${API_BASE_URL}/api/team/get`);
+      const data = await res.json();
+      console.log(data);
       setTeam(data);
       setLoading(false);
-    });
+    };
+
+    fetchTeam();
   }, []);
 
   if (loading) {
@@ -107,17 +82,18 @@ const OurTeam = () => {
   }
 
   return (
-    <div className="flex flex-wrap justify-center gap-8">
-      {team.map((member) => (
-        <TeamCard
-          key={member.id}
-          name={member.name}
-          designation={member.designation}
-          image={member.image}
-          description={member.description}
-        />
-      ))}
-    </div>
+    
+    <div className="px-4 mt-6 mb-10 flex flex-wrap justify-center gap-8">
+  {team.map((member) => (
+    <TeamCard
+      key={member.id}
+      name={member.name}
+      designation={member.designation}
+      image={member.image}
+      bio={member.bio}
+    />
+  ))}
+</div>
   );
 };
 
