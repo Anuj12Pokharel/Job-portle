@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const authController_1 = require("../controller/authController");
-const authMiddleware_1 = require("../middleware/authMiddleware");
-const upload_1 = require("../middleware/upload");
+const googleAuthController_1 = require("../controller/googleAuthController");
 const router = (0, express_1.Router)();
 router.post("/register", authController_1.registerUser);
 router.post("/login", authController_1.loginUser);
@@ -12,22 +10,5 @@ router.post("/login-otp/send", authController_1.sendLoginOtp);
 router.post("/login-otp/verify", authController_1.verifyLoginOtp);
 router.post("/forgot-password", authController_1.forgotPassword);
 router.post("/reset-password", authController_1.resetPassword);
-router.put("/profile", authMiddleware_1.protect, upload_1.uploadProfile.single("profilePicture"), authController_1.updateProfile);
+router.post("/google", googleAuthController_1.googleSignIn);
 exports.default = router;
-=======
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const authController_1 = require("../controller/authController");
-const authMiddleware_1 = require("../middleware/authMiddleware");
-const upload_1 = require("../middleware/upload");
-const router = (0, express_1.Router)();
-router.post("/register", authController_1.registerUser);
-router.post("/login", authController_1.loginUser);
-router.post("/login-otp/send", authController_1.sendLoginOtp);
-router.post("/login-otp/verify", authController_1.verifyLoginOtp);
-router.post("/forgot-password", authController_1.forgotPassword);
-router.post("/reset-password", authController_1.resetPassword);
-router.put("/profile", authMiddleware_1.protect, upload_1.uploadProfile.single("profilePicture"), authController_1.updateProfile);
-exports.default = router;
->>>>>>> origin/job
