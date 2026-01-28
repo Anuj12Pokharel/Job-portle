@@ -9,6 +9,7 @@ export interface IUser extends Document {
   email: string;
   profilePicture?: string;
   location?: string;
+  preferredJobCategory?: string;
   password: string;
   confirmPassword: string;
   role: Role;
@@ -25,7 +26,7 @@ const userSchema = new Schema<IUser>(
       type: String,
       required: true,
     },
-   
+
     mobileNumber: {
       type: String,
       required: true,
@@ -43,6 +44,10 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
     location: {
+      type: String,
+      default: "",
+    },
+    preferredJobCategory: {
       type: String,
       default: "",
     },
