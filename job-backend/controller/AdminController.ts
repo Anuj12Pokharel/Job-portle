@@ -233,7 +233,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     const user = await User.findById(req.params.id);
     if (user) {
-      await logHistory("user", "deleted", user._id, user.toObject(), req.user?._id || req.user?.id, req.user?.role || "superadmin", `User deleted: ${user.fullName}`);
+      await logHistory("user", "deleted", user._id, user.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "superadmin", `User deleted: ${user.fullName}`);
     }
 
     await User.findByIdAndDelete(req.params.id);
@@ -252,7 +252,7 @@ export const deleteEmployer = async (req: Request, res: Response) => {
 
     const employer = await Admin.findById(req.params.id);
     if (employer) {
-      await logHistory("company", "deleted", employer._id, employer.toObject(), req.user?._id || req.user?.id, req.user?.role || "superadmin", `Company deleted: ${employer.companyName}`);
+      await logHistory("company", "deleted", employer._id, employer.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "superadmin", `Company deleted: ${employer.companyName}`);
     }
 
     await Admin.findByIdAndDelete(req.params.id);
