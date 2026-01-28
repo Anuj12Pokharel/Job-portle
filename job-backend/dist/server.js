@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -196,4 +196,4 @@ mongoose_1.default
     .catch((err) => {
     console.error("MongoDB connection failed:", err.message);
 });
->>>>>>> origin/job
+
