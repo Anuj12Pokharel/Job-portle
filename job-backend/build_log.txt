@@ -1,0 +1,11 @@
+
+> job-backend@1.0.0 build
+> tsc
+
+controller/AdminController.ts(236,43): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/AdminController.ts(255,46): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/jobController.ts(32,40): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/jobController.ts(59,42): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/jobController.ts(78,40): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/jobController.ts(180,48): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
+controller/jobController.ts(316,85): error TS2345: Argument of type 'unknown' is not assignable to parameter of type 'string | ObjectId'.
