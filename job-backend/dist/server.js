@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+=======
+
+>>>>>>> 108f8ad8d4773195aac884c882cba97758519749
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
@@ -16,6 +19,13 @@ const userFormRoutes_1 = __importDefault(require("./routes/userFormRoutes"));
 const jobRoutes_1 = __importDefault(require("./routes/jobRoutes"));
 const AdminRoutes_1 = __importDefault(require("./routes/AdminRoutes"));
 const contactRoutes_1 = __importDefault(require("./routes/contactRoutes"));
+const BlogRoutes_1 = __importDefault(require("./routes/BlogRoutes"));
+const trainingRoutes_1 = __importDefault(require("./routes/trainingRoutes"));
+const clientLogoRoutes_1 = __importDefault(require("./routes/clientLogoRoutes"));
+const teamRoutes_1 = __importDefault(require("./routes/teamRoutes"));
+const historyRoutes_1 = __importDefault(require("./routes/historyRoutes"));
+const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
+const talentRoutes_1 = __importDefault(require("./routes/talentRoutes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use("/uploads", express_1.default.static(path_1.default.join(__dirname, "uploads")));
@@ -25,10 +35,17 @@ app.get("/", (_req, res) => {
     res.json({ message: "Welcome to the Job Backend API" });
 });
 app.use("/api/auth", authRoutes_1.default);
+app.use("/api/user", userRoutes_1.default);
 app.use("/api/form", userFormRoutes_1.default);
 app.use("/api/jobs", jobRoutes_1.default);
 app.use("/api/admin", AdminRoutes_1.default);
 app.use("/api/contact", contactRoutes_1.default);
+app.use("/api/blog", BlogRoutes_1.default);
+app.use("/api/training", trainingRoutes_1.default);
+app.use("/api/client-logos", clientLogoRoutes_1.default);
+app.use("/api/team", teamRoutes_1.default);
+app.use("/api/history", historyRoutes_1.default);
+app.use("/api/talent", talentRoutes_1.default);
 const logsDir = path_1.default.join(__dirname, "logs");
 if (!fs_1.default.existsSync(logsDir))
     fs_1.default.mkdirSync(logsDir, { recursive: true });
@@ -97,6 +114,7 @@ mongoose_1.default
     .catch((err) => {
     console.error("MongoDB connection failed:", err.message);
 });
+<<<<<<< HEAD
 =======
 "use strict";
 var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -196,4 +214,5 @@ mongoose_1.default
     .catch((err) => {
     console.error("MongoDB connection failed:", err.message);
 });
->>>>>>> origin/job
+
+>>>>>>> 108f8ad8d4773195aac884c882cba97758519749

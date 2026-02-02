@@ -8,10 +8,23 @@
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "strict": false,
+    "noImplicitAny": false,
     "skipLibCheck": true,
-    "types": ["node", "express"]
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "types": [
+      "node",
+      "express"
+    ]
   },
-  "include": ["**/*.ts", "types/**/*.d.ts"],
-  "exclude": ["node_modules", "dist", "uploads", "logs"]
+  "include": [
+    "**/*.ts",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "uploads",
+    "logs"
+  ]
 }
-
