@@ -80,13 +80,13 @@ const EmployerRegister = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+    <div className="flex justify-center items-center min-h-screen bg-gray-50 p-8">
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
         <h2 className="text-3xl font-bold mb-2 text-center text-teal-500">
           Create Your Employer Account
         </h2>
         <p className="mb-6 text-cyan-600 text-center">
-          Create an account, fill out your profile, and post jobs at no cost.
+          Create an account, fill out your profile, and post jobs.
         </p>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -182,11 +182,11 @@ const EmployerRegister = () => {
             </div>
             <p className="text-balck font-bold text-center">
               {" "}
-              Already have jobseeker account? Login Or login with google{" "}
+              Already have jobseeker account?
+              <a href="/Employeer-Login" className="text-cyan-600 hover:underline">
+                {" "} Login
+              </a>
             </p>
-            <div className="mt-4">
-              <GoogleSignIn role="admin" />
-            </div>
           </form>
         </div>
       </div>

@@ -7,6 +7,7 @@ import Categories from "./Job/Categories";
 
 export default function Navbar() {
   const [user, setUser] = useState<any>(null);
+  
 
   useEffect(() => {
     const loadUser = () => {
@@ -35,6 +36,14 @@ export default function Navbar() {
   const [employerOpen, setEmployerOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [mobileCategoryOpen, setMobileCategoryOpen] = useState(false);
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setMobileCategoryOpen(false);
+    setJobseekerOpen(false);
+    setEmployerOpen(false);
+  };
+
 
   const mainNavItems = [
     { name: "TRAINING", path: "/training" },
@@ -68,7 +77,7 @@ export default function Navbar() {
     <img
       src={logo}
       alt="JobLink 360 Logo"
-      className="h-full w-48"
+      className="h-14 sm:h-16 md:h-18 w-auto"
     />
   </Link>
 
@@ -358,14 +367,15 @@ export default function Navbar() {
             <div className="px-4 pt-4 pb-4 space-y-4 bg-gray-50">
               {/* Job Category Dropdown for Mobile */}
               <div>
-                <button
-                  onClick={() => setCategoryOpen(!categoryOpen)}
-                  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
-                >
-                  JOB CATEGORY
-                  <span>{categoryOpen ? "−" : "+"}</span>
-                </button>
-                {categoryOpen && (
+               <button
+  onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
+  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+>
+  JOB CATEGORY
+  <span>{mobileCategoryOpen ? "−" : "+"}</span>
+</button>
+
+                {mobileCategoryOpen && (
                   <div className="mt-2 bg-white rounded-md border border-gray-200 shadow-sm">
                     <Link
                       to="/jobs"
@@ -391,6 +401,7 @@ export default function Navbar() {
                   key={index}
                   to={item.path}
                   className="text-gray-700 hover:text-gray-900 block text-base font-medium"
+                  onClick={closeMobileMenu}
                 >
                   {item.name}
                 </Link>
@@ -398,6 +409,7 @@ export default function Navbar() {
               <Link
                 to="/services"
                 className="text-gray-700 hover:text-gray-900 block text-base font-medium"
+                onClick={closeMobileMenu}
               >
                 SERVICES
               </Link>
@@ -407,6 +419,7 @@ export default function Navbar() {
                 <button
                   onClick={() => setJobseekerOpen(!jobseekerOpen)}
                   className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+                  
                 >
                   For Jobseekers
                   <span>{jobseekerOpen ? "−" : "+"}</span>
@@ -416,14 +429,20 @@ export default function Navbar() {
                     <Link
                       to="/Jobseeker-Login"
                       className="block text-gray-700 hover:text-gray-900 text-base"
-                      onClick={() => setJobseekerOpen(false)}
+                      onClick={() => {
+                        setJobseekerOpen(false);
+                        closeMobileMenu();
+                      }}
                     >
                       Login
                     </Link>
                     <Link
                       to="/Jobseeker-Register"
                       className="block text-gray-700 hover:text-gray-900 text-base"
-                      onClick={() => setJobseekerOpen(false)}
+                      onClick={() => {
+                        setJobseekerOpen(false);
+                        closeMobileMenu();
+                      }}
                     >
                       Register
                     </Link>
@@ -445,14 +464,20 @@ export default function Navbar() {
                     <Link
                       to="/Employeer-Login"
                       className="block text-gray-700 hover:text-gray-900 text-base"
-                      onClick={() => setEmployerOpen(false)}
+                      onClick={() => {
+                        setEmployerOpen(false);
+                        closeMobileMenu();
+                      }}
                     >
                       Login
                     </Link>
                     <Link
                       to="/Employeer-Register"
                       className="block text-gray-700 hover:text-gray-900 text-base"
-                      onClick={() => setEmployerOpen(false)}
+                      onClick={() => {
+                        setEmployerOpen(false);
+                        closeMobileMenu();
+                      }}
                     >
                       Register
                     </Link>

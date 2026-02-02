@@ -68,7 +68,7 @@ name in HR solutions. We appreciate you joining us on our path.
               JobLink360 | Linking Talent and Opportunity
             </h2>
             <p className="text-black mt-2 text-justify">
-              JobLink360, operating under the brand name Hamro Job PVT.LTD. is
+              JobLink360, operating under the registered name HAMRO JOB PVT.LTD. is
               becoming a Leading company in Nepal for professional and honest HR
               services. Established with a keen understanding of the nation's
               dynamic job market, our company is committed to bringing talented

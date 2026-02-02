@@ -94,7 +94,7 @@ export default function Jobform() {
         </div>
 
         {showForm && (
-          <div className="w-full max-w-4xl mb-8">
+          <div className="w-full max-w-4xl mb-8 text-center mx-auto">
             <Form
               formData={formData}
               onInputChange={handleInputChange}
