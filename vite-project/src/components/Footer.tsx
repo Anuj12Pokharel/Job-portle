@@ -21,31 +21,39 @@ const Footer = () => {
        {/* ABOUT */}
 <div className="lg:col-span-1">
   <h3 className="font-semibold text-lg mb-3">About JobLink360</h3>
-  <p className="text-sm leading-6 text-white/90 text-left ">
-    JobLink360, operating under the registered name <span className="font-bold text-red-400 underline">Hamro Job Pvt. Ltd.</span>,
-    is a rapidly growing recruitment company in Nepal, specializing in
-    professional HR services. Established with a deep understanding of
-    the country’s evolving employment landscape, we are dedicated to
-    connecting talented individuals with the right employers. At
-    JobLink360, we prioritize professionalism,client satisfaction, and
-    long-term partnerships.
-  </p>
+<p className="text-sm leading-6 text-white/90 text-justify">
+  JobLink360, operating under the registered name{" "}
+  <span className="font-bold text-red-400 underline">
+    Hamro Job Pvt. Ltd.
+  </span>
+  , is a rapidly growing recruitment company in Nepal, specializing in
+  professional HR services. Established with a deep understanding of
+  the country’s evolving employment landscape, we are dedicated to
+  connecting talented individuals with the right employers. At
+  JobLink360, we prioritize professionalism, client satisfaction, and
+  long-term partnerships.
+</p>
+
 </div>
 
 
         {/* COMPANY */}
-        <div>
-          <h3 className="font-semibold text-lg mb-4 text-center">Company</h3>
-          <ul className="space-y-2 text-sm text-center">
-            <li><a href="#" className="hover:underline">Home</a></li>
-            <li><a href="#" className="hover:underline">About</a></li>
-            <li><a href="#" className="hover:underline">Services</a></li>
-            <li><a href="#" className="hover:underline">Team</a></li>
-            <li><a href="#" className="hover:underline">Contact</a></li>
-            <li><a href="#" className="hover:underline">Blog</a></li>
-            <li><a href="#" className="hover:underline">Training</a></li>
-          </ul>
-        </div>
+       <div>
+  <h3 className="font-semibold text-lg mb-4 text-left sm:text-center">
+    Company
+  </h3>
+
+  <ul className="space-y-2 text-sm text-left sm:text-center">
+    <li><a href="/" className="hover:underline">Home</a></li>
+    <li><a href="/about" className="hover:underline">About</a></li>
+    <li><a href="/services" className="hover:underline">Services</a></li>
+    <li><a href="/team" className="hover:underline">Team</a></li>
+    <li><a href="/contact" className="hover:underline">Contact</a></li>
+    <li><a href="/blogs" className="hover:underline">Blog</a></li>
+    <li><a href="/training" className="hover:underline">Training</a></li>
+  </ul>
+</div>
+
 
         {/* SERVICES */}
         <div>
@@ -113,7 +121,7 @@ const Footer = () => {
       {/* BOTTOM BAR */}
       <div className="border-t border-white/30 mt-10 pt-6 text-sm flex flex-col lg:flex-row justify-between items-center">
         <p>
-          &copy; {new Date().getFullYear()} JobLink360. All rights reserved.
+          &copy; {new Date().getFullYear()} Hamro Job PVT.LTD. All rights reserved.
         </p>
         <p className="mt-3 lg:mt-0">
           Designed & Developed by JobLink360 Team

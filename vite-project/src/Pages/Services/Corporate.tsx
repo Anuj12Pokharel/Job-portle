@@ -10,7 +10,7 @@ const Corporate = () => {
       <div className="flex flex-col lg:flex-row items-center md:gap-8  p-8">
         <div className="flex-1">
           <h2 className="font-bold  text-teal-600 text-3xl">
-            Seamless Management of Cooperative Events
+            Seamless Management of corporate Events
           </h2>
           <p className="text-black mt-2 text-justify">
             Plan and execute training sessions, job fairs, or cooperative

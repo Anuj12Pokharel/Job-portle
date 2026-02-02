@@ -19,6 +19,7 @@ import teamRoutes from "./routes/teamRoutes";
 import historyRoutes from "./routes/historyRoutes";
 import userRoutes from "./routes/userRoutes";
 import talentRoutes from "./routes/talentRoutes";
+import ServiceInquiry from "./routes/ServiceInquiry";
 
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use("/api/client-logos", clientLogoRoutes);
 app.use("/api/team",teamRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/talent", talentRoutes);
+app.use("/api", ServiceInquiry);   
 
 
 
