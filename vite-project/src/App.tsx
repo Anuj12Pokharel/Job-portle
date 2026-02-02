@@ -49,6 +49,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <main className="pt-16">
       <Routes>
         <Route element={<ProtectedRoute />}>
          
@@ -107,6 +108,7 @@ function App() {
         <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
         <Route path="/registration-pending" element={<RegistrationPending />}></Route>
       </Routes>
+      </main>
                <ToastContainer position="top-right" autoClose={3000} />
       {!hideFooter && <Footer />}
     </>

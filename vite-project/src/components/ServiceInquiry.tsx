@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
 const ServiceInquiry = () => {
   const [formData, setFormData] = useState({
@@ -17,19 +19,30 @@ const ServiceInquiry = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(formData);
-    setStatus("Your message has been sent!");
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      address: "",
-      company_size: "",
-      service: "",
-      message: "",
-    });
+    setStatus("Sending...");
+
+    try {
+      const res = await axios.post(`${API_BASE_URL}/api/service-inquiry`, formData);
+
+      // Show success message
+      setStatus(res.data.message);
+
+      // Reset form
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        company_size: "",
+        service: "",
+        message: "",
+      });
+    } catch (err: any) {
+      console.error(err.response?.data || err);
+      setStatus(err.response?.data?.message || "Something went wrong ❌");
+    }
   };
 
   return (

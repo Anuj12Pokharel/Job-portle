@@ -38,7 +38,7 @@ export default function Form({
               <input
                 id="fullName"
                 type="text"
-                placeholder="John Smith"
+                placeholder=""
                 value={formData.fullName}
                 onChange={(e) => onInputChange("fullName", e.target.value)}
                 className="pl-10 border rounded px-3 py-2 w-full"
@@ -60,7 +60,7 @@ export default function Form({
               <input
                 id="designation"
                 type="text"
-                placeholder="e.g. Senior Product Manager"
+                placeholder=""
                 value={formData.designation}
                 onChange={(e) => onInputChange("designation", e.target.value)}
                 className="pl-10 border rounded px-3 py-2 w-full"
@@ -82,7 +82,7 @@ export default function Form({
               <input
                 id="email"
                 type="email"
-                placeholder="john.smith@example.com"
+                placeholder=""
                 value={formData.email}
                 onChange={(e) => onInputChange("email", e.target.value)}
                 className="pl-10 border rounded px-3 py-2 w-full"
@@ -104,9 +104,9 @@ export default function Form({
               <input
                 id="contactNumber"
                 type="tel"
-                placeholder="+1 (555) 123-4567"
-                value={formData.contactNumber}
-                onChange={(e) => onInputChange("contactNumber", e.target.value)}
+                placeholder=""
+                value={formData.phone}
+                onChange={(e) => onInputChange("phone", e.target.value)}
                 className="pl-10 border rounded px-3 py-2 w-full"
                 required
               />
@@ -123,9 +123,9 @@ export default function Form({
             </label>
             <select
               id="fieldOfExpertise"
-              value={formData.fieldOfExpertise}
+              value={formData.expertise}
               onChange={(e) =>
-                onInputChange("fieldOfExpertise", e.target.value)
+                onInputChange("expertise", e.target.value)
               }
               className="border rounded px-3 py-2 w-full"
               required
