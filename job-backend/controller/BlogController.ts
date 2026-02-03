@@ -8,8 +8,24 @@ export const getBlogs = async (req: Request, res: Response) => {
   const skip = (page - 1) * limit;
 
   try {
+    const totalBlogs = await Blog.countDocuments(); // Get total count
     const blogs = await Blog.find().skip(skip).limit(limit);
-    res.json(blogs);
+
+    // Convert image filenames to full URLs
+    const blogsWithFullImageUrls = blogs.map(blog => {
+      if (blog.image) {
+        const fullImageUrl = `${req.protocol}://${req.get('host')}/uploads/blogs/${blog.image}`;
+        return { ...blog.toObject(), image: fullImageUrl };
+      }
+      return blog.toObject();
+    });
+
+    res.json({
+      totalBlogs,
+      currentPage: page,
+      totalPages: Math.ceil(totalBlogs / limit),
+      blogs: blogsWithFullImageUrls,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -22,6 +38,14 @@ export const getBlogById = async (req: Request, res: Response) => {
   try {
     const blog = await Blog.findById(id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
+
+    // Convert image filename to full URL
+    if (blog.image) {
+      const fullImageUrl = `${req.protocol}://${req.get('host')}/uploads/blogs/${blog.image}`;
+      const blogWithFullImageUrl = { ...blog.toObject(), image: fullImageUrl };
+      return res.json(blogWithFullImageUrl);
+    }
+
     res.json(blog);
   } catch (error) {
     console.error(error);
