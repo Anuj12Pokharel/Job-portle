@@ -11,15 +11,12 @@ import userFormRoutes from "./routes/userFormRoutes";
 import jobRoutes from "./routes/jobRoutes";
 import AdminRoutes from "./routes/AdminRoutes";
 import contactRoutes from "./routes/contactRoutes";
-
-import blogRoutes from "./routes/BlogRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
-import clientLogoRoutes from "./routes/clientLogoRoutes"; 
-import teamRoutes from "./routes/teamRoutes";
+import clientLogoRoutes from "./routes/clientLogoRoutes";
 import historyRoutes from "./routes/historyRoutes";
+
 import userRoutes from "./routes/userRoutes";
-import talentRoutes from "./routes/talentRoutes";
-import ServiceInquiry from "./routes/ServiceInquiry";
+import BlogRoutes from "./routes/BlogRoutes";
 
 dotenv.config();
 
@@ -33,21 +30,21 @@ app.get("/", (_req, res) => {
   res.json({ message: "Welcome to the Job Backend API" });
 });
 
+// Health check endpoint for Docker
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "healthy", timestamp: new Date().toISOString() });
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/form", userFormRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/admin", AdminRoutes);
 app.use("/api/contact", contactRoutes);
-app.use("/api/blog", blogRoutes);
 app.use("/api/training", trainingRoutes);
 app.use("/api/client-logos", clientLogoRoutes);
-app.use("/api/team",teamRoutes);
 app.use("/api/history", historyRoutes);
-app.use("/api/talent", talentRoutes);
-app.use("/api", ServiceInquiry);   
-
-
+app.use("/api/blog", BlogRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
