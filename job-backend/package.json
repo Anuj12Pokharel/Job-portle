@@ -8,6 +8,7 @@
     "dev": "ts-node-dev --respawn --transpile-only server.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
+    "seed:superadmin": "ts-node seedSuperAdmin.ts",
     "build-client": "npm --prefix ../vite-project install && npm --prefix ../vite-project run build",
     "heroku-postbuild": "npm --prefix ../vite-project install && npm --prefix ../vite-project run build"
   },
