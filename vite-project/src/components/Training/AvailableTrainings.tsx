@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Clock, Calendar,User } from "lucide-react";
+import { Clock, Calendar, User } from "lucide-react";
 
 interface Training {
     id: number;
@@ -13,6 +13,8 @@ interface Training {
     image: string;
 }
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 const AvailableTrainings = () => {
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +23,7 @@ const AvailableTrainings = () => {
     useEffect(() => {
         const fetchTrainings = async () => {
             try {
-                const response = await axios.get("http://localhost:5000/api/training");
+                const response = await axios.get(`${API_BASE_URL}/api/training`);
                 setTrainings(response.data.data);
             } catch (err) {
                 console.error("Error fetching trainings:", err);
@@ -52,15 +54,15 @@ const AvailableTrainings = () => {
 
     return (
         <section className="p-6 bg-gray-50">
-             <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent ">
-              Training Gallery
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
-              Explore our comprehensive training programs designed to accelerate
-              your career growth.
-            </p>
-          
+            <div className="text-center mb-16">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent ">
+                    Training Gallery
+                </h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+                    Explore our comprehensive training programs designed to accelerate
+                    your career growth.
+                </p>
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {trainings.map((training) => (
@@ -101,7 +103,7 @@ const AvailableTrainings = () => {
 
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                                     <div className="flex items-center font-bold text-cyan-600 text-lg">
-                                       <span className="font-semibold"> Rs {training.price} </span>
+                                        <span className="font-semibold"> Rs {training.price} </span>
 
                                     </div>
                                     <button className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors">
