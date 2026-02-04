@@ -6,6 +6,10 @@ import Admin from "../models/Admin";
 import User from "../models/User";
 import { logHistory } from "../services/historyService";
 
+type ObjectId = mongoose.Types.ObjectId;
+
+type ObjectId = mongoose.Types.ObjectId;
+
 const ensureObjectId = (id: string) => new mongoose.Types.ObjectId(id);
 
 export const createJob = async (req: Request, res: Response) => {
@@ -28,7 +32,7 @@ export const createJob = async (req: Request, res: Response) => {
     }
 
     // Log history
-    await logHistory("job", "created", job._id, job.toObject(), String(adminObjectId), req.user?.role || "admin", `Job created: ${job.position}`, adminObjectId);
+    await logHistory("job", "created", job._id as unknown as string | ObjectId, job.toObject(), String(adminObjectId), req.user?.role || "admin", `Job created: ${job.position}`, adminObjectId as unknown as string | ObjectId);
 
     res.status(201).json({ message: "Job posted successfully", job });
   } catch (err) {
@@ -55,7 +59,7 @@ export const updateJob = async (req: Request, res: Response) => {
 
     // Log history
     if (updatedJob) {
-      await logHistory("job", "updated", updatedJob._id, updatedJob.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "admin", `Job updated: ${updatedJob.position}`, updatedJob.postedBy);
+      await logHistory("job", "updated", updatedJob._id as unknown as string | ObjectId, updatedJob.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "admin", `Job updated: ${updatedJob.position}`, updatedJob.postedBy as unknown as string | ObjectId);
     }
 
     res.json({ message: "Job updated successfully", job: updatedJob });
@@ -74,7 +78,7 @@ export const deleteJob = async (req: Request, res: Response) => {
       return res.status(403).json({ message: "Not authorized" });
 
     // Log history before deletion
-    await logHistory("job", "deleted", job._id, job.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "admin", `Job deleted: ${job.position}`, job.postedBy);
+    await logHistory("job", "deleted", job._id as unknown as string | ObjectId, job.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "admin", `Job deleted: ${job.position}`, job.postedBy as unknown as string | ObjectId);
 
     await job.deleteOne();
     res.json({ message: "Job deleted successfully" });
@@ -176,7 +180,7 @@ export const applyJob = async (req: Request, res: Response) => {
 
     // Log history
     const job = await Job.findById(jobId);
-    await logHistory("application", "applied", application._id, { ...application.toObject(), jobTitle: job?.position }, String(userId), req.user?.role || "user", `Applied for job: ${job?.position}`, job?.postedBy);
+    await logHistory("application", "applied", application._id as unknown as string | ObjectId, { ...application.toObject(), jobTitle: job?.position }, String(userId), req.user?.role || "user", `Applied for job: ${job?.position}`, job?.postedBy as unknown as string | ObjectId);
 
     res.status(201).json({ message: "Applied successfully", application });
   } catch (err) {
@@ -312,7 +316,7 @@ export const updateApplicationStatus = async (req: Request, res: Response) => {
     // Log history for status changes (hired/rejected are most important)
     const user = await User.findById(application.user);
     if (status === "hired" || status === "rejected") {
-      await logHistory("application", status === "hired" ? "accepted" : "rejected", application._id, { ...application.toObject(), jobTitle: job.position, userName: user?.fullName }, String(userId), req.user?.role || "admin", `Application ${status}: ${user?.fullName} for ${job.position}`, job.postedBy);
+      await logHistory("application", status === "hired" ? "accepted" : "rejected", application._id as unknown as string | ObjectId, { ...application.toObject(), jobTitle: job.position, userName: user?.fullName }, String(userId), req.user?.role || "admin", `Application ${status}: ${user?.fullName} for ${job.position}`, job.postedBy as unknown as string | ObjectId);
     }
 
     res.json({ message: "Status updated successfully", application });
