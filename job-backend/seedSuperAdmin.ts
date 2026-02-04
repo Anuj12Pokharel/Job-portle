@@ -10,10 +10,10 @@ const seedSuperAdmin = async () => {
         await mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/job-portal");
         console.log("MongoDB Connected");
 
-        const email = "superadmin@jobportal.com";
-        const password = "superadmin123";
-        const companyName = "Job Portal HQ";
-        const companyLocation = "Global";
+        const email = process.env.SUPER_ADMIN_EMAIL || "admin@joblink360.com";
+        const password = process.env.SUPER_ADMIN_PASSWORD || "Admin@JobLink360!2026";
+        const companyName = "JobLink360 Administration";
+        const companyLocation = "Nepal";
         const mobileNumber = "9999999999";
 
         const existingAdmin = await Admin.findOne({ email });
