@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Types } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import Admin, { IAdmin } from "../models/Admin";
@@ -6,6 +7,7 @@ import User from "../models/User";
 import { sendEmail } from "../utils/mailer";
 import { logHistory } from "../services/historyService";
 
+// DEPLOY FIX TIMESTAMP: 2026-02-04 20:20 - FINAL ATTEMPT
 const jwtSecret = process.env.JWT_SECRET;
 const ensureSecret = () => {
   if (!jwtSecret) throw new Error("JWT_SECRET is not defined");
@@ -233,7 +235,7 @@ export const deleteUser = async (req: Request, res: Response) => {
 
     const user = await User.findById(req.params.id);
     if (user) {
-      await logHistory("user", "deleted", user._id, user.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "superadmin", `User deleted: ${user.fullName}`);
+      await logHistory("user", "deleted", user._id as any, user.toObject(), String(req.user?._id || (req.user as any)?.id), req.user?.role || "superadmin", `User deleted: ${user.fullName}`);
     }
 
     await User.findByIdAndDelete(req.params.id);
@@ -252,7 +254,7 @@ export const deleteEmployer = async (req: Request, res: Response) => {
 
     const employer = await Admin.findById(req.params.id);
     if (employer) {
-      await logHistory("company", "deleted", employer._id, employer.toObject(), String(req.user?._id || req.user?.id), req.user?.role || "superadmin", `Company deleted: ${employer.companyName}`);
+      await logHistory("company", "deleted", employer._id as any, employer.toObject(), String(req.user?._id || (req.user as any)?.id), req.user?.role || "superadmin", `Company deleted: ${employer.companyName}`);
     }
 
     await Admin.findByIdAndDelete(req.params.id);
