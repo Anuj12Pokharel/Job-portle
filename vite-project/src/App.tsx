@@ -1,4 +1,4 @@
-import { Routes, Route,useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, useEffect } from "react-router-dom";
 
 import Home from "./Pages/Home";
 import EmployeerRegister from "./Pages/EmployeerRegister";
@@ -36,80 +36,118 @@ import Payrollmanagement from "./Pages/Services/Payrollmanagement";
 import Jobposting from "./Pages/Services/Jobposting";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateTeam from "./Pages/CreateTeam";
-import { ToastContainer } from "react-toastify";    
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const location = useLocation();
-  const hideFooter = 
-    location.pathname.startsWith("/admin-dashboard") || 
-    location.pathname.startsWith("/super-admin-dashboard")  
-    
+
+  // Dynamic page title based on route
+  useEffect(() => {
+    const pageTitles: { [key: string]: string } = {
+      '/': 'JobLink360 - Find Your Dream Job',
+      '/jobs': 'Browse Jobs - JobLink360',
+      '/blogs': 'Career Tips & Blogs - JobLink360',
+      '/blog': 'Blog - JobLink360',
+      '/contact': 'Contact Us - JobLink360',
+      '/aboutus': 'About Us - JobLink360',
+      '/services': 'Our Services - JobLink360',
+      '/training': 'Training Programs - JobLink360',
+      '/admin-dashboard': 'Admin Dashboard - JobLink360',
+      '/super-admin-dashboard': 'Super Admin Dashboard - JobLink360',
+      '/Jobseeker-Login': 'Login - JobLink360',
+      '/Jobseeker-Register': 'Register - JobLink360',
+      '/Employeer-Login': 'Employer Login - JobLink360',
+      '/Employeer-Register': 'Employer Registration - JobLink360',
+      '/profile-settings': 'Profile Settings - JobLink360',
+      '/applied-jobs': 'Applied Jobs - JobLink360',
+      '/saved-jobs': 'Saved Jobs - JobLink360',
+    };
+
+    // Check for exact match first
+    let title = pageTitles[location.pathname];
+
+    // If no exact match, check for partial matches
+    if (!title) {
+      if (location.pathname.startsWith('/jobs/')) title = 'Job Details - JobLink360';
+      else if (location.pathname.startsWith('/blog/')) title = 'Blog - JobLink360';
+      else if (location.pathname.startsWith('/services/')) title = 'Services - JobLink360';
+      else if (location.pathname.startsWith('/training/')) title = 'Training - JobLink360';
+      else title = 'JobLink360 - Find Your Dream Job';
+    }
+
+    document.title = title;
+  }, [location]);
+
+  const hideFooter =
+    location.pathname.startsWith("/admin-dashboard") ||
+    location.pathname.startsWith("/super-admin-dashboard");
+
 
   return (
     <>
       <Navbar />
       <main className="pt-16">
-      <Routes>
-        <Route element={<ProtectedRoute />}>
-         
-          <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
-        <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
-        <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
-        </Route>
+        <Routes>
+          <Route element={<ProtectedRoute />}>
 
-         <Route path="/" element={<Home />} />
-        <Route path="/jobs" element={<Jobs />}></Route>
-        <Route path="/saved-jobs" element={<SavedJobs />}></Route>
-        <Route
-          path="/Employeer-Register"
-          element={<EmployeerRegister />}
-        ></Route>
-        <Route path="/Employeer-Login" element={<EmployeerLogin />}></Route>
-        <Route path="/Jobseeker-Login" element={<JobseekerLogin />}></Route>
-        <Route
-          path="/Jobseeker-Register"
-          element={<JobseekerRegister />}
-        ></Route>
-       
-        <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
-        <Route path="/super-admin/create-blog"element={<Createblog />}/>
-        <Route path="/contact" element={<Contactus />}></Route>
-        <Route path="/aboutus" element={<Aboutus />}></Route>
-        <Route path="/services" element={<Services />}></Route>
-        <Route
-          path="/services/corporate&eventmanagement"
-          element={<Corporate />}
-        ></Route>
-        <Route path="/services/outsourcing" element={<Outsourcing />}></Route>
-        <Route path="/services/recruitment" element={<Recruitment />}></Route>
-        <Route path="/services/hr-consulting" element={<Resource />}></Route>
-        <Route path="/services/payroll-management" element={<Payrollmanagement />}></Route>
-        <Route path="/services/job-posting" element={<Jobposting />}></Route>
-        <Route
-          path="/services/training_and_development"
-          element={<Training />}
-        ></Route>
-        <Route path="/training" element={<Trainings />}></Route>
-        <Route
-          path="/training/customerservice"
-          element={<Customerservice />}
-        ></Route>
-        <Route path="/profile-settings" element={<ProfileSettings />}></Route>
-        <Route path="/blogs" element={<Blog />}></Route>
-        <Route path="/blog/:id" element={<BlogDetails />}></Route>
-        <Route path="/forgot-password" element={<ForgotPassword />}></Route>
-        <Route
-          path="/forgot-password-employer"
-          element={<ForgotPasswordEmployer />}
-        ></Route>
-        <Route path="/jobs/:id" element={<JobDetails />}></Route>
-        <Route path="/apply-job/:id" element={<ApplyJob />}></Route>
-        <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
-        <Route path="/registration-pending" element={<RegistrationPending />}></Route>
-      </Routes>
+            <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
+            <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
+            <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
+          </Route>
+
+          <Route path="/" element={<Home />} />
+          <Route path="/jobs" element={<Jobs />}></Route>
+          <Route path="/saved-jobs" element={<SavedJobs />}></Route>
+          <Route
+            path="/Employeer-Register"
+            element={<EmployeerRegister />}
+          ></Route>
+          <Route path="/Employeer-Login" element={<EmployeerLogin />}></Route>
+          <Route path="/Jobseeker-Login" element={<JobseekerLogin />}></Route>
+          <Route
+            path="/Jobseeker-Register"
+            element={<JobseekerRegister />}
+          ></Route>
+
+          <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
+          <Route path="/super-admin/create-blog" element={<Createblog />} />
+          <Route path="/contact" element={<Contactus />}></Route>
+          <Route path="/aboutus" element={<Aboutus />}></Route>
+          <Route path="/services" element={<Services />}></Route>
+          <Route
+            path="/services/corporate&eventmanagement"
+            element={<Corporate />}
+          ></Route>
+          <Route path="/services/outsourcing" element={<Outsourcing />}></Route>
+          <Route path="/services/recruitment" element={<Recruitment />}></Route>
+          <Route path="/services/hr-consulting" element={<Resource />}></Route>
+          <Route path="/services/payroll-management" element={<Payrollmanagement />}></Route>
+          <Route path="/services/job-posting" element={<Jobposting />}></Route>
+          <Route
+            path="/services/training_and_development"
+            element={<Training />}
+          ></Route>
+          <Route path="/training" element={<Trainings />}></Route>
+          <Route
+            path="/training/customerservice"
+            element={<Customerservice />}
+          ></Route>
+          <Route path="/profile-settings" element={<ProfileSettings />}></Route>
+          <Route path="/blogs" element={<Blog />}></Route>
+          <Route path="/blog/:id" element={<BlogDetails />}></Route>
+          <Route path="/forgot-password" element={<ForgotPassword />}></Route>
+          <Route
+            path="/forgot-password-employer"
+            element={<ForgotPasswordEmployer />}
+          ></Route>
+          <Route path="/jobs/:id" element={<JobDetails />}></Route>
+          <Route path="/apply-job/:id" element={<ApplyJob />}></Route>
+          <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
+          <Route path="/registration-pending" element={<RegistrationPending />}></Route>
+        </Routes>
       </main>
-               <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer position="top-right" autoClose={3000} />
       {!hideFooter && <Footer />}
     </>
   );
