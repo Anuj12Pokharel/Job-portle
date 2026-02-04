@@ -62,7 +62,7 @@ echo "----------------------------------------------------------"
 docker-compose run --rm certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
-    --email your-email@example.com \
+    --email magar.tirtha3@gmail.com \
     --agree-tos \
     --no-eff-email \
     -d joblink360.com \
@@ -74,7 +74,7 @@ echo "-----------------------------------------------------------"
 docker-compose run --rm certbot certonly \
     --webroot \
     --webroot-path=/var/www/certbot \
-    --email your-email@example.com \
+    --email magar.tirtha3@gmail.com \
     --agree-tos \
     --no-eff-email \
     -d hamrojob.com.np \
