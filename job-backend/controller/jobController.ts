@@ -8,7 +8,6 @@ import { logHistory } from "../services/historyService";
 
 type ObjectId = mongoose.Types.ObjectId;
 
-type ObjectId = mongoose.Types.ObjectId;
 
 const ensureObjectId = (id: string) => new mongoose.Types.ObjectId(id);
 
