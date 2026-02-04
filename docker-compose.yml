@@ -33,7 +33,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 5000
-      MONGO_URI: mongodb://admin:${MONGO_ROOT_PASSWORD:-JobPortal@2026}@mongodb:27017/job-portal?authSource=admin
+      MONGO_URI: mongodb://admin:JobPortal%402026@mongodb:27017/job-portal?authSource=admin
       JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-key-change-in-production}
       EMAIL_USER: ${EMAIL_USER}
       EMAIL_PASS: ${EMAIL_PASS}
