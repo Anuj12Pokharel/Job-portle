@@ -1,60 +1,99 @@
 #!/bin/bash
-# SSL Certificate Setup for joblink360.com and hamrojob.com.np
-# Run this AFTER your application is deployed with Docker
+# SSL Certificate Generation Script for joblink360.com and hamrojob.com.np
 
 set -e
 
-echo "🔒 Setting up SSL certificates with Let's Encrypt..."
+echo "╔════════════════════════════════════════════════════════════════╗"
+echo "║  SSL Certificate Generation for Job Portal                    ║"
+echo "╚════════════════════════════════════════════════════════════════╝"
+echo ""
 
-# Install Certbot
-echo "📦 Installing Certbot..."
-apt update
-apt install -y certbot python3-certbot-nginx
+# Check if DNS is configured
+echo "Step 1: Verifying DNS configuration..."
+echo "----------------------------------------"
 
-# Stop frontend container temporarily to free port 80
-echo "🛑 Stopping frontend container..."
-docker-compose stop frontend
+check_dns() {
+    domain=$1
+    echo "Checking $domain..."
+    resolved_ip=$(nslookup $domain | grep 'Address:' | tail -n1 | awk '{print $2}')
+    expected_ip="161.97.75.244"
+    
+    if [[ "$resolved_ip" == "$expected_ip" ]]; then
+        echo "✓ $domain resolves to $expected_ip"
+        return 0
+    else
+        echo "✗ $domain does NOT resolve to $expected_ip (got: $resolved_ip)"
+        return 1
+    fi
+}
 
-# Get SSL certificate for joblink360.com
-echo "🔐 Getting SSL certificate for joblink360.com..."
-certbot certonly --standalone \
-  -d joblink360.com -d www.joblink360.com \
-  --email magar.tirtha3@gmail.com \
-  --agree-tos \
-  --no-eff-email \
-  --non-interactive
+dns_ok=true
+check_dns "joblink360.com" || dns_ok=false
+check_dns "www.joblink360.com" || dns_ok=false
+check_dns "hamrojob.com.np" || dns_ok=false
+check_dns "www.hamrojob.com.np" || dns_ok=false
 
-# Get SSL certificate for hamrojob.com.np
-echo "🔐 Getting SSL certificate for hamrojob.com.np..."
-certbot certonly --standalone \
-  -d hamrojob.com.np -d www.hamrojob.com.np \
-  --email magar.tirtha3@gmail.com \
-  --agree-tos \
-  --no-eff-email \
-  --non-interactive
-
-echo "✅ SSL certificates obtained!"
-
-# Update docker-compose.yml to mount SSL certificates
-echo "📝 Updating docker-compose.yml..."
-
-# Backup original
-cp docker-compose.yml docker-compose.yml.backup
-
-# Add volume mount for SSL certificates (if not already present)
-if ! grep -q "/etc/letsencrypt" docker-compose.yml; then
-    echo "Adding SSL certificate volumes to docker-compose.yml"
-    # This will be done manually or via the updated nginx.conf
+if [ "$dns_ok" = false ]; then
+    echo ""
+    echo "⚠️  DNS is not properly configured!"
+    echo "Please configure your DNS A records and wait for propagation before continuing."
+    exit 1
 fi
 
 echo ""
-echo "✅ SSL Setup Complete!"
+echo "Step 2: Creating certbot directories..."
+echo "----------------------------------------"
+mkdir -p ./certbot/conf
+mkdir -p ./certbot/www
+
 echo ""
-echo "📋 Next Steps:"
-echo "1. Update nginx.conf to use SSL certificates (see SSL_NGINX_CONFIG.md)"
-echo "2. Update docker-compose.yml to mount certificates"
-echo "3. Rebuild frontend: docker-compose build frontend"
-echo "4. Restart all services: docker-compose up -d"
+echo "Step 3: Stopping system nginx (if running)..."
+echo "-----------------------------------------------"
+sudo systemctl stop nginx || true
+
 echo ""
-echo "🔄 Auto-renewal is configured via certbot"
-echo "Test renewal with: certbot renew --dry-run"
+echo "Step 4: Starting frontend container for certificate validation..."
+echo "------------------------------------------------------------------"
+docker-compose up -d frontend
+
+echo ""
+echo "Step 5: Generating SSL certificate for joblink360.com..."
+echo "----------------------------------------------------------"
+docker-compose run --rm certbot certonly \
+    --webroot \
+    --webroot-path=/var/www/certbot \
+    --email your-email@example.com \
+    --agree-tos \
+    --no-eff-email \
+    -d joblink360.com \
+    -d www.joblink360.com
+
+echo ""
+echo "Step 6: Generating SSL certificate for hamrojob.com.np..."
+echo "-----------------------------------------------------------"
+docker-compose run --rm certbot certonly \
+    --webroot \
+    --webroot-path=/var/www/certbot \
+    --email your-email@example.com \
+    --agree-tos \
+    --no-eff-email \
+    -d hamrojob.com.np \
+    -d www.hamrojob.com.np
+
+echo ""
+echo "Step 7: Restarting all services with SSL..."
+echo "--------------------------------------------"
+docker-compose down
+docker-compose up -d
+
+echo ""
+echo "╔════════════════════════════════════════════════════════════════╗"
+echo "║  ✓ SSL Certificates Generated Successfully!                   ║"
+echo "╚════════════════════════════════════════════════════════════════╝"
+echo ""
+echo "Your site is now accessible at:"
+echo "  • https://joblink360.com"
+echo "  • https://hamrojob.com.np (redirects to joblink360.com)"
+echo ""
+echo "SSL certificates will auto-renew every 12 hours via the certbot container."
+echo ""
