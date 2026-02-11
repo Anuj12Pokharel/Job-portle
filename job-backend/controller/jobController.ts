@@ -105,11 +105,15 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
 
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    const { category, search } = req.query;
+    const { category, search, featured } = req.query;
     const filter: any = {};
 
     if (category) {
       filter.category = category;
+    }
+
+    if (featured === "true") {
+      filter.isFeatured = true;
     }
 
     if (search) {
