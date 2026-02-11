@@ -68,56 +68,63 @@ export const createBlog = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// export const updateBlog = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const { title, body, author } = req.body;
+import fs from "fs";
+import path from "path";
 
-//     const blog = await Blog.findById(id);
-//     if (!blog) return res.status(404).json({ message: "Blog not found" });
+// Update blog
+export const updateBlog = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { title, body, author } = req.body;
 
-//     // delete old image if new uploaded
-//     if (req.file && blog.image) {
-//       const oldImagePath = path.resolve(blog.image);
-//       if (fs.existsSync(oldImagePath)) {
-//         fs.unlinkSync(oldImagePath);
-//       }
-//       blog.image = `uploads/blog/${req.file.filename}`;
-//     }
+    const blog = await Blog.findById(id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-//     blog.title = title ?? blog.title;
-//     blog.body = body ?? blog.body;
-//     blog.author = author ?? blog.author;
+    // delete old image if new uploaded
+    if (req.file && blog.image) {
+      // Check if image path is a full URL or relative path
+      // If it's just a filename, we can try to delete it from uploads/blogs
+      // The getBlogs method constructs full URLs, but the DB stores filenames usually.
+      // Let's check what's stored. createBlog stores 'req.file.filename'.
+      const oldImagePath = path.join(__dirname, '../../uploads/blogs', blog.image);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+      blog.image = req.file.filename;
+    }
 
-//     await blog.save();
-//     res.status(200).json(blog);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+    if (title) blog.title = title;
+    if (body) blog.body = body;
+    if (author) blog.author = author;
 
+    await blog.save();
+    res.status(200).json(blog);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
-// // Delete blog (only superadmin)
-// export const deleteBlog = async (req, res) => {
-//   try {
-//     const { id } = req.params;
+// Delete blog (only superadmin)
+export const deleteBlog = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
 
-//     const blog = await Blog.findById(id);
-//     if (!blog) return res.status(404).json({ message: "Blog not found" });
+    const blog = await Blog.findById(id);
+    if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-//     // Delete image if exists
-//     if (blog.image) {
-//       const imagePath = path.resolve(blog.image);
-//       if (fs.existsSync(imagePath)) {
-//         fs.unlinkSync(imagePath);
-//       }
-//     }
+    // Delete image if exists
+    if (blog.image) {
+      const imagePath = path.join(__dirname, '../../uploads/blogs', blog.image);
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+      }
+    }
 
-//     await Blog.findByIdAndDelete(id);
-//     res.status(200).json({ message: "Blog deleted successfully" });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
+    await Blog.findByIdAndDelete(id);
+    res.status(200).json({ message: "Blog deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

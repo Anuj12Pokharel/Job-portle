@@ -10,6 +10,7 @@ const Admin_1 = __importDefault(require("../models/Admin"));
 const User_1 = __importDefault(require("../models/User"));
 const mailer_1 = require("../utils/mailer");
 const historyService_1 = require("../services/historyService");
+// DEPLOY FIX TIMESTAMP: 2026-02-04 20:20 - FINAL ATTEMPT
 const jwtSecret = process.env.JWT_SECRET;
 const ensureSecret = () => {
     if (!jwtSecret)

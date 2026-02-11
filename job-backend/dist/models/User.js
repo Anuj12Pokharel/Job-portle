@@ -30,6 +30,18 @@ const userSchema = new mongoose_1.Schema({
         type: String,
         default: "",
     },
+    permanentAddress: {
+        type: String,
+        default: "",
+    },
+    temporaryAddress: {
+        type: String,
+        default: "",
+    },
+    academicDegree: {
+        type: String,
+        default: "",
+    },
     preferredJobCategory: {
         type: String,
         default: "",
@@ -58,6 +70,39 @@ const userSchema = new mongoose_1.Schema({
     resetOTPExpiry: {
         type: Date,
         select: false,
+    },
+    cvData: {
+        personalInfo: {
+            fullName: { type: String },
+            email: { type: String },
+            phone: { type: String },
+            address: { type: String },
+            summary: { type: String },
+        },
+        education: [
+            {
+                institution: { type: String },
+                degree: { type: String },
+                startYear: { type: String },
+                endYear: { type: String },
+            },
+        ],
+        experience: [
+            {
+                company: { type: String },
+                role: { type: String },
+                duration: { type: String },
+                responsibilities: { type: String },
+            },
+        ],
+        skills: [{ type: String }],
+        projects: [
+            {
+                name: { type: String },
+                description: { type: String },
+                link: { type: String },
+            },
+        ],
     },
 }, { timestamps: true });
 userSchema.pre("save", async function (next) {
