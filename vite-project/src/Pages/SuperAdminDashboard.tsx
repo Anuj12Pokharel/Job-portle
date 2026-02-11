@@ -60,6 +60,15 @@ const SuperAdminDashboard = () => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
 
+    // Banner State
+    const [bannerData, setBannerData] = useState({
+        type: "job-search",
+        title: "",
+        subtitle: "",
+        isActive: true
+    });
+    const [bannerFile, setBannerFile] = useState<File | null>(null);
+
 
     useEffect(() => {
         fetchData();
@@ -131,6 +140,21 @@ const SuperAdminDashboard = () => {
                 const res = await axios.get(`${API_BASE_URL}/api/history`, config);
                 setHistory(res.data.history || []);
                 setHistoryTotal(res.data.total || 0);
+            }
+            else if (activeTab === "banners") {
+                try {
+                    const res = await axios.get(`${API_BASE_URL}/api/banners/job-search`);
+                    if (res.data.success && res.data.data) {
+                        setBannerData({
+                            type: res.data.data.type || "job-search",
+                            title: res.data.data.title || "",
+                            subtitle: res.data.data.subtitle || "",
+                            isActive: res.data.data.isActive !== false
+                        });
+                    }
+                } catch (err) {
+                    console.log("No existing banner or error fetching");
+                }
             }
         } catch (err) {
             console.error("Failed to fetch data", err);
@@ -305,6 +329,32 @@ const SuperAdminDashboard = () => {
             console.error(err);
             const msg = err.response?.data?.message || "Failed to post job";
             alert(msg);
+        }
+    };
+
+    const handleBannerUpload = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const token = localStorage.getItem("token");
+        const formData = new FormData();
+        formData.append("type", "job-search");
+        formData.append("title", bannerData.title);
+        formData.append("subtitle", bannerData.subtitle);
+        formData.append("isActive", String(bannerData.isActive));
+        if (bannerFile) formData.append("backgroundImage", bannerFile);
+
+        try {
+            await axios.post(`${API_BASE_URL}/api/banners`, formData, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            alert("Banner updated successfully");
+            setBannerFile(null);
+            fetchData(); // Refresh to see changes if needed
+        } catch (err) {
+            console.error("Banner update failed", err);
+            alert("Banner update failed");
         }
     };
 
@@ -603,6 +653,9 @@ const SuperAdminDashboard = () => {
 
                     <button onClick={() => setActiveTab("partner_logos")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'partner_logos' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <ImageIcon className="w-5 h-5 mr-3" /> Partner Logos
+                    </button>
+                    <button onClick={() => setActiveTab("banners")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'banners' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
+                        <ImageIcon className="w-5 h-5 mr-3" /> Banners
                     </button>
                     <button onClick={() => setActiveTab("history")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'history' ? 'bg-cyan-800' : 'hover:bg-slate-900'}`}>
                         <HistoryIcon className="w-5 h-5 mr-3" /> History
@@ -1169,6 +1222,67 @@ const SuperAdminDashboard = () => {
                                         </div>
                                     </div>
                                 )}
+
+                {activeTab === "banners" && (
+                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        <h3 className="text-2xl font-bold text-gray-800 mb-6">Manage Job Search Banner</h3>
+                        <form onSubmit={handleBannerUpload} className="space-y-6">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Banner Title</label>
+                                <input
+                                    type="text"
+                                    value={bannerData.title}
+                                    onChange={(e) => setBannerData({ ...bannerData, title: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2"
+                                    placeholder="e.g., Find Your Dream Job"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Banner Subtitle</label>
+                                <input
+                                    type="text"
+                                    value={bannerData.subtitle}
+                                    onChange={(e) => setBannerData({ ...bannerData, subtitle: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2"
+                                    placeholder="e.g., Connecting Talent with Opportunity"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Background Image</label>
+                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
+                                    <div className="space-y-1 text-center">
+                                        <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                        <div className="flex text-sm text-gray-600">
+                                            <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                                <span>Upload a file</span>
+                                                <input
+                                                    type="file"
+                                                    className="sr-only"
+                                                    accept="image/*"
+                                                    onChange={(e) => setBannerFile(e.target.files ? e.target.files[0] : null)}
+                                                />
+                                            </label>
+                                            <p className="pl-1">or drag and drop</p>
+                                        </div>
+                                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
+                                    </div>
+                                </div>
+                                {bannerFile && (
+                                    <p className="mt-2 text-sm text-green-600">Selected: {bannerFile.name}</p>
+                                )}
+                            </div>
+
+                            <div className="flex justify-end">
+                                <button
+                                    type="submit"
+                                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center shadow-md transition-colors"
+                                >
+                                    <Save className="w-4 h-4 mr-2" /> Save Banner Settings
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                )}
             </div>
 
             {/* Edit Modal */}
