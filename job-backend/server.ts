@@ -24,7 +24,14 @@ import BlogRoutes from "./routes/BlogRoutes";
 dotenv.config();
 
 const app = express();
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Serve static files from uploads directory
+// Use absolute path to ensure it works in both dev and production
+const uploadsPath = path.join(__dirname, "..", "uploads");
+app.use("/uploads", express.static(uploadsPath));
+
+// Log uploads path for debugging
+console.log("Serving uploads from:", uploadsPath);
 
 app.use(cors());
 app.use(express.json());
