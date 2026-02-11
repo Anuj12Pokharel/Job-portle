@@ -226,6 +226,8 @@ const SuperAdminDashboard = () => {
                     formData.append('fullName', editFormData.fullName || '');
                     formData.append('email', editFormData.email || '');
                     formData.append('mobileNumber', editFormData.mobileNumber || '');
+                    formData.append('permanentAddress', editFormData.permanentAddress || '');
+                    formData.append('temporaryAddress', editFormData.temporaryAddress || '');
                     if (selectedFile) formData.append('profilePicture', selectedFile);
                     endpoint = `/api/admin/user/${editingItem._id}`;
                 } else if (editType === 'employer') {
