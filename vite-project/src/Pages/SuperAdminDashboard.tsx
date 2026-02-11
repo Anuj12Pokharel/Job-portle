@@ -59,6 +59,7 @@ const SuperAdminDashboard = () => {
     const [editFormData, setEditFormData] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
+    const [successMessage, setSuccessMessage] = useState("");
 
     // Banner State
     const [bannerData, setBannerData] = useState({
@@ -255,9 +256,12 @@ const SuperAdminDashboard = () => {
                 }
             });
 
-            alert("Updated Successfully");
-            setEditingItem(null);
-            setEditType(null);
+            setSuccessMessage("Updated Successfully");
+            setTimeout(() => {
+                setSuccessMessage("");
+                setEditingItem(null);
+                setEditType(null);
+            }, 1000);
             fetchData();
         } catch (err) {
             console.error("Update failed", err);
@@ -379,6 +383,12 @@ const SuperAdminDashboard = () => {
                     </div>
 
                     <form onSubmit={handleUpdate} className="space-y-4">
+                        {successMessage && (
+                            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
+                                <strong className="font-bold">Success! </strong>
+                                <span className="block sm:inline">{successMessage}</span>
+                            </div>
+                        )}
                         {editType === "training" && (
                             <>
                                 <input type="text" placeholder="Title" value={editFormData.title || ''} onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })} className="w-full border rounded px-3 py-2" />
