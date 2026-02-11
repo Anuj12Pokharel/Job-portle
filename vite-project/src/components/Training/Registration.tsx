@@ -46,6 +46,7 @@ const Registration = () => {
     supportAvailable: "24/7"
   });
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchTrainingStatistics();
@@ -64,9 +65,33 @@ const Registration = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Registration submitted:", formData);
+    setSubmitting(true);
+
+    try {
+      const response = await axios.post(`${API_BASE_URL}/api/enrollments`, formData);
+
+      if (response.data.success) {
+        alert(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
+        // Reset form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          shift: "",
+          course: "",
+        });
+        // Refresh statistics to show the new enrollment
+        fetchTrainingStatistics();
+      }
+    } catch (error: any) {
+      console.error("Error submitting enrollment:", error);
+      const errorMessage = error.response?.data?.message || "Failed to submit enrollment. Please try again.";
+      alert(errorMessage);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleInputChange = (field, value) => {
@@ -264,10 +289,14 @@ const Registration = () => {
                 {/* Submit */}
                 <button
                   type="submit"
-                  className="w-1/2 flex items-center justify-center text-lg px-2 py-2 rounded-lg bg-teal-600 text-white font-semibold shadow-md hover:bg-teal-700 transition group"
+                  disabled={submitting}
+                  className={`w-1/2 flex items-center justify-center text-lg px-2 py-2 rounded-lg font-semibold shadow-md transition group ${submitting
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-teal-600 text-white hover:bg-teal-700'
+                    }`}
                 >
-                  Submit Registration
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  {submitting ? "Submitting..." : "Submit Registration"}
+                  {!submitting && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
                 </button>
               </form>
             </div>
