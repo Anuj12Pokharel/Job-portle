@@ -29,6 +29,8 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
         const url = `${backendBase}/api/jobs/get${params.toString() ? `?${params.toString()}` : ""}`;
 
         const res = await axios.get(url);
+        console.log("Topjob - Fetched jobs:", res.data);
+        console.log("Topjob - Total jobs:", res.data.length);
         setJobs(res.data);
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
@@ -38,42 +40,42 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
   }, [category, search, backendBase]);
 
   const sortedJobs = [...jobs]
-   .filter((job) => {
-    if (!job.expiryDate) return true; // Keep jobs with no expiry
-    const expiry = new Date(job.expiryDate);
-    expiry.setHours(23, 59, 59, 999); // End of the expiry day
-    return expiry.getTime() > Date.now(); // Only include jobs that are not expired
-  })
-  .sort((a, b) => {
-    const dateA = new Date(a.createdAt || 0).getTime();
-    const dateB = new Date(b.createdAt || 0).getTime();
-    return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
-  });
+    .filter((job) => {
+      if (!job.expiryDate) return true; // Keep jobs with no expiry
+      const expiry = new Date(job.expiryDate);
+      expiry.setHours(23, 59, 59, 999); // End of the expiry day
+      return expiry.getTime() > Date.now(); // Only include jobs that are not expired
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.createdAt || 0).getTime();
+      const dateB = new Date(b.createdAt || 0).getTime();
+      return sortOrder === "newest" ? dateB - dateA : dateA - dateB;
+    });
 
   return (
-   <div className="px-4 sm:px-6 lg:px-8 py-8">
-  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+    <div className="px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
 
-    <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold text-center sm:text-left">
-      {search ? `Top Jobs - Search Results for "${search}"` : "Top Jobs"}
-    </h2>
+        <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold text-center sm:text-left">
+          {search ? `Top Jobs - Search Results for "${search}"` : "Top Jobs"}
+        </h2>
 
-    <div className="flex items-center gap-2 justify-center sm:justify-start">
-      <span className="text-sm text-gray-600 font-medium">Sort by:</span>
-      <select
-        value={sortOrder}
-        onChange={(e) =>
-          setSortOrder(e.target.value as "newest" | "oldest")
-        }
-        className="border border-gray-300 rounded-md px-2 py-1 text-sm 
+        <div className="flex items-center gap-2 justify-center sm:justify-start">
+          <span className="text-sm text-gray-600 font-medium">Sort by:</span>
+          <select
+            value={sortOrder}
+            onChange={(e) =>
+              setSortOrder(e.target.value as "newest" | "oldest")
+            }
+            className="border border-gray-300 rounded-md px-2 py-1 text-sm 
                    focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-white"
-      >
-        <option value="newest">Newest First</option>
-        <option value="oldest">Oldest First</option>
-      </select>
-    </div>
+          >
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+          </select>
+        </div>
 
-  </div>
+      </div>
 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
@@ -117,21 +119,21 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                 <div className="flex items-center gap-1">
                   <Calendar className="w-5 h-5 text-gray-500" />
                   <span>
-  {job.expiryDate
-    ? (() => {
-        const expiry = new Date(job.expiryDate);
-        // Set expiry to end of the day
-        expiry.setHours(23, 59, 59, 999);
+                    {job.expiryDate
+                      ? (() => {
+                        const expiry = new Date(job.expiryDate);
+                        // Set expiry to end of the day
+                        expiry.setHours(23, 59, 59, 999);
 
-        const diff = expiry.getTime() - Date.now();
-        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                        const diff = expiry.getTime() - Date.now();
+                        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
 
-        if (days < 0) return "Expired";
-        if (days === 0) return "Expires Today";
-        return `${days} days left`;
-      })()
-    : "No expiry"}
-</span>
+                        if (days < 0) return "Expired";
+                        if (days === 0) return "Expires Today";
+                        return `${days} days left`;
+                      })()
+                      : "No expiry"}
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <LiaMoneyCheckSolid className="h-5 w-5 text-gray-700" />
@@ -142,26 +144,26 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
               </div>
             </div>
 
-           {/* Job Level + Type + View Details */}
-<div className="mt-3 flex justify-between items-center">
-  <div className="flex space-x-2">
-    {job.jobLevel && (
-      <span className="bg-blue-100 text-blue-700 px-2 py-1 text-xs rounded">
-        {job.jobLevel}
-      </span>
-    )}
-    <span className="bg-green-100 text-green-700 px-2 py-1 text-xs rounded">
-      {job.jobType}
-    </span>
-  </div>
+            {/* Job Level + Type + View Details */}
+            <div className="mt-3 flex justify-between items-center">
+              <div className="flex space-x-2">
+                {job.jobLevel && (
+                  <span className="bg-blue-100 text-blue-700 px-2 py-1 text-xs rounded">
+                    {job.jobLevel}
+                  </span>
+                )}
+                <span className="bg-green-100 text-green-700 px-2 py-1 text-xs rounded">
+                  {job.jobType}
+                </span>
+              </div>
 
-  <Link
-    to={`/jobs/${job._id}`}
-    className="text-blue-600 text-sm font-semibold hover:underline"
-  >
-    View Details
-  </Link>
-</div>
+              <Link
+                to={`/jobs/${job._id}`}
+                className="text-blue-600 text-sm font-semibold hover:underline"
+              >
+                View Details
+              </Link>
+            </div>
           </div>
         ))}
       </div>
