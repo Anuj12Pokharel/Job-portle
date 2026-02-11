@@ -251,7 +251,16 @@ export const getAppliedJobs = async (req: Request, res: Response) => {
 export const getCategories = async (_req: Request, res: Response) => {
   try {
     const categories = await Job.aggregate([
-      { $match: { category: { $exists: true, $ne: "" } } },
+      {
+        $match: {
+          category: {
+            $exists: true,
+            $ne: "",
+            // Exclude known job levels that were mistakenly saved as categories
+            $nin: ["Junior", "Senior", "Middle Level", "Internship", "Entry Level"]
+          }
+        }
+      },
       { $group: { _id: "$category", count: { $sum: 1 } } },
       { $sort: { count: -1, _id: 1 } },
     ]);
