@@ -8,6 +8,7 @@ const Createblog = () => {
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -37,11 +38,11 @@ const Createblog = () => {
 
       alert("Blog posted successfully");
 
-      // reset
       setTitle("");
       setBody("");
       setAuthor("");
       setImage(null);
+      setImagePreview("");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to post blog");
     } finally {
@@ -80,11 +81,26 @@ const Createblog = () => {
           required
         />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Blog Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImage(file);
+                setImagePreview(URL.createObjectURL(file));
+              }
+            }}
+            className="w-full border p-2 rounded"
+          />
+          {imagePreview && (
+            <div className="mt-3">
+              <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded border" />
+            </div>
+          )}
+        </div>
 
         <button
           type="submit"
