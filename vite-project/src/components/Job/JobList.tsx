@@ -67,6 +67,8 @@ export default function JobList({
         if (!search && !category) {
           params.append("featured", "true");
         }
+        // Add cache buster
+        params.append("_t", String(Date.now()));
 
         const res = await axios.get(url + params.toString());
         console.log("JobList - Fetched jobs:", res.data);
