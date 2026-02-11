@@ -63,6 +63,8 @@ export default function JobList({
         if (search) params.append("search", search);
 
         const res = await axios.get(url + params.toString());
+        console.log("JobList - Fetched jobs:", res.data);
+        console.log("JobList - Total jobs:", res.data.length);
         setJobs(res.data);
       } catch (err) {
         console.error("Failed to fetch jobs:", err);
@@ -132,13 +134,13 @@ export default function JobList({
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {jobs
-           .filter((job) => {
-    // Filter out expired jobs
-    if (!job.expiryDate) return true; // Keep jobs with no expiry
-    const expiry = new Date(job.expiryDate);
-    expiry.setHours(23, 59, 59, 999);
-    return expiry.getTime() > Date.now(); // Only include active jobs
-  })
+            .filter((job) => {
+              // Filter out expired jobs
+              if (!job.expiryDate) return true; // Keep jobs with no expiry
+              const expiry = new Date(job.expiryDate);
+              expiry.setHours(23, 59, 59, 999);
+              return expiry.getTime() > Date.now(); // Only include active jobs
+            })
             .slice(-6)
             .reverse()
             .map((job) => (
@@ -199,26 +201,26 @@ export default function JobList({
                   </div>
                 </div>
 
-              {/* Job Level + Type + View Details */}
-<div className="mt-4 flex justify-between items-center flex-wrap gap-2">
-  <div className="flex flex-wrap gap-2">
-    {job.jobLevel && (
-      <span className="bg-blue-50 text-blue-700 px-2.5 py-1 text-xs font-medium rounded-full border border-blue-100">
-        {job.jobLevel}
-      </span>
-    )}
-    <span className="bg-green-50 text-green-700 px-2.5 py-1 text-xs font-medium rounded-full border border-green-100">
-      {job.jobType}
-    </span>
-  </div>
+                {/* Job Level + Type + View Details */}
+                <div className="mt-4 flex justify-between items-center flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2">
+                    {job.jobLevel && (
+                      <span className="bg-blue-50 text-blue-700 px-2.5 py-1 text-xs font-medium rounded-full border border-blue-100">
+                        {job.jobLevel}
+                      </span>
+                    )}
+                    <span className="bg-green-50 text-green-700 px-2.5 py-1 text-xs font-medium rounded-full border border-green-100">
+                      {job.jobType}
+                    </span>
+                  </div>
 
-  <Link
-    to={`/jobs/${job._id}`}
-    className="text-blue-600 text-sm font-semibold hover:underline"
-  >
-    View Details
-  </Link>
-</div>
+                  <Link
+                    to={`/jobs/${job._id}`}
+                    className="text-blue-600 text-sm font-semibold hover:underline"
+                  >
+                    View Details
+                  </Link>
+                </div>
               </div>
             ))}
         </div>
