@@ -1,0 +1,143 @@
+import React from "react";
+
+interface Props {
+    data: {
+        personalInfo: {
+            fullName: string;
+            email: string;
+            phone: string;
+            address: string;
+            summary?: string;
+        };
+        education: Array<{
+            degree: string;
+            institution: string;
+            startYear: string;
+            endYear: string;
+        }>;
+        experience: Array<{
+            company: string;
+            role: string;
+            duration: string;
+            responsibilities?: string;
+        }>;
+        skills: string[];
+        projects: Array<{
+            name: string;
+            description: string;
+            link?: string;
+        }>;
+    };
+}
+
+const CVPreview: React.FC<Props> = ({ data }) => {
+    const { personalInfo, education, experience, skills, projects } = data;
+
+    return (
+        <div className="bg-white shadow-2xl rounded-sm w-full min-h-[841px] p-[40px] text-gray-800 border overflow-y-auto print:shadow-none" id="cv-preview">
+            {/* Header */}
+            <div className="text-center border-b-2 border-primary-blue pb-4 mb-6">
+                <h1 className="text-3xl font-bold text-gray-900 uppercase tracking-wider">{personalInfo.fullName || "Your Name"}</h1>
+                <div className="text-sm text-gray-600 mt-2 flex justify-center gap-3">
+                    <span>{personalInfo.email || "email@example.com"}</span>
+                    {personalInfo.phone && (
+                        <>
+                            <span>|</span>
+                            <span>{personalInfo.phone}</span>
+                        </>
+                    )}
+                </div>
+                <p className="text-sm text-gray-600 mt-1">{personalInfo.address}</p>
+            </div>
+
+            {/* Summary */}
+            {personalInfo.summary && (
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Professional Summary</h2>
+                    <p className="text-sm leading-relaxed text-gray-700">{personalInfo.summary}</p>
+                </div>
+            )}
+
+            {/* Experience */}
+            <div className="mb-6">
+                <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-3">Work Experience</h2>
+                <div className="space-y-4">
+                    {experience && experience.length > 0 ? (
+                        experience.map((exp: any, index: number) => (
+                            <div key={index} className="item">
+                                <div className="flex justify-between font-bold text-gray-800 text-sm">
+                                    <span>{exp.role || "Role"}</span>
+                                    <span className="text-gray-500 font-normal">{exp.duration}</span>
+                                </div>
+                                <div className="text-sm italic text-gray-600 mb-1">{exp.company}</div>
+                                {exp.responsibilities && (
+                                    <ul className="list-disc list-inside text-xs text-gray-700 space-y-1 ml-2">
+                                        {exp.responsibilities.split('\n').filter((l: string) => l.trim()).map((line: string, i: number) => (
+                                            <li key={i}>{line.trim().startsWith('•') ? line.trim().substring(1).trim() : line.trim()}</li>
+                                        ))}
+                                    </ul>
+                                )}
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-xs text-gray-400 italic">No experience added yet</p>
+                    )}
+                </div>
+            </div>
+
+            {/* Education */}
+            <div className="mb-6">
+                <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-3">Education</h2>
+                <div className="space-y-3">
+                    {education && education.length > 0 ? (
+                        education.map((edu: any, index: number) => (
+                            <div key={index}>
+                                <div className="flex justify-between font-bold text-gray-800 text-sm">
+                                    <span>{edu.degree || "Degree"}</span>
+                                    <span className="text-gray-500 font-normal">{edu.startYear} - {edu.endYear}</span>
+                                </div>
+                                <div className="text-sm italic text-gray-600">{edu.institution}</div>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-xs text-gray-400 italic">No education added yet</p>
+                    )}
+                </div>
+            </div>
+
+            {/* Skills */}
+            <div className="mb-6">
+                <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Skills</h2>
+                <div className="flex flex-wrap gap-2">
+                    {skills && skills.length > 0 ? (
+                        skills.map((skill: string, index: number) => (
+                            <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                {skill}
+                            </span>
+                        ))
+                    ) : (
+                        <p className="text-xs text-gray-400 italic">No skills added yet</p>
+                    )}
+                </div>
+            </div>
+
+            {/* Projects */}
+            {projects && projects.length > 0 && (
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Projects</h2>
+                    <div className="space-y-3">
+                        {projects.map((proj: any, index: number) => (
+                            <div key={index}>
+                                <h3 className="text-sm font-bold text-gray-800">{proj.name}</h3>
+                                <p className="text-xs text-gray-700 mt-1">{proj.description}</p>
+                                {proj.link && <a href={proj.link} className="text-xs text-blue-500 mt-1 hover:underline" target="_blank" rel="noopener noreferrer">{proj.link}</a>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default CVPreview;
