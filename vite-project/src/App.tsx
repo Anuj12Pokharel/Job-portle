@@ -38,6 +38,7 @@ import Jobposting from "./Pages/Services/Jobposting";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateTeam from "./Pages/CreateTeam";
 import CVGenerator from "./Pages/CVGenerator";
+import BannerManagement from "./Pages/BannerManagement";
 import { ToastContainer } from "react-toastify";    
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -95,6 +96,7 @@ function App() {
             <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
             <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
             <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
+            <Route path="/banner-management" element={<BannerManagement />}></Route>
           </Route>
 
           <Route path="/" element={<Home />} />

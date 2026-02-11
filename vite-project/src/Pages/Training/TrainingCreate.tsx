@@ -10,9 +10,10 @@ const CreateTraining = () => {
     duration: "",
     price: "",
     startDate: "",
-    image: "",
   });
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -20,6 +21,19 @@ const CreateTraining = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should be less than 5MB");
+        return;
+      }
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+      setError("");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,15 +50,32 @@ const CreateTraining = () => {
       return;
     }
 
+    if (!imageFile) {
+      setError("Please select an image for the training");
+      setLoading(false);
+      return;
+    }
+
     try {
-      // 2. Include the token in the headers
+      // 2. Create FormData for file upload
+      const data = new FormData();
+      data.append("title", formData.title);
+      data.append("description", formData.description);
+      data.append("instructor", formData.instructor);
+      data.append("duration", formData.duration);
+      data.append("price", formData.price);
+      data.append("startDate", formData.startDate);
+      data.append("image", imageFile);
+
+      // 3. Include the token in the headers
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
         },
       };
 
-      await axios.post(`${API_BASE_URL}/api/training`, formData, config);
+      await axios.post(`${API_BASE_URL}/api/training`, data, config);
       
       alert("Training created successfully");
 
@@ -55,10 +86,11 @@ const CreateTraining = () => {
         duration: "",
         price: "",
         startDate: "",
-        image: "",
       });
+      setImageFile(null);
+      setImagePreview("");
     } catch (err: any) {
-      // 3. Improve error message handling
+      // 4. Improve error message handling
       console.error("Error creating training:", err);
       setError(err.response?.data?.message || "Failed to create training. Only admins can perform this action.");
     } finally {
@@ -150,15 +182,19 @@ const CreateTraining = () => {
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Image URL</label>
+                <label className="text-sm font-semibold text-gray-700 mb-1">Training Image</label>
                 <input
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="Image URL"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
                 />
+                {imagePreview && (
+                  <div className="mt-2">
+                    <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border" />
+                  </div>
+                )}
             </div>
 
             <div className="md:col-span-2 flex flex-col">

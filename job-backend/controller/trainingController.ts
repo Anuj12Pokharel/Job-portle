@@ -22,7 +22,12 @@ export const getTrainings = async (req: Request, res: Response) => {
 // Create a new training
 export const createTraining = async (req: Request, res: Response) => {
     try {
-        const training = await Training.create(req.body);
+        const trainingData = {
+            ...req.body,
+            image: req.file ? `/uploads/trainings/${req.file.filename}` : req.body.image
+        };
+        
+        const training = await Training.create(trainingData);
         res.status(201).json({
             success: true,
             data: training,
@@ -40,9 +45,14 @@ export const updateTraining = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
+    const updateData = {
+      ...req.body,
+      ...(req.file && { image: `/uploads/trainings/${req.file.filename}` })
+    };
+
     const updatedTraining = await Training.findByIdAndUpdate(
       id,
-      req.body,
+      updateData,
       {
         new: true,        // return updated document
         runValidators: true, // validate schema
