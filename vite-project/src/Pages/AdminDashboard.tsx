@@ -41,6 +41,7 @@ const AdminDashboard = () => {
         companyName: "",
         position: "",
         category: "",
+        jobLevel: "",
         jobType: "Full-time",
         location: "",
         description: "",
@@ -179,6 +180,7 @@ const AdminDashboard = () => {
             companyName: job.companyName || "",
             position: job.position || "",
             category: job.category || "",
+            jobLevel: job.jobLevel || "",
             jobType: job.jobType || "Full-time",
             location: job.location || "",
             description: job.description || "",
@@ -241,7 +243,7 @@ const AdminDashboard = () => {
                 fetchMyJobs();
             }
             setJobData({
-                companyName: "", position: "", category: "", jobType: "Full-time",
+                companyName: "", position: "", category: "", jobLevel: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
@@ -570,7 +572,40 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                    <input type="text" value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
+                                    <select value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required>
+                                        <option value="">Select Category</option>
+                                        <option>Information Technology</option>
+                                        <option>Marketing</option>
+                                        <option>Sales</option>
+                                        <option>Human Resources</option>
+                                        <option>Finance & Accounting</option>
+                                        <option>Customer Service</option>
+                                        <option>Engineering</option>
+                                        <option>Healthcare</option>
+                                        <option>Education</option>
+                                        <option>Design</option>
+                                        <option>Operations</option>
+                                        <option>Management</option>
+                                        <option>Legal</option>
+                                        <option>Construction</option>
+                                        <option>Hospitality</option>
+                                        <option>Retail</option>
+                                        <option>Manufacturing</option>
+                                        <option>Banking</option>
+                                        <option>Telecommunications</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Level</label>
+                                    <select value={jobData.jobLevel} onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })} className="w-full border rounded-lg px-4 py-2">
+                                        <option value="">Select Level (Optional)</option>
+                                        <option>Entry-level</option>
+                                        <option>Mid-level</option>
+                                        <option>Senior-level</option>
+                                        <option>Junior</option>
+                                        <option>Executive</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
