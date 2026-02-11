@@ -37,6 +37,9 @@ export interface IUser extends Document {
   email: string;
   profilePicture?: string;
   location?: string;
+  permanentAddress?: string;
+  temporaryAddress?: string;
+  academicDegree?: string;
   preferredJobCategory?: string;
   password: string;
   confirmPassword: string;
@@ -73,6 +76,18 @@ const userSchema = new Schema<IUser>(
       default: "",
     },
     location: {
+      type: String,
+      default: "",
+    },
+    permanentAddress: {
+      type: String,
+      default: "",
+    },
+    temporaryAddress: {
+      type: String,
+      default: "",
+    },
+    academicDegree: {
       type: String,
       default: "",
     },

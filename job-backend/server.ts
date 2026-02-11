@@ -16,6 +16,7 @@ import clientLogoRoutes from "./routes/clientLogoRoutes";
 import historyRoutes from "./routes/historyRoutes";
 import bannerRoutes from "./routes/bannerRoutes";
 import cvRoutes from "./routes/cvRoutes";
+import statisticsRoutes from "./routes/statisticsRoutes";
 
 import userRoutes from "./routes/userRoutes";
 import BlogRoutes from "./routes/BlogRoutes";
@@ -24,7 +25,14 @@ import BlogRoutes from "./routes/BlogRoutes";
 dotenv.config({ path: path.join(__dirname, "..", ".env.production") });
 
 const app = express();
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Serve static files from uploads directory
+// Use absolute path to ensure it works in both dev and production
+const uploadsPath = path.join(__dirname, "..", "uploads");
+app.use("/uploads", express.static(uploadsPath));
+
+// Log uploads path for debugging
+console.log("Serving uploads from:", uploadsPath);
 
 app.use(cors());
 app.use(express.json());
@@ -50,6 +58,7 @@ app.use("/api/history", historyRoutes);
 app.use("/api/blog", BlogRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/cv", cvRoutes);
+app.use("/api/statistics", statisticsRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
