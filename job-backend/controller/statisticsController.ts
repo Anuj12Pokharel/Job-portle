@@ -63,14 +63,26 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
         // Count total trainings (courses available)
         const totalCourses = await Training.countDocuments();
 
-        // For students trained, you would ideally have a separate model for enrollments
-        // For now, we can estimate based on various factors
-        // This is a placeholder - you should implement a proper enrollment system
-        const studentsTrainedEstimate = totalCourses * 10; // Estimate 10 students per course
+        // Import Enrollment model
+        const Enrollment = (await import("../models/Enrollment")).default;
 
-        // Success rate would come from enrollment completion data
-        // For now using a default high success rate
-        const successRate = 95;
+        // Count total students who enrolled (any status)
+        const totalEnrollments = await Enrollment.countDocuments();
+
+        // Count completed enrollments for success rate
+        const completedEnrollments = await Enrollment.countDocuments({
+            status: "completed"
+        });
+
+        // Calculate success rate (percentage of completed vs enrolled students)
+        // Only count enrolled and completed students for the calculation
+        const activeEnrollments = await Enrollment.countDocuments({
+            status: { $in: ["enrolled", "completed"] }
+        });
+
+        const successRate = activeEnrollments > 0
+            ? Math.round((completedEnrollments / activeEnrollments) * 100)
+            : 95; // Default to 95% if no data yet
 
         // Support available is always 24/7 (static but included for completeness)
         const supportAvailable = "24/7";
@@ -78,7 +90,7 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
         res.status(200).json({
             success: true,
             data: {
-                studentsTrained: studentsTrainedEstimate,
+                studentsTrained: totalEnrollments,
                 coursesAvailable: totalCourses,
                 successRate: successRate,
                 supportAvailable: supportAvailable
@@ -93,3 +105,4 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
         });
     }
 };
+
