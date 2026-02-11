@@ -99,10 +99,13 @@ const getApplicantsForJob = async (req, res) => {
 exports.getApplicantsForJob = getApplicantsForJob;
 const getJobs = async (req, res) => {
     try {
-        const { category, search } = req.query;
+        const { category, search, featured } = req.query;
         const filter = {};
         if (category) {
             filter.category = category;
+        }
+        if (featured === "true") {
+            filter.isFeatured = true;
         }
         if (search) {
             const searchRegex = new RegExp(String(search), "i");
@@ -242,7 +245,16 @@ exports.getAppliedJobs = getAppliedJobs;
 const getCategories = async (_req, res) => {
     try {
         const categories = await Job_1.default.aggregate([
-            { $match: { category: { $exists: true, $ne: "" } } },
+            {
+                $match: {
+                    category: {
+                        $exists: true,
+                        $ne: "",
+                        // Exclude known job levels that were mistakenly saved as categories
+                        $nin: ["Junior", "Senior", "Middle Level", "Internship", "Entry Level"]
+                    }
+                }
+            },
             { $group: { _id: "$category", count: { $sum: 1 } } },
             { $sort: { count: -1, _id: 1 } },
         ]);

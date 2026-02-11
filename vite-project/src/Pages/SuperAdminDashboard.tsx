@@ -12,7 +12,9 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000
 const SuperAdminDashboard = () => {
     const [activeTab, setActiveTab] = useState("dashboard");
     const [trainingSubTab, setTrainingSubTab] = useState("list");
+    const [blogSubTab, setBlogSubTab] = useState("list");
     const [users, setUsers] = useState([]);
+    const [blogs, setBlogs] = useState([]);
     const [employers, setEmployers] = useState([]);
     const [jobs, setJobs] = useState([]);
     const [trainings, setTrainings] = useState([]);
@@ -56,7 +58,7 @@ const SuperAdminDashboard = () => {
 
     // Edit State
     const [editingItem, setEditingItem] = useState<any>(null);
-    const [editType, setEditType] = useState<"user" | "employer" | "job" | "training" | null>(null);
+    const [editType, setEditType] = useState<"user" | "employer" | "job" | "training" | "blog" | null>(null);
     const [editFormData, setEditFormData] = useState<any>({});
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [stats, setStats] = useState({ totalJobs: 0, totalJobseekers: 0, totalEmployers: 0, rejectedApplications: 0 });
@@ -137,6 +139,12 @@ const SuperAdminDashboard = () => {
             } else if (activeTab === "partner_logos") {
                 const res = await axios.get(`${API_BASE_URL}/api/client-logos/get`);
                 setClientLogos(res.data);
+            } else if (activeTab === "trainings") {
+                const res = await axios.get(`${API_BASE_URL}/api/training`);
+                setTrainings(res.data.data);
+            } else if (activeTab === "blogs") {
+                const res = await axios.get(`${API_BASE_URL}/api/blogs`);
+                setBlogs(res.data.blogs);
             }
             else if (activeTab === "history") {
                 const res = await axios.get(`${API_BASE_URL}/api/history`, config);
@@ -165,7 +173,7 @@ const SuperAdminDashboard = () => {
         }
     };
 
-    const handleDelete = async (id: string, type: "user" | "employer" | "job") => {
+    const handleDelete = async (id: string, type: "user" | "employer" | "job" | "training" | "blog") => {
         if (!window.confirm("Are you sure you want to delete this record?")) return;
         const token = localStorage.getItem("token");
         try {
@@ -174,6 +182,7 @@ const SuperAdminDashboard = () => {
             else if (type === "employer") endpoint = `/api/admin/employer/${id}`;
             else if (type === "job") endpoint = `/api/jobs/delete/${id}`;
             else if (type === "training") endpoint = `/api/training/delete/${id}`;
+            else if (type === "blog") endpoint = `/api/blogs/delete/${id}`;
 
             await axios.delete(`${API_BASE_URL}${endpoint}`, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -247,6 +256,12 @@ const SuperAdminDashboard = () => {
                     formData.append('isFeatured', String(editFormData.isFeatured || false));
                     if (selectedFile) formData.append('logo', selectedFile);
                     endpoint = `/api/jobs/update/${editingItem._id}`;
+                } else if (editType === 'blog') {
+                    formData.append('title', editFormData.title || '');
+                    formData.append('author', editFormData.author || '');
+                    formData.append('body', editFormData.body || '');
+                    if (selectedFile) formData.append('image', selectedFile);
+                    endpoint = `/api/blogs/update/${editingItem._id}`;
                 }
                 payload = formData;
             }
@@ -386,7 +401,7 @@ const SuperAdminDashboard = () => {
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg overflow-y-auto max-h-[90vh]">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="text-xl font-bold">Edit {editType === 'user' ? 'Jobseeker' : editType === 'employer' ? 'Company' : 'Job'}</h3>
+                        <h3 className="text-xl font-bold">Edit {editType === 'user' ? 'Jobseeker' : editType === 'employer' ? 'Company' : editType === 'job' ? 'Job' : editType === 'training' ? 'Training' : 'Blog'}</h3>
                         <button onClick={() => setEditingItem(null)} className="text-gray-500 hover:text-gray-700">
                             <X className="w-6 h-6" />
                         </button>
@@ -405,6 +420,28 @@ const SuperAdminDashboard = () => {
                                 <input type="text" placeholder="Instructor" value={editFormData.instructor || ''} onChange={(e) => setEditFormData({ ...editFormData, instructor: e.target.value })} className="w-full border rounded px-3 py-2" />
                                 <input type="text" placeholder="Price" value={editFormData.price || ''} onChange={(e) => setEditFormData({ ...editFormData, price: e.target.value })} className="w-full border rounded px-3 py-2" />
                                 <textarea placeholder="Description" value={editFormData.description || ''} onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })} className="w-full border rounded px-3 py-2 h-24" />
+                            </>
+                        )}
+                        {editType === "blog" && (
+                            <>
+                                <div className="flex justify-center mb-4">
+                                    <div className="w-24 h-24 rounded-lg bg-gray-200 overflow-hidden relative border">
+                                        {selectedFile ? (
+                                            <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : editFormData.image ? (
+                                            <img src={editFormData.image.startsWith('http') ? editFormData.image : `${API_BASE_URL}/uploads/blogs/${editFormData.image}`} alt="Current" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <div className="flex items-center justify-center h-full text-gray-400"><ImageIcon /></div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Cover Image</label>
+                                    <input type="file" onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                                </div>
+                                <input type="text" placeholder="Title" value={editFormData.title || ''} onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                <input type="text" placeholder="Author" value={editFormData.author || ''} onChange={(e) => setEditFormData({ ...editFormData, author: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                <textarea placeholder="Content" value={editFormData.body || ''} onChange={(e) => setEditFormData({ ...editFormData, body: e.target.value })} className="w-full border rounded px-3 py-2 h-40" />
                             </>
                         )}
 
@@ -906,352 +943,455 @@ const SuperAdminDashboard = () => {
                             </button>
                         </form>
                     </div>
-                ) :
-                    activeTab === "trainings" ? (
-                        <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                            {<CreateTraining />}
-                        </div>
-                    ) :
-                        activeTab === "blogs" ? (
-                            <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                                {<Createblog />}
+                ) : activeTab === "trainings" ? (
+                    <div className="space-y-6">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-bold text-gray-800">Manage Trainings</h3>
+                                <button
+                                    onClick={() => setTrainingSubTab(trainingSubTab === "list" ? "create" : "list")}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center transition-colors"
+                                >
+                                    {trainingSubTab === "list" ? <><PlusCircle className="w-5 h-5 mr-2" /> Add Training</> : <><LayoutDashboard className="w-5 h-5 mr-2" /> Training List</>}
+                                </button>
                             </div>
-                        ) :
-                            activeTab === "create_team" ? (
-                                <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
-                                    {<CreateTeam />}
-                                </div>
-                            ) :
-                                (
-                                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                                        <div className="overflow-x-auto">
-                                            <table className="w-full text-left">
-                                                <thead className="bg-gray-50 border-b border-gray-200">
-                                                    <tr>
-                                                        {activeTab === "users" && (
-                                                            <>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">S.N</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Picture</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Name</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Permanent Address</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Temporary Address</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Academic (Last Degree)</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Profile Update Date</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Contact Number</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
-                                                            </>
-                                                        )}
-                                                        {activeTab === "employers" && (
-                                                            <>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Mobile</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
-                                                            </>
-                                                        )}
-                                                        {activeTab === "pending" && (
-                                                            <>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
-                                                            </>
-                                                        )}
-                                                        {activeTab === "jobs" && (
-                                                            <>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Title</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
-                                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
-                                                            </>
-                                                        )}
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="divide-y divide-gray-100">
-                                                    {activeTab === "users" && users.map((u: any, index: number) => (
-                                                        <tr key={u._id} className="hover:bg-gray-50 transition-colors">
-                                                            <td className="px-6 py-4 text-sm">{index + 1}</td>
-                                                            <td className="px-6 py-4" onClick={() => handleEdit(u, "user")}>
-                                                                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                                                    {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Users className="p-2 w-full h-full text-gray-400" />}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "user")}>{u.fullName}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.permanentAddress || 'N/A'}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.temporaryAddress || 'N/A'}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.academicDegree || 'N/A'}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.updatedAt ? new Date(u.updatedAt).toLocaleDateString() : 'N/A'}</td>
-                                                            <td className="px-6 py-4 text-sm">{u.mobileNumber || 'N/A'}</td>
-                                                            <td className="px-6 py-4 flex gap-2">
-                                                                <button onClick={() => handleEdit(u, "user")} className="text-blue-500 hover:text-blue-700" title="Edit">
-                                                                    <Edit className="w-5 h-5" />
-                                                                </button>
-                                                                <button onClick={() => handleDelete(u._id, "user")} className="text-red-500 hover:text-red-700" title="Delete">
-                                                                    <Trash2 className="w-5 h-5" />
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {activeTab === "employers" && employers.map((u: any) => (
-                                                        <tr key={u._id} className="hover:bg-gray-50 transition-colors">
-                                                            <td className="px-6 py-4" onClick={() => handleEdit(u, "employer")}>
-                                                                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                                                    {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Building2 className="p-2 w-full h-full text-gray-400" />}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "employer")}>{u.companyName}</td>
-                                                            <td className="px-6 py-4">{u.email}</td>
-                                                            <td className="px-6 py-4">{u.mobileNumber}</td>
-                                                            <td className="px-6 py-4">
-                                                                <span className={`px-2 py-1 rounded-full text-xs font-semibold 
-                                                    ${u.status === 'approved' ? 'bg-green-100 text-green-800' :
-                                                                        u.status === 'rejected' ? 'bg-red-100 text-red-800' :
-                                                                            'bg-yellow-100 text-yellow-800'}`}>
-                                                                    {u.status || 'pending'}
-                                                                </span>
-                                                            </td>
-                                                            <td className="px-6 py-4 flex gap-2">
-                                                                {(!u.status || u.status === 'pending') && (
-                                                                    <>
-                                                                        <button onClick={() => handleVerify(u._id, "approved")} className="text-green-500 hover:text-green-700" title="Approve">
-                                                                            <CheckCircle className="w-5 h-5" />
-                                                                        </button>
-                                                                        <button onClick={() => handleVerify(u._id, "rejected")} className="text-red-500 hover:text-red-700" title="Reject">
-                                                                            <XCircle className="w-5 h-5" />
-                                                                        </button>
-                                                                    </>
-                                                                )}
-                                                                <button onClick={() => handleEdit(u, "employer")} className="text-blue-500 hover:text-blue-700" title="Edit">
-                                                                    <Edit className="w-5 h-5" />
-                                                                </button>
-                                                                <button onClick={() => handleDelete(u._id, "employer")} className="text-red-500 hover:text-red-700" title="Delete">
-                                                                    <Trash2 className="w-5 h-5" />
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {activeTab === "pending" && employers.map((u: any) => (
-                                                        <tr key={u._id} className="hover:bg-gray-50 transition-colors">
-                                                            <td className="px-6 py-4">
-                                                                <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                                                    {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Building2 className="p-2 w-full h-full text-gray-400" />}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-6 py-4 font-medium">{u.companyName}</td>
-                                                            <td className="px-6 py-4">{u.email}</td>
-                                                            <td className="px-6 py-4">
-                                                                {u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-US', {
-                                                                    year: 'numeric',
-                                                                    month: 'short',
-                                                                    day: 'numeric'
-                                                                }) : 'N/A'}
-                                                            </td>
-                                                            <td className="px-6 py-4">
-                                                                <div className="flex gap-2">
-                                                                    <button
-                                                                        onClick={() => setViewingEmployer(u)}
-                                                                        className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1 transition-colors"
-                                                                        title="View Details"
-                                                                    >
-                                                                        <Eye className="w-4 h-4" /> Details
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => handleVerify(u._id, "approved")}
-                                                                        className="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 flex items-center gap-1 transition-colors"
-                                                                        title="Confirm"
-                                                                    >
-                                                                        <CheckCircle className="w-4 h-4" /> Confirm
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => handleVerify(u._id, "rejected")}
-                                                                        className="px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center gap-1 transition-colors"
-                                                                        title="Reject"
-                                                                    >
-                                                                        <XCircle className="w-4 h-4" /> Reject
-                                                                    </button>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {activeTab === "jobs" && jobs.map((j: any) => (
-                                                        <tr key={j._id} className="hover:bg-gray-50 transition-colors">
-                                                            <td className="px-6 py-4" onClick={() => handleEdit(j, "job")}>
-                                                                <div className="w-10 h-10 rounded-lg bg-gray-200 overflow-hidden">
-                                                                    {j.logo ? <img src={`${API_BASE_URL}/${j.logo}`} alt="" className="w-full h-full object-cover" /> : <Briefcase className="p-2 w-full h-full text-gray-400" />}
-                                                                </div>
-                                                            </td>
-                                                            <td className="px-6 py-4 font-medium" onClick={() => handleEdit(j, "job")}>{j.position}</td>
-                                                            <td className="px-6 py-4">{j.companyName}</td>
-                                                            <td className="px-6 py-4 flex gap-2">
-                                                                <button onClick={() => handleEdit(j, "job")} className="text-blue-500 hover:text-blue-700" title="Edit">
-                                                                    <Edit className="w-5 h-5" />
-                                                                </button>
-                                                                <button onClick={() => handleDelete(j._id, "job")} className="text-red-500 hover:text-red-700" title="Delete">
-                                                                    <Trash2 className="w-5 h-5" />
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    ))}
-                                                    {activeTab === "partner_logos" && (
-                                                        <tr>
-                                                            <td colSpan={6} className="px-6 py-4">
-                                                                <div className="mb-6 flex gap-4 items-end bg-gray-50 p-4 rounded-lg">
-                                                                    <div>
-                                                                        <label className="block text-sm font-medium text-gray-700 mb-1">Add New Client Logo</label>
-                                                                        <input
-                                                                            type="file"
-                                                                            accept="image/*"
-                                                                            onChange={(e) => setLogoFile(e.target.files ? e.target.files[0] : null)}
-                                                                            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                                                                        />
-                                                                    </div>
-                                                                    <button
-                                                                        onClick={handleUploadLogo}
-                                                                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
-                                                                        disabled={!logoFile}
-                                                                    >
-                                                                        <Save className="w-4 h-4 mr-2" /> Upload
-                                                                    </button>
-                                                                </div>
 
-                                                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                                                                    {clientLogos.map((logo: any) => (
-                                                                        <div key={logo._id} className="relative group bg-white border rounded-lg p-4 flex items-center justify-center hover:shadow-md transition-shadow">
-                                                                            <img
-                                                                                src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, '/')}`}
-                                                                                alt="Client Logo"
-                                                                                className="h-20 w-full object-contain"
-                                                                            />
-                                                                            <button
-                                                                                onClick={() => handleDeleteLogo(logo._id)}
-                                                                                className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                title="Delete Logo"
-                                                                            >
-                                                                                <X className="w-4 h-4" />
-                                                                            </button>
-                                                                        </div>
-                                                                    ))}
-                                                                    {clientLogos.length === 0 && (
-                                                                        <div className="col-span-full text-center py-8 text-gray-500">
-                                                                            No logos uploaded yet.
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                    {activeTab === "history" && (
-                                                        <tr>
-                                                            <td colSpan={6} className="px-6 py-4">
-                                                                {/* Filter Tabs */}
-                                                                <div className="flex gap-2 mb-4 border-b">
-                                                                    <button
-                                                                        onClick={() => setHistoryFilter("all")}
-                                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
-                                                                            ? "border-b-2 border-blue-500 text-blue-600"
-                                                                            : "text-gray-600 hover:text-gray-800"
-                                                                            }`}
-                                                                    >
-                                                                        All History
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setHistoryFilter("application")}
-                                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
-                                                                            ? "border-b-2 border-blue-500 text-blue-600"
-                                                                            : "text-gray-600 hover:text-gray-800"
-                                                                            }`}
-                                                                    >
-                                                                        Applicant History
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setHistoryFilter("company")}
-                                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "company"
-                                                                            ? "border-b-2 border-blue-500 text-blue-600"
-                                                                            : "text-gray-600 hover:text-gray-800"
-                                                                            }`}
-                                                                    >
-                                                                        Company History
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setHistoryFilter("job")}
-                                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
-                                                                            ? "border-b-2 border-blue-500 text-blue-600"
-                                                                            : "text-gray-600 hover:text-gray-800"
-                                                                            }`}
-                                                                    >
-                                                                        Job History
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => setHistoryFilter("user")}
-                                                                        className={`px-4 py-2 font-medium transition-colors ${historyFilter === "user"
-                                                                            ? "border-b-2 border-blue-500 text-blue-600"
-                                                                            : "text-gray-600 hover:text-gray-800"
-                                                                            }`}
-                                                                    >
-                                                                        User History
-                                                                    </button>
-                                                                </div>
-                                                                <div className="overflow-x-auto">
-                                                                    <table className="min-w-full">
-                                                                        <thead className="bg-gray-100">
-                                                                            <tr>
-                                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Timestamp</th>
-                                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Entity Type</th>
-                                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
-                                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Details</th>
-                                                                                <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Performed By</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {history.filter(record => historyFilter === "all" || record.entityType === historyFilter).length === 0 ? (
-                                                                                <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">No {historyFilter !== "all" ? historyFilter : ""} history records found</td></tr>
-                                                                            ) : (
-                                                                                history.filter(record => historyFilter === "all" || record.entityType === historyFilter).map((record: any) => (
-                                                                                    <tr key={record._id} className="border-t hover:bg-gray-50">
-                                                                                        <td className="px-4 py-3 text-sm">{new Date(record.createdAt).toLocaleString()}</td>
-                                                                                        <td className="px-4 py-3 text-sm capitalize">
-                                                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
-                                                                                                record.entityType === 'company' ? 'bg-purple-100 text-purple-800' :
-                                                                                                    record.entityType === 'user' ? 'bg-green-100 text-green-800' :
-                                                                                                        'bg-yellow-100 text-yellow-800'
-                                                                                                }`}>{record.entityType}</span>
-                                                                                        </td>
-                                                                                        <td className="px-4 py-3 text-sm capitalize">
-                                                                                            <span className={`px-2 py-1 rounded text-xs font-medium ${record.action === 'created' ? 'bg-green-100 text-green-800' :
-                                                                                                record.action === 'deleted' ? 'bg-red-100 text-red-800' :
-                                                                                                    record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
-                                                                                                        record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
-                                                                                                            record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
-                                                                                                                'bg-gray-100 text-gray-800'
-                                                                                                }`}>{record.action}</span>
-                                                                                        </td>
-                                                                                        <td className="px-4 py-3 text-sm text-gray-700">{record.details || 'N/A'}</td>
-                                                                                        <td className="px-4 py-3 text-sm">{record.performedBy?.fullName || record.performedBy?.email || 'System'}</td>
-                                                                                    </tr>
-                                                                                ))
-                                                                            )}
-                                                                        </tbody>
-                                                                    </table>
-                                                                    {history.length > 0 && (
-                                                                        <div className="mt-4 text-sm text-gray-600">Total: {historyTotal} records</div>
-                                                                    )}
-                                                                </div>
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                            {!loading && ((activeTab === 'users' && users.length === 0) || (activeTab === 'employers' && employers.length === 0) || (activeTab === 'pending' && employers.length === 0) || (activeTab === 'jobs' && jobs.length === 0)) && (
-                                                <div className="p-8 text-center text-gray-500">No records found</div>
+                            {trainingSubTab === "create" ? (
+                                <CreateTraining />
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-gray-50 border-b border-gray-200">
+                                            <tr>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Image</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Title</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Instructor</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Price</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {trainings.map((t: any) => (
+                                                <tr key={t._id} className="hover:bg-gray-50 transition-colors">
+                                                    <td className="px-6 py-4">
+                                                        <div className="w-16 h-10 rounded bg-gray-200 overflow-hidden">
+                                                            {t.image ? <img src={`${API_BASE_URL}${t.image}`} alt="" className="w-full h-full object-cover" /> : <BookOpen className="p-2 w-full h-full text-gray-400" />}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-medium">{t.title}</td>
+                                                    <td className="px-6 py-4">{t.instructor}</td>
+                                                    <td className="px-6 py-4">{t.price}</td>
+                                                    <td className="px-6 py-4 flex gap-2">
+                                                        <button onClick={() => handleEdit(t, "training")} className="text-blue-500 hover:text-blue-700" title="Edit">
+                                                            <Edit className="w-5 h-5" />
+                                                        </button>
+                                                        <button onClick={() => handleDelete(t._id, "training")} className="text-red-500 hover:text-red-700" title="Delete">
+                                                            <Trash2 className="w-5 h-5" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {trainings.length === 0 && (
+                                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No trainings found</td></tr>
                                             )}
-                                        </div>
-                                    </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ) : activeTab === "blogs" ? (
+                    <div className="space-y-6">
+                        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                            <div className="flex justify-between items-center mb-6">
+                                <h3 className="text-xl font-bold text-gray-800">Manage Blogs</h3>
+                                <button
+                                    onClick={() => setBlogSubTab(blogSubTab === "list" ? "create" : "list")}
+                                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center transition-colors"
+                                >
+                                    {blogSubTab === "list" ? <><PlusCircle className="w-5 h-5 mr-2" /> Add Blog</> : <><LayoutDashboard className="w-5 h-5 mr-2" /> Blog List</>}
+                                </button>
+                            </div>
+
+                            {blogSubTab === "create" ? (
+                                <Createblog />
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left">
+                                        <thead className="bg-gray-50 border-b border-gray-200">
+                                            <tr>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Image</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Title</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Author</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Date</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100">
+                                            {blogs.map((b: any) => (
+                                                <tr key={b._id} className="hover:bg-gray-50 transition-colors">
+                                                    <td className="px-6 py-4">
+                                                        <div className="w-16 h-10 rounded bg-gray-200 overflow-hidden">
+                                                            {b.image ? <img src={b.image.startsWith('http') ? b.image : `${API_BASE_URL}/uploads/blogs/${b.image}`} alt="" className="w-full h-full object-cover" /> : <BookOpen className="p-2 w-full h-full text-gray-400" />}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 font-medium">{b.title}</td>
+                                                    <td className="px-6 py-4">{b.author}</td>
+                                                    <td className="px-6 py-4">{new Date(b.createdAt).toLocaleDateString()}</td>
+                                                    <td className="px-6 py-4 flex gap-2">
+                                                        <button onClick={() => handleEdit(b, "blog")} className="text-blue-500 hover:text-blue-700" title="Edit">
+                                                            <Edit className="w-5 h-5" />
+                                                        </button>
+                                                        <button onClick={() => handleDelete(b._id, "blog")} className="text-red-500 hover:text-red-700" title="Delete">
+                                                            <Trash2 className="w-5 h-5" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {blogs.length === 0 && (
+                                                <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No blogs found</td></tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                ) : activeTab === "create_team" ? (
+                    <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
+                        {<CreateTeam />}
+                    </div>
+                ) :
+                    (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left">
+                                    <thead className="bg-gray-50 border-b border-gray-200">
+                                        <tr>
+                                            {activeTab === "users" && (
+                                                <>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">S.N</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Picture</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Name</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Permanent Address</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Temporary Address</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Academic (Last Degree)</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Profile Update Date</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Contact Number</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                                </>
+                                            )}
+                                            {activeTab === "employers" && (
+                                                <>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Mobile</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                                </>
+                                            )}
+                                            {activeTab === "pending" && (
+                                                <>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                                </>
+                                            )}
+                                            {activeTab === "jobs" && (
+                                                <>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Logo</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Title</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Company</th>
+                                                    <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
+                                                </>
+                                            )}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-100">
+                                        {activeTab === "users" && users.map((u: any, index: number) => (
+                                            <tr key={u._id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4 text-sm">{index + 1}</td>
+                                                <td className="px-6 py-4" onClick={() => handleEdit(u, "user")}>
+                                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                                                        {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Users className="p-2 w-full h-full text-gray-400" />}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "user")}>{u.fullName}</td>
+                                                <td className="px-6 py-4 text-sm">{u.permanentAddress || 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm">{u.temporaryAddress || 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm">{u.academicDegree || 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm">{u.updatedAt ? new Date(u.updatedAt).toLocaleDateString() : 'N/A'}</td>
+                                                <td className="px-6 py-4 text-sm">{u.mobileNumber || 'N/A'}</td>
+                                                <td className="px-6 py-4 flex gap-2">
+                                                    <button onClick={() => handleEdit(u, "user")} className="text-blue-500 hover:text-blue-700" title="Edit">
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(u._id, "user")} className="text-red-500 hover:text-red-700" title="Delete">
+                                                        <Trash2 className="w-5 h-5" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {activeTab === "employers" && employers.map((u: any) => (
+                                            <tr key={u._id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4" onClick={() => handleEdit(u, "employer")}>
+                                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                                                        {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Building2 className="p-2 w-full h-full text-gray-400" />}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "employer")}>{u.companyName}</td>
+                                                <td className="px-6 py-4">{u.email}</td>
+                                                <td className="px-6 py-4">{u.mobileNumber}</td>
+                                                <td className="px-6 py-4">
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold 
+                                                    ${u.status === 'approved' ? 'bg-green-100 text-green-800' :
+                                                            u.status === 'rejected' ? 'bg-red-100 text-red-800' :
+                                                                'bg-yellow-100 text-yellow-800'}`}>
+                                                        {u.status || 'pending'}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 flex gap-2">
+                                                    {(!u.status || u.status === 'pending') && (
+                                                        <>
+                                                            <button onClick={() => handleVerify(u._id, "approved")} className="text-green-500 hover:text-green-700" title="Approve">
+                                                                <CheckCircle className="w-5 h-5" />
+                                                            </button>
+                                                            <button onClick={() => handleVerify(u._id, "rejected")} className="text-red-500 hover:text-red-700" title="Reject">
+                                                                <XCircle className="w-5 h-5" />
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                    <button onClick={() => handleEdit(u, "employer")} className="text-blue-500 hover:text-blue-700" title="Edit">
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(u._id, "employer")} className="text-red-500 hover:text-red-700" title="Delete">
+                                                        <Trash2 className="w-5 h-5" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {activeTab === "pending" && employers.map((u: any) => (
+                                            <tr key={u._id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4">
+                                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
+                                                        {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Building2 className="p-2 w-full h-full text-gray-400" />}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 font-medium">{u.companyName}</td>
+                                                <td className="px-6 py-4">{u.email}</td>
+                                                <td className="px-6 py-4">
+                                                    {u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-US', {
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    }) : 'N/A'}
+                                                </td>
+                                                <td className="px-6 py-4">
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => setViewingEmployer(u)}
+                                                            className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 flex items-center gap-1 transition-colors"
+                                                            title="View Details"
+                                                        >
+                                                            <Eye className="w-4 h-4" /> Details
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleVerify(u._id, "approved")}
+                                                            className="px-3 py-1.5 bg-green-500 text-white text-sm rounded hover:bg-green-600 flex items-center gap-1 transition-colors"
+                                                            title="Confirm"
+                                                        >
+                                                            <CheckCircle className="w-4 h-4" /> Confirm
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleVerify(u._id, "rejected")}
+                                                            className="px-3 py-1.5 bg-red-500 text-white text-sm rounded hover:bg-red-600 flex items-center gap-1 transition-colors"
+                                                            title="Reject"
+                                                        >
+                                                            <XCircle className="w-4 h-4" /> Reject
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {activeTab === "jobs" && jobs.map((j: any) => (
+                                            <tr key={j._id} className="hover:bg-gray-50 transition-colors">
+                                                <td className="px-6 py-4" onClick={() => handleEdit(j, "job")}>
+                                                    <div className="w-10 h-10 rounded-lg bg-gray-200 overflow-hidden">
+                                                        {j.logo ? <img src={`${API_BASE_URL}/${j.logo}`} alt="" className="w-full h-full object-cover" /> : <Briefcase className="p-2 w-full h-full text-gray-400" />}
+                                                    </div>
+                                                </td>
+                                                <td className="px-6 py-4 font-medium" onClick={() => handleEdit(j, "job")}>{j.position}</td>
+                                                <td className="px-6 py-4">{j.companyName}</td>
+                                                <td className="px-6 py-4 flex gap-2">
+                                                    <button onClick={() => handleEdit(j, "job")} className="text-blue-500 hover:text-blue-700" title="Edit">
+                                                        <Edit className="w-5 h-5" />
+                                                    </button>
+                                                    <button onClick={() => handleDelete(j._id, "job")} className="text-red-500 hover:text-red-700" title="Delete">
+                                                        <Trash2 className="w-5 h-5" />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                        {activeTab === "partner_logos" && (
+                                            <tr>
+                                                <td colSpan={6} className="px-6 py-4">
+                                                    <div className="mb-6 flex gap-4 items-end bg-gray-50 p-4 rounded-lg">
+                                                        <div>
+                                                            <label className="block text-sm font-medium text-gray-700 mb-1">Add New Client Logo</label>
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                onChange={(e) => setLogoFile(e.target.files ? e.target.files[0] : null)}
+                                                                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                                                            />
+                                                        </div>
+                                                        <button
+                                                            onClick={handleUploadLogo}
+                                                            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center"
+                                                            disabled={!logoFile}
+                                                        >
+                                                            <Save className="w-4 h-4 mr-2" /> Upload
+                                                        </button>
+                                                    </div>
+
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                                                        {clientLogos.map((logo: any) => (
+                                                            <div key={logo._id} className="relative group bg-white border rounded-lg p-4 flex items-center justify-center hover:shadow-md transition-shadow">
+                                                                <img
+                                                                    src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, '/')}`}
+                                                                    alt="Client Logo"
+                                                                    className="h-20 w-full object-contain"
+                                                                />
+                                                                <button
+                                                                    onClick={() => handleDeleteLogo(logo._id)}
+                                                                    className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                    title="Delete Logo"
+                                                                >
+                                                                    <X className="w-4 h-4" />
+                                                                </button>
+                                                            </div>
+                                                        ))}
+                                                        {clientLogos.length === 0 && (
+                                                            <div className="col-span-full text-center py-8 text-gray-500">
+                                                                No logos uploaded yet.
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {activeTab === "history" && (
+                                            <tr>
+                                                <td colSpan={6} className="px-6 py-4">
+                                                    {/* Filter Tabs */}
+                                                    <div className="flex gap-2 mb-4 border-b">
+                                                        <button
+                                                            onClick={() => setHistoryFilter("all")}
+                                                            className={`px-4 py-2 font-medium transition-colors ${historyFilter === "all"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                                }`}
+                                                        >
+                                                            All History
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setHistoryFilter("application")}
+                                                            className={`px-4 py-2 font-medium transition-colors ${historyFilter === "application"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                                }`}
+                                                        >
+                                                            Applicant History
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setHistoryFilter("company")}
+                                                            className={`px-4 py-2 font-medium transition-colors ${historyFilter === "company"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                                }`}
+                                                        >
+                                                            Company History
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setHistoryFilter("job")}
+                                                            className={`px-4 py-2 font-medium transition-colors ${historyFilter === "job"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                                }`}
+                                                        >
+                                                            Job History
+                                                        </button>
+                                                        <button
+                                                            onClick={() => setHistoryFilter("user")}
+                                                            className={`px-4 py-2 font-medium transition-colors ${historyFilter === "user"
+                                                                ? "border-b-2 border-blue-500 text-blue-600"
+                                                                : "text-gray-600 hover:text-gray-800"
+                                                                }`}
+                                                        >
+                                                            User History
+                                                        </button>
+                                                    </div>
+                                                    <div className="overflow-x-auto">
+                                                        <table className="min-w-full">
+                                                            <thead className="bg-gray-100">
+                                                                <tr>
+                                                                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Timestamp</th>
+                                                                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Entity Type</th>
+                                                                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Action</th>
+                                                                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Details</th>
+                                                                    <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">Performed By</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {history.filter(record => historyFilter === "all" || record.entityType === historyFilter).length === 0 ? (
+                                                                    <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">No {historyFilter !== "all" ? historyFilter : ""} history records found</td></tr>
+                                                                ) : (
+                                                                    history.filter(record => historyFilter === "all" || record.entityType === historyFilter).map((record: any) => (
+                                                                        <tr key={record._id} className="border-t hover:bg-gray-50">
+                                                                            <td className="px-4 py-3 text-sm">{new Date(record.createdAt).toLocaleString()}</td>
+                                                                            <td className="px-4 py-3 text-sm capitalize">
+                                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${record.entityType === 'job' ? 'bg-blue-100 text-blue-800' :
+                                                                                    record.entityType === 'company' ? 'bg-purple-100 text-purple-800' :
+                                                                                        record.entityType === 'user' ? 'bg-green-100 text-green-800' :
+                                                                                            'bg-yellow-100 text-yellow-800'
+                                                                                    }`}>{record.entityType}</span>
+                                                                            </td>
+                                                                            <td className="px-4 py-3 text-sm capitalize">
+                                                                                <span className={`px-2 py-1 rounded text-xs font-medium ${record.action === 'created' ? 'bg-green-100 text-green-800' :
+                                                                                    record.action === 'deleted' ? 'bg-red-100 text-red-800' :
+                                                                                        record.action === 'updated' ? 'bg-blue-100 text-blue-800' :
+                                                                                            record.action === 'accepted' ? 'bg-teal-100 text-teal-800' :
+                                                                                                record.action === 'rejected' ? 'bg-orange-100 text-orange-800' :
+                                                                                                    'bg-gray-100 text-gray-800'
+                                                                                    }`}>{record.action}</span>
+                                                                            </td>
+                                                                            <td className="px-4 py-3 text-sm text-gray-700">{record.details || 'N/A'}</td>
+                                                                            <td className="px-4 py-3 text-sm">{record.performedBy?.fullName || record.performedBy?.email || 'System'}</td>
+                                                                        </tr>
+                                                                    ))
+                                                                )}
+                                                            </tbody>
+                                                        </table>
+                                                        {history.length > 0 && (
+                                                            <div className="mt-4 text-sm text-gray-600">Total: {historyTotal} records</div>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        )}
+                                    </tbody>
+                                </table>
+                                {!loading && ((activeTab === 'users' && users.length === 0) || (activeTab === 'employers' && employers.length === 0) || (activeTab === 'pending' && employers.length === 0) || (activeTab === 'jobs' && jobs.length === 0)) && (
+                                    <div className="p-8 text-center text-gray-500">No records found</div>
                                 )}
+                            </div>
+                        </div>
+                    )}
 
                 {activeTab === "banners" && (
                     <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">

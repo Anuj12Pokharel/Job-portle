@@ -7,7 +7,8 @@ const jobSchema = new mongoose_1.Schema({
     position: { type: String, required: true },
     category: { type: String, required: true },
     location: { type: String, required: true },
-    jobLevel: { type: String,
+    jobLevel: {
+        type: String,
         enum: ["Entry-level", "Mid-level", "Senior-level", "Junior", "Executive"],
     },
     jobType: {
@@ -29,6 +30,7 @@ const jobSchema = new mongoose_1.Schema({
     aboutCompany: { type: String },
     companyWebsite: { type: String },
     postedBy: { type: mongoose_1.Schema.Types.ObjectId, ref: "Admin", required: true },
+    isFeatured: { type: Boolean, default: false },
 }, { timestamps: true });
 const Job = (0, mongoose_1.model)("Job", jobSchema);
 exports.default = Job;
