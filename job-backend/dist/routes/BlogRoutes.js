@@ -12,5 +12,6 @@ const router = express_1.default.Router();
 router.get("/", BlogController_1.getBlogs);
 router.get("/:id", BlogController_1.getBlogById);
 router.post("/", authMiddleware_1.protect, checkAdmin_1.default, blogs_1.uploadBlogImage.single("image"), BlogController_1.createBlog);
-// router.put("/update/:id", protect, checkAdmin, upload.single("image"), updateBlog);
+router.put("/update/:id", authMiddleware_1.protect, checkAdmin_1.default, blogs_1.uploadBlogImage.single("image"), BlogController_1.updateBlog);
+router.delete("/delete/:id", authMiddleware_1.protect, checkAdmin_1.default, BlogController_1.deleteBlog);
 exports.default = router;
