@@ -1,4 +1,5 @@
-import pdf from "html-pdf";
+import puppeteer from "puppeteer";
+import fs from "fs";
 
 export class PDFService {
   /**
@@ -6,23 +7,42 @@ export class PDFService {
    * @param htmlContent - HTML string to convert to PDF
    * @returns Promise<Buffer> - PDF file buffer
    */
-  static generateFromHtml(htmlContent: string): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        format: "A4",
-        orientation: "portrait",
-        border: "10mm",
-        type: "application/pdf",
-      };
+  static async generateFromHtml(htmlContent: string): Promise<Buffer> {
+    let browser;
+    try {
+      browser = await puppeteer.launch({
+        headless: true,
+        args: [
+          "--no-sandbox",
+          "--disable-setuid-sandbox",
+          "--disable-dev-shm-usage",
+          "--disable-gpu"
+        ],
+        // Use installed chromium in Docker, or default in local
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+      });
 
-      pdf.create(htmlContent, options).toBuffer((err: any, buffer: Buffer) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(buffer);
+      const page = await browser.newPage();
+      await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+
+      const buffer = await page.pdf({
+        format: "A4",
+        printBackground: true,
+        margin: {
+          top: "10mm",
+          bottom: "10mm",
+          left: "10mm",
+          right: "10mm"
         }
       });
-    });
+
+      return Buffer.from(buffer);
+    } catch (error) {
+      console.error("Puppeteer error:", error);
+      throw error;
+    } finally {
+      if (browser) await browser.close();
+    }
   }
 
   /**
@@ -30,22 +50,9 @@ export class PDFService {
    * @param htmlContent - HTML string to convert to PDF
    * @param filePath - Path where PDF should be saved
    */
-  static generatePdfFile(htmlContent: string, filePath: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const options = {
-        format: "A4",
-        orientation: "portrait",
-        border: "10mm",
-        type: "application/pdf",
-      };
-
-      pdf.create(htmlContent, options).toFile(filePath, (err: any, res: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(res.filename);
-        }
-      });
-    });
+  static async generatePdfFile(htmlContent: string, filePath: string): Promise<string> {
+    const buffer = await this.generateFromHtml(htmlContent);
+    await fs.promises.writeFile(filePath, buffer);
+    return filePath;
   }
 }
