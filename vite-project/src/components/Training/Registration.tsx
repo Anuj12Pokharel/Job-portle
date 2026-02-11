@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, Users, BookOpen, Award, Clock } from "lucide-react";
+import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const courses = [
   "Digital Marketing",
@@ -20,6 +23,13 @@ const shifts = [
   { value: "evening", label: "Evening (6:00 PM - 10:00 PM)" },
 ];
 
+interface TrainingStats {
+  studentsTrained: number;
+  coursesAvailable: number;
+  successRate: number;
+  supportAvailable: string;
+}
+
 const Registration = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +39,31 @@ const Registration = () => {
     course: "",
   });
 
+  const [stats, setStats] = useState<TrainingStats>({
+    studentsTrained: 0,
+    coursesAvailable: 0,
+    successRate: 0,
+    supportAvailable: "24/7"
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTrainingStatistics();
+  }, []);
+
+  const fetchTrainingStatistics = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/statistics/training`);
+      if (response.data.success) {
+        setStats(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching training statistics:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Registration submitted:", formData);
@@ -36,6 +71,13 @@ const Registration = () => {
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const formatNumber = (num: number): string => {
+    if (num >= 1000) {
+      return `${Math.floor(num / 1000)}K+`;
+    }
+    return `${num}+`;
   };
 
   return (
@@ -59,25 +101,33 @@ const Registration = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-white text-center p-6 rounded-lg shadow">
                   <Users className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">500+</div>
+                  <div className="text-2xl font-bold text-cyan-600">
+                    {loading ? "..." : formatNumber(stats.studentsTrained)}
+                  </div>
                   <div className="text-sm text-black">Students Trained</div>
                 </div>
 
                 <div className="bg-white text-center p-6 rounded-lg shadow">
                   <BookOpen className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">50+</div>
+                  <div className="text-2xl font-bold text-cyan-600">
+                    {loading ? "..." : `${stats.coursesAvailable}+`}
+                  </div>
                   <div className="text-sm text-black">Courses Available</div>
                 </div>
 
                 <div className="bg-white text-center p-6 rounded-lg shadow">
                   <Award className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">95%</div>
+                  <div className="text-2xl font-bold text-cyan-600">
+                    {loading ? "..." : `${stats.successRate}%`}
+                  </div>
                   <div className="text-sm text-black">Success Rate</div>
                 </div>
 
                 <div className="bg-white text-center p-6 rounded-lg shadow">
                   <Clock className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">24/7</div>
+                  <div className="text-2xl font-bold text-cyan-600">
+                    {loading ? "..." : stats.supportAvailable}
+                  </div>
                   <div className="text-sm text-black">Support Available</div>
                 </div>
               </div>

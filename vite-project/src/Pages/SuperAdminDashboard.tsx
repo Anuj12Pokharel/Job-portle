@@ -367,6 +367,18 @@ const SuperAdminDashboard = () => {
                                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
                                     <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value })} className="w-full border rounded px-3 py-2" />
                                 </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Permanent Address</label>
+                                    <input type="text" value={editFormData.permanentAddress || ''} onChange={(e) => setEditFormData({ ...editFormData, permanentAddress: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Temporary Address</label>
+                                    <input type="text" value={editFormData.temporaryAddress || ''} onChange={(e) => setEditFormData({ ...editFormData, temporaryAddress: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Academic Degree</label>
+                                    <input type="text" value={editFormData.academicDegree || ''} onChange={(e) => setEditFormData({ ...editFormData, academicDegree: e.target.value })} className="w-full border rounded px-3 py-2" placeholder="e.g., Bachelor's in Computer Science" />
+                                </div>
                             </>
                         )}
                         {editType === "employer" && (
@@ -810,9 +822,15 @@ const SuperAdminDashboard = () => {
                                     <tr>
                                         {activeTab === "users" && (
                                             <>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">S.N</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Picture</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Name</th>
-                                                <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Permanent Address</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Temporary Address</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Academic (Last Degree)</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Registration Date</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Profile Update Date</th>
+                                                <th className="px-6 py-4 font-semibold text-gray-600">Contact Number</th>
                                                 <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
                                             </>
                                         )}
@@ -846,15 +864,21 @@ const SuperAdminDashboard = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
-                                    {activeTab === "users" && users.map((u: any) => (
+                                    {activeTab === "users" && users.map((u: any, index: number) => (
                                         <tr key={u._id} className="hover:bg-gray-50 transition-colors">
+                                            <td className="px-6 py-4 text-sm">{index + 1}</td>
                                             <td className="px-6 py-4" onClick={() => handleEdit(u, "user")}>
                                                 <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
                                                     {u.profilePicture ? <img src={`${API_BASE_URL}/${u.profilePicture}`} alt="" className="w-full h-full object-cover" /> : <Users className="p-2 w-full h-full text-gray-400" />}
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 font-medium" onClick={() => handleEdit(u, "user")}>{u.fullName}</td>
-                                            <td className="px-6 py-4">{u.email}</td>
+                                            <td className="px-6 py-4 text-sm">{u.permanentAddress || 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm">{u.temporaryAddress || 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm">{u.academicDegree || 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm">{u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm">{u.updatedAt ? new Date(u.updatedAt).toLocaleDateString() : 'N/A'}</td>
+                                            <td className="px-6 py-4 text-sm">{u.mobileNumber || 'N/A'}</td>
                                             <td className="px-6 py-4 flex gap-2">
                                                 <button onClick={() => handleEdit(u, "user")} className="text-blue-500 hover:text-blue-700" title="Edit">
                                                     <Edit className="w-5 h-5" />
