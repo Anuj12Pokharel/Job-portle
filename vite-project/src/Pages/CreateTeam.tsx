@@ -10,6 +10,7 @@ const CreateTeam = () => {
     bio: "",
   });
   const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -45,6 +46,7 @@ const CreateTeam = () => {
       alert("Team member added successfully");
       setForm({ name: "", designation: "", bio: "" });
       setImage(null);
+      setImagePreview("");
     } catch (err) {
       alert(err.response?.data?.message || "Something went wrong ❌"
       );
@@ -52,7 +54,7 @@ const CreateTeam = () => {
       setLoading(false);
     }
   };
-   
+
 
 
   return (
@@ -92,12 +94,26 @@ const CreateTeam = () => {
           required
         />
 
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setImage(e.target.files[0])}
-          className="w-full"
-        />
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Team Member Photo</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                setImage(file);
+                setImagePreview(URL.createObjectURL(file));
+              }
+            }}
+            className="w-full border p-2 rounded"
+          />
+          {imagePreview && (
+            <div className="mt-3">
+              <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-full border" />
+            </div>
+          )}
+        </div>
 
         <button
           type="submit"
