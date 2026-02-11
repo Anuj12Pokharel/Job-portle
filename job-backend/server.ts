@@ -14,6 +14,8 @@ import contactRoutes from "./routes/contactRoutes";
 import trainingRoutes from "./routes/trainingRoutes";
 import clientLogoRoutes from "./routes/clientLogoRoutes";
 import historyRoutes from "./routes/historyRoutes";
+import bannerRoutes from "./routes/bannerRoutes";
+import cvRoutes from "./routes/cvRoutes";
 
 import userRoutes from "./routes/userRoutes";
 import BlogRoutes from "./routes/BlogRoutes";
@@ -45,6 +47,8 @@ app.use("/api/training", trainingRoutes);
 app.use("/api/client-logos", clientLogoRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/blog", BlogRoutes);
+app.use("/api/banners", bannerRoutes);
+app.use("/api/cv", cvRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
