@@ -20,7 +20,8 @@ import cvRoutes from "./routes/cvRoutes";
 import userRoutes from "./routes/userRoutes";
 import BlogRoutes from "./routes/BlogRoutes";
 
-dotenv.config();
+// Load environment variables from .env.production in the root directory
+dotenv.config({ path: path.join(__dirname, "..", ".env.production") });
 
 const app = express();
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
