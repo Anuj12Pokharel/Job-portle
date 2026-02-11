@@ -28,6 +28,10 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
         if (category) params.append("category", category);
         if (search) params.append("search", search);
 
+        if (search) params.append("search", search);
+        // Add cache buster
+        params.append("_t", String(Date.now()));
+
         const url = `${backendBase}/api/jobs/get${params.toString() ? `?${params.toString()}` : ""}`;
 
         const res = await axios.get(url);
