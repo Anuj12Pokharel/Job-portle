@@ -23,7 +23,19 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Install curl for healthcheck
-RUN apk add --no-cache curl
+# Install curl for healthcheck and Chromium for Puppeteer
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    curl
+
+# Tell Puppeteer to skip installing Chrome. We'll use the installed package.
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 
 # Copy package files
 COPY package*.json ./
