@@ -61,6 +61,10 @@ export default function JobList({
 
         if (category) params.append("category", category);
         if (search) params.append("search", search);
+        // Only show featured jobs unless searching
+        if (!search && !category) {
+          params.append("featured", "true");
+        }
 
         const res = await axios.get(url + params.toString());
         console.log("JobList - Fetched jobs:", res.data);
