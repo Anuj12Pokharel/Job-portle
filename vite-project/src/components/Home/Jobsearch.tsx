@@ -1,6 +1,53 @@
 import { ArrowRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
+interface Statistics {
+  totalCandidates: number;
+  dailyJobs: number;
+  totalCompanies: number;
+  platformYears: number;
+  dailyVisits: number;
+  totalJobs: number;
+}
 
 export default function Jobsearch() {
+  const [stats, setStats] = useState<Statistics>({
+    totalCandidates: 0,
+    dailyJobs: 0,
+    totalCompanies: 0,
+    platformYears: 0,
+    dailyVisits: 0,
+    totalJobs: 0
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchStatistics();
+  }, []);
+
+  const fetchStatistics = async () => {
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/statistics`);
+      if (response.data.success) {
+        setStats(response.data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching statistics:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatNumber = (num: number): string => {
+    if (num >= 1000) {
+      return `${Math.floor(num / 1000)}K+`;
+    }
+    return `${num}+`;
+  };
+
   return (
     <section className="w-full mx-auto px-11 py-6">
       <div className="bg-gradient-to-br from-cyan-500 via-teal-500 to-cyan-600 rounded-3xl p-10 md:p-10 text-white text-center">
@@ -25,35 +72,45 @@ export default function Jobsearch() {
         {/* Statistics Section */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold mb-2">10,000+</div>
+            <div className="text-2xl md:text-3xl font-bold mb-2">
+              {loading ? "..." : formatNumber(stats.totalCandidates)}
+            </div>
             <div className="text-sm md:text-base uppercase tracking-wider opacity-90">
               CANDIDATE
             </div>
           </div>
 
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold mb-2">100+</div>
+            <div className="text-2xl md:text-3xl font-bold mb-2">
+              {loading ? "..." : `${stats.dailyJobs}+`}
+            </div>
             <div className="text-sm md:text-base uppercase tracking-wider opacity-90">
               JOBS DAILY
             </div>
           </div>
 
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold mb-2">1000+</div>
+            <div className="text-2xl md:text-3xl font-bold mb-2">
+              {loading ? "..." : formatNumber(stats.totalCompanies)}
+            </div>
             <div className="text-sm md:text-base uppercase tracking-wider opacity-90">
               COMPANIES
             </div>
           </div>
 
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold mb-2">2+</div>
+            <div className="text-2xl md:text-3xl font-bold mb-2">
+              {loading ? "..." : `${stats.platformYears}+`}
+            </div>
             <div className="text-sm md:text-base uppercase tracking-wider opacity-90">
               YEARS
             </div>
           </div>
 
           <div className="text-center col-span-2 md:col-span-1">
-            <div className="text-2xl md:text-3xl font-bold mb-2">1000+</div>
+            <div className="text-2xl md:text-3xl font-bold mb-2">
+              {loading ? "..." : formatNumber(stats.dailyVisits)}
+            </div>
             <div className="text-sm md:text-base uppercase tracking-wider opacity-90">
               DAILY VISITS
             </div>

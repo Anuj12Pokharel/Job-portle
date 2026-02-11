@@ -2,6 +2,58 @@
 
 ## Issues Resolved
 
+### Task 1: Dynamic Statistics in JobSearch Component ✅
+**Problem**: The statistics displayed in the JobSearch component (candidates, daily jobs, years, and daily visits) were hardcoded/static values. This doesn't reflect the actual platform data.
+
+**Solution**:
+- **Backend Changes**:
+  - Created `job-backend/controller/statisticsController.ts` with `getStatistics` endpoint
+  - Created `job-backend/routes/statisticsRoutes.ts` for statistics API
+  - Registered statistics routes in `job-backend/server.ts`
+  - Statistics calculated:
+    - **Total Candidates**: Count of users with role "user"
+    - **Daily Jobs**: Jobs posted in last 24 hours
+    - **Total Companies**: Count of registered employers/admins
+    - **Platform Years**: Calculated from first user registration date
+    - **Daily Visits**: Estimated from 10% of total candidates (can be replaced with actual analytics)
+    - **Total Jobs**: Total job postings
+
+- **Frontend Changes**:
+  - Updated `vite-project/src/components/Home/Jobsearch.tsx`:
+    - Added state management with `useState` for statistics
+    - Added `useEffect` to fetch statistics on component mount
+    - Added `fetchStatistics` function to call API
+    - Added `formatNumber` function to format large numbers (e.g., 10000 → 10K+)
+    - Added loading state with "..." placeholder while fetching
+    - Made all statistics dynamic and real-time
+
+**API Endpoint**: `GET /api/statistics`
+
+**Response Format**:
+```json
+{
+  "success": true,
+  "data": {
+    "totalCandidates": 150,
+    "dailyJobs": 5,
+    "totalCompanies": 25,
+    "platformYears": 2,
+    "dailyVisits": 15,
+    "totalJobs": 200
+  }
+}
+```
+
+**Files Created**:
+- `job-backend/controller/statisticsController.ts`
+- `job-backend/routes/statisticsRoutes.ts`
+
+**Files Modified**:
+- `job-backend/server.ts`
+- `vite-project/src/components/Home/Jobsearch.tsx`
+
+---
+
 ### Task 5: JobProfile not showing on mobile for jobseeker account ✅
 **Problem**: The mobile menu did not show profile options for logged-in jobseekers.
 
