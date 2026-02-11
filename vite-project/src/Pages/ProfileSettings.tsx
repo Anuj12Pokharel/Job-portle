@@ -160,7 +160,7 @@ const ProfileSettings = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-gray-50 py-4 sm:py-8 md:py-12 px-2 sm:px-4 md:px-6 lg:px-8">
             <div className="max-w-3xl mx-auto">
                 <div className="bg-white shadow rounded-lg overflow-hidden">
                     {/* Header */}
@@ -183,9 +183,9 @@ const ProfileSettings = () => {
 
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Profile Picture Section */}
-                            <div className="flex flex-col items-center sm:flex-row sm:items-start gap-6 mb-8">
+                            <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
                                 <div className="relative group">
-                                    <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md bg-gray-200">
+                                    <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md bg-gray-200">
                                         {previewImage ? (
                                             <img
                                                 src={previewImage}
@@ -194,17 +194,17 @@ const ProfileSettings = () => {
                                             />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center text-gray-400">
-                                                <User className="w-16 h-16" />
+                                                <User className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16" />
                                             </div>
                                         )}
                                     </div>
                                     <button
                                         type="button"
                                         onClick={() => fileInputRef.current?.click()}
-                                        className="absolute bottom-0 right-0 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-sm"
+                                        className="absolute bottom-0 right-0 p-1.5 sm:p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition shadow-sm"
                                         title="Change Photo"
                                     >
-                                        <Camera className="w-4 h-4" />
+                                        <Camera className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                                     </button>
                                     <input
                                         type="file"
@@ -215,13 +215,13 @@ const ProfileSettings = () => {
                                     />
                                 </div>
                                 <div className="text-center sm:text-left pt-2">
-                                    <h3 className="text-lg font-medium text-gray-900">
+                                    <h3 className="text-base sm:text-lg font-medium text-gray-900">
                                         Profile Picture
                                     </h3>
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
                                         Upload a new photo to personalize your profile.
-                                        <br />
-                                        JPG, GIF or PNG. Max size of 5MB.
+                                        <br className="hidden sm:block" />
+                                        <span className="block sm:inline"> JPG, GIF or PNG. Max size of 5MB.</span>
                                     </p>
                                 </div>
                             </div>
