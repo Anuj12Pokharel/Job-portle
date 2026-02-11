@@ -262,6 +262,14 @@ export default function Navbar() {
                           <Briefcase className="w-4 h-4" />
                           Saved Jobs
                         </Link>
+                        <Link
+                          to="/cv-generator"
+                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <Briefcase className="w-4 h-4" />
+                          CV Generator
+                        </Link>
                       </>
                     )}
                     <button

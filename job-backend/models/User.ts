@@ -3,6 +3,34 @@ import bcrypt from "bcryptjs";
 
 type Role = "user" | "admin" | "superadmin";
 
+export interface ICVData {
+  personalInfo: {
+    fullName: string;
+    email: string;
+    phone: string;
+    address: string;
+    summary?: string;
+  };
+  education: Array<{
+    institution: string;
+    degree: string;
+    startYear: string;
+    endYear: string;
+  }>;
+  experience: Array<{
+    company: string;
+    role: string;
+    duration: string;
+    responsibilities?: string;
+  }>;
+  skills: string[];
+  projects?: Array<{
+    name: string;
+    description: string;
+    link?: string;
+  }>;
+}
+
 export interface IUser extends Document {
   fullName: string;
   mobileNumber: string;
@@ -17,6 +45,7 @@ export interface IUser extends Document {
   appliedJobs: Types.ObjectId[];
   resetOTP?: string;
   resetOTPExpiry?: Date;
+  cvData?: ICVData;
   comparePassword(password: string): Promise<boolean>;
 }
 
@@ -75,6 +104,39 @@ const userSchema = new Schema<IUser>(
     resetOTPExpiry: {
       type: Date,
       select: false,
+    },
+    cvData: {
+      personalInfo: {
+        fullName: { type: String },
+        email: { type: String },
+        phone: { type: String },
+        address: { type: String },
+        summary: { type: String },
+      },
+      education: [
+        {
+          institution: { type: String },
+          degree: { type: String },
+          startYear: { type: String },
+          endYear: { type: String },
+        },
+      ],
+      experience: [
+        {
+          company: { type: String },
+          role: { type: String },
+          duration: { type: String },
+          responsibilities: { type: String },
+        },
+      ],
+      skills: [{ type: String }],
+      projects: [
+        {
+          name: { type: String },
+          description: { type: String },
+          link: { type: String },
+        },
+      ],
     },
   },
   { timestamps: true },

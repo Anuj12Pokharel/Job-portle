@@ -37,7 +37,8 @@ import Payrollmanagement from "./Pages/Services/Payrollmanagement";
 import Jobposting from "./Pages/Services/Jobposting";
 import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateTeam from "./Pages/CreateTeam";
-import { ToastContainer } from "react-toastify";
+import CVGenerator from "./Pages/CVGenerator";
+import { ToastContainer } from "react-toastify";    
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -91,7 +92,6 @@ function App() {
       <main className="pt-16">
         <Routes>
           <Route element={<ProtectedRoute />}>
-
             <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
             <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
             <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
@@ -146,6 +146,7 @@ function App() {
           <Route path="/apply-job/:id" element={<ApplyJob />}></Route>
           <Route path="/applied-jobs" element={<AppliedJobs />}></Route>
           <Route path="/registration-pending" element={<RegistrationPending />}></Route>
+          <Route path="/cv-generator" element={<CVGenerator />}></Route>
         </Routes>
       </main>
       <ToastContainer position="top-right" autoClose={3000} />
