@@ -41,7 +41,8 @@ const SuperAdminDashboard = () => {
         twoFourWheeler: "",
         skills: "",
         expiryDate: "",
-        desiredCandidate: ""
+        desiredCandidate: "",
+        isFeatured: false
     });
     const [jobLogo, setJobLogo] = useState<File | null>(null);
     const [companies, setCompanies] = useState<any[]>([]);
@@ -243,6 +244,7 @@ const SuperAdminDashboard = () => {
                     formData.append('category', editFormData.category || '');
                     formData.append('location', editFormData.location || '');
                     formData.append('salary', editFormData.salary || '');
+                    formData.append('isFeatured', String(editFormData.isFeatured || false));
                     if (selectedFile) formData.append('logo', selectedFile);
                     endpoint = `/api/jobs/update/${editingItem._id}`;
                 }
@@ -310,7 +312,13 @@ const SuperAdminDashboard = () => {
         e.preventDefault();
         const token = localStorage.getItem("token");
         const formData = new FormData();
-        Object.entries(jobData).forEach(([key, value]) => formData.append(key, value));
+        Object.entries(jobData).forEach(([key, value]) => {
+            if (key === 'isFeatured') {
+                formData.append(key, String(value));
+            } else {
+                formData.append(key, value as string);
+            }
+        });
         if (jobLogo) formData.append("logo", jobLogo);
 
         try {
@@ -514,6 +522,16 @@ const SuperAdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Salary</label>
                                     <input type="text" value={editFormData.salary || ''} onChange={(e) => setEditFormData({ ...editFormData, salary: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        id="editIsFeatured"
+                                        checked={editFormData.isFeatured || false}
+                                        onChange={(e) => setEditFormData({ ...editFormData, isFeatured: e.target.checked })}
+                                        className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                    />
+                                    <label htmlFor="editIsFeatured" className="text-sm font-medium text-gray-700">Mark as Featured Job</label>
                                 </div>
                             </>
                         )}
