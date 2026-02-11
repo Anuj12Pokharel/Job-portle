@@ -49,6 +49,8 @@ export interface IUser extends Document {
   resetOTP?: string;
   resetOTPExpiry?: Date;
   cvData?: ICVData;
+  createdAt?: Date;
+  updatedAt?: Date;
   comparePassword(password: string): Promise<boolean>;
 }
 
