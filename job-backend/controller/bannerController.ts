@@ -23,11 +23,49 @@ export const getBannerByType = async (req: Request, res: Response) => {
     try {
         const { type } = req.params;
         const banner = await Banner.findOne({ type, isActive: true });
-        
+
         if (!banner) {
-            return res.status(404).json({
-                success: false,
-                message: "Banner not found",
+            // Return default banner data instead of 404
+            const defaultBanners: any = {
+                "job-search": {
+                    type: "job-search",
+                    title: "Find Your Dream Job",
+                    subtitle: "Connecting Talent with Opportunity",
+                    backgroundImage: "",
+                    isActive: true
+                },
+                "home": {
+                    type: "home",
+                    title: "Welcome to JobLink360",
+                    subtitle: "Your Gateway to Career Success",
+                    backgroundImage: "",
+                    isActive: true
+                },
+                "training": {
+                    type: "training",
+                    title: "Enhance Your Skills",
+                    subtitle: "Professional Training Programs",
+                    backgroundImage: "",
+                    isActive: true
+                },
+                "about": {
+                    type: "about",
+                    title: "About Us",
+                    subtitle: "Empowering Careers Since Day One",
+                    backgroundImage: "",
+                    isActive: true
+                }
+            };
+
+            return res.status(200).json({
+                success: true,
+                data: defaultBanners[type] || {
+                    type,
+                    title: "Welcome",
+                    subtitle: "",
+                    backgroundImage: "",
+                    isActive: true
+                },
             });
         }
 
@@ -48,7 +86,7 @@ export const getBannerByType = async (req: Request, res: Response) => {
 export const upsertBanner = async (req: Request, res: Response) => {
     try {
         const { type, title, subtitle, isActive } = req.body;
-        
+
         const bannerData: any = {
             type,
             title,
@@ -63,10 +101,10 @@ export const upsertBanner = async (req: Request, res: Response) => {
         const banner = await Banner.findOneAndUpdate(
             { type },
             bannerData,
-            { 
-                new: true, 
+            {
+                new: true,
                 upsert: true,
-                runValidators: true 
+                runValidators: true
             }
         );
 
