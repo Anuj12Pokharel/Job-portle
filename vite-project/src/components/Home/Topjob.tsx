@@ -16,7 +16,9 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
   const buildLogoUrl = (logo?: string) => {
     if (!logo) return "";
     const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
-    return cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
+    // Append timestamp to bust cache
+    const url = cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
+    return `${url}?t=${new Date().getTime()}`;
   };
 
   useEffect(() => {
