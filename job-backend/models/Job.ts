@@ -22,6 +22,7 @@ export interface IJob extends Document {
   aboutCompany?: string;
   companyWebsite?: string;
   postedBy: Types.ObjectId;
+  isFeatured?: boolean;
 }
 
 const jobSchema = new Schema<IJob>(
