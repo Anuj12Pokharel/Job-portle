@@ -22,7 +22,7 @@ function Home() {
 
   return (
     <>
-      <div className="front pt-16 overflow-x-hidden">
+      <div className="front  overflow-x-hidden">
         <Jobsearchbanner />
          <LogoSlider />
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
