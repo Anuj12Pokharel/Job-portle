@@ -12,13 +12,6 @@ import photo from "../assets/depraaj.jpeg"
 export default function Aboutus() {
   return (
     <>
-      <div
-        className="relative bg-cover bg-center h-[250px] md:h-[350px] flex flex-col items-center justify-center text-center px-4"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        {" "}
-        <p className="text-white font-bold text-2xl"> About us </p>
-      </div>
        <LeadershipProfile
         role="Chairman"
         name="Diparaj kulung Rai"
@@ -63,11 +56,11 @@ name in HR solutions. We appreciate you joining us on our path.
       <section className="bg-white px-6 lg:px-10 py-6 space-y-10">
         {/* Intro */}
         <div className="flex flex-col lg:flex-row items-center gap-5 p-2">
-          <div className="flex-1 ">
-            <h2 className="font-bold text-lg text-teal-600">
+          <div className="flex-1 space-y-4"> 
+            <h2 className="font-bold text-xl text-teal-600">
               JobLink360 | Linking Talent and Opportunity
             </h2>
-            <p className="text-black mt-2 text-justify">
+            <p className="text-lg leading-relaxed text-foreground/80 font-light tracking-wide text-justify">
               JobLink360, operating under the registered name HAMRO JOB PVT.LTD. is
               becoming a Leading company in Nepal for professional and honest HR
               services. Established with a keen understanding of the nation's
@@ -88,9 +81,9 @@ name in HR solutions. We appreciate you joining us on our path.
 
         {/* Mission */}
         <div className="flex flex-col lg:flex-row-reverse items-center md:gap-5  p-2">
-          <div className="flex-1">
+          <div className="flex-1 space-y-4">
             <h2 className="font-bold text-lg text-teal-600">Our Mission</h2>
-            <p className="text-black mt-2 text-justify">
+            <p className="text-lg leading-relaxed text-foreground/80 font-light tracking-wide text-justify">
               Our mission at JobLink360 is simple yet purposeful: to deliver
               professional and ethical human resource services that connect
               potential employers with talented individuals. Our commitment is
@@ -111,9 +104,9 @@ name in HR solutions. We appreciate you joining us on our path.
 
         {/* Vision */}
         <div className="flex flex-col lg:flex-row items-center md:gap-5 p-2">
-          <div className="flex-1">
-            <h2 className="font-bold text-lg text-teal-600">Our Vision</h2>
-            <p className="text-black mt-2 text-justify">
+          <div className="flex-1 space-y-4">
+            <h2 className="font-bold text-xl text-teal-600">Our Vision</h2>
+            <p className="text-lg leading-relaxed text-foreground/80 font-light tracking-wide text-justify">
               We envision ourselves as Nepal's premier HR solution provider on
               the basis of our integrity, innovation, and excellence. Through
               continuous improvement, strategic partnerships, and client
@@ -133,11 +126,11 @@ name in HR solutions. We appreciate you joining us on our path.
        
         {/* Why Choose Us */}
         <div className="flex flex-col lg:flex-row-reverse items-center  p-2  md:gap-5">
-          <div className="flex-1 ">
-            <h2 className="font-bold text-lg text-teal-600">
+          <div className="flex-1 space-y-4">
+            <h2 className="font-bold text-xl text-teal-600">
               Why Choose JobLink360?
             </h2>
-            <p className="text-black mt-2 text-justify">
+            <p className="text-lg leading-relaxed text-foreground/80 font-light tracking-wide text-justify">
               We don't just fill positions at JobLink360, we build careers and
               strengthen organizations. Our customized approach, industry
               expertise, and expansive network of professionals enable us to
