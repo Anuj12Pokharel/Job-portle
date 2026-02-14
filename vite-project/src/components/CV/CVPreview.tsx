@@ -115,10 +115,10 @@ const CVPreview: React.FC<Props> = ({ data }) => {
             {/* Skills */}
             <div className="mb-6">
                 <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Skills</h2>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
                     {skills && skills.length > 0 ? (
                         skills.map((skill: any, index: number) => (
-                            <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                            <span key={index} className="text-sm text-gray-800">
                                 {typeof skill === 'string' ? skill : `${skill.name} (Lvl ${skill.level})`}
                             </span>
                         ))
@@ -132,9 +132,9 @@ const CVPreview: React.FC<Props> = ({ data }) => {
             {languages && languages.length > 0 && (
                 <div className="mb-6">
                     <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Languages</h2>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
                         {languages.map((lang: any, index: number) => (
-                            <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                            <span key={index} className="text-sm text-gray-800">
                                 {lang.name} (Lvl {lang.level})
                             </span>
                         ))}
