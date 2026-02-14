@@ -8,7 +8,7 @@ interface GoogleSignInProps {
 
 const GoogleSignIn: React.FC<GoogleSignInProps> = ({ role }) => {
   useEffect(() => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '49940105856-6edqjocuk098bjn1k6hvugfucc3q8lub.apps.googleusercontent.com';
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '709633837604-iv4igu24ric1r8lucc326hqrg0n025fs.apps.googleusercontent.com';
     if (!clientId) {
       console.warn('VITE_GOOGLE_CLIENT_ID not set');
       return;

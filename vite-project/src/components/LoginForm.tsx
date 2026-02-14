@@ -85,7 +85,7 @@ const LoginForm = () => {
   };
 
   const handleGoogleLogin = () => {
-    window.location.href = `${backendBase}/api/auth/google`;
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
   };
 
   return (
