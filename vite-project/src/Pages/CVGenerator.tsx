@@ -17,7 +17,8 @@ const initialCVData = {
     experience: [],
     skills: [],
     languages: [],
-    projects: []
+    projects: [],
+    references: []
 };
 
 const CVGenerator: React.FC = () => {

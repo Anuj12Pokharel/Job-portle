@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Plus, Trash2, X } from "lucide-react";
 
 interface Props {
@@ -29,11 +29,21 @@ interface Props {
             description: string;
             link: string;
         }>;
+        references?: Array<{
+            name: string;
+            company: string;
+            email: string;
+            phone: string;
+        }>;
     };
     onChange: (newData: any) => void;
 }
 
 const CVForm: React.FC<Props> = ({ data, onChange }) => {
+    const [skillInput, setSkillInput] = useState("");
+    const [skillLevel, setSkillLevel] = useState(5);
+    const [langInput, setLangInput] = useState("");
+    const [langLevel, setLangLevel] = useState(5);
     const handleChange = (section: string, field: string, value: any, index?: number) => {
         const newData = { ...data };
         if (index !== undefined && Array.isArray(newData[section as keyof typeof data])) {
@@ -229,11 +239,16 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                 <div className="flex gap-2">
                     <input
                         type="text"
-                        id="skill-input"
+                        value={skillInput}
+                        onChange={(e) => setSkillInput(e.target.value)}
                         placeholder="Add a skill"
                         className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     />
-                    <select id="skill-level" className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    <select
+                        value={skillLevel}
+                        onChange={(e) => setSkillLevel(parseInt(e.target.value))}
+                        className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+                    >
                         <option value="5">Expert (5)</option>
                         <option value="4">Advanced (4)</option>
                         <option value="3">Intermediate (3)</option>
@@ -242,11 +257,10 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                     </select>
                     <button
                         onClick={() => {
-                            const input = document.getElementById('skill-input') as HTMLInputElement;
-                            const levelInput = document.getElementById('skill-level') as HTMLSelectElement;
-                            if (input.value.trim()) {
-                                addItem("skills", { name: input.value.trim(), level: parseInt(levelInput.value) });
-                                input.value = "";
+                            if (skillInput.trim()) {
+                                addItem("skills", { name: skillInput.trim(), level: skillLevel });
+                                setSkillInput("");
+                                setSkillLevel(5);
                             }
                         }}
                         className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
@@ -272,11 +286,16 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                 <div className="flex gap-2">
                     <input
                         type="text"
-                        id="lang-input"
+                        value={langInput}
+                        onChange={(e) => setLangInput(e.target.value)}
                         placeholder="Add a language"
                         className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
                     />
-                    <select id="lang-level" className="p-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                    <select
+                        value={langLevel}
+                        onChange={(e) => setLangLevel(parseInt(e.target.value))}
+                        className="p-2 border rounded-lg focus:ring-2 focus:ring-green-500"
+                    >
                         <option value="5">Native (5)</option>
                         <option value="4">Fluent (4)</option>
                         <option value="3">Intermediate (3)</option>
@@ -284,11 +303,10 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                     </select>
                     <button
                         onClick={() => {
-                            const input = document.getElementById('lang-input') as HTMLInputElement;
-                            const levelInput = document.getElementById('lang-level') as HTMLSelectElement;
-                            if (input.value.trim()) {
-                                addItem("languages", { name: input.value.trim(), level: parseInt(levelInput.value) });
-                                input.value = "";
+                            if (langInput.trim()) {
+                                addItem("languages", { name: langInput.trim(), level: langLevel });
+                                setLangInput("");
+                                setLangLevel(5);
                             }
                         }}
                         className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
@@ -338,6 +356,61 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                                     className="w-full p-2 border rounded-lg"
                                     value={proj.link}
                                     onChange={(e) => handleChange("projects", "link", e.target.value, index)}
+                                />
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* References */}
+            <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <div className="flex justify-between items-center mb-4 border-b pb-2">
+                    <h3 className="text-lg font-semibold text-gray-900">References</h3>
+                    <button
+                        onClick={() => addItem("references", { name: "", company: "", email: "", phone: "" })}
+                        className="text-blue-600 flex items-center gap-1 text-sm font-medium hover:text-blue-700 transition-colors"
+                    >
+                        <Plus className="w-4 h-4" /> Add Reference
+                    </button>
+                </div>
+                <div className="space-y-4">
+                    {((data.references || []) as any[]).map((ref: any, index: number) => (
+                        <div key={index} className="p-4 border rounded-lg relative bg-gray-50/50">
+                            <button
+                                onClick={() => removeItem("references", index)}
+                                className="absolute top-2 right-2 text-red-500 hover:text-red-600 transition-colors"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <input
+                                    type="text"
+                                    placeholder="Reference Name"
+                                    className="w-full p-2 border rounded-lg"
+                                    value={ref.name}
+                                    onChange={(e) => handleChange("references", "name", e.target.value, index)}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Company / Organization"
+                                    className="w-full p-2 border rounded-lg"
+                                    value={ref.company}
+                                    onChange={(e) => handleChange("references", "company", e.target.value, index)}
+                                />
+                                <input
+                                    type="email"
+                                    placeholder="Email"
+                                    className="w-full p-2 border rounded-lg"
+                                    value={ref.email}
+                                    onChange={(e) => handleChange("references", "email", e.target.value, index)}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Phone"
+                                    className="w-full p-2 border rounded-lg"
+                                    value={ref.phone}
+                                    onChange={(e) => handleChange("references", "phone", e.target.value, index)}
                                 />
                             </div>
                         </div>

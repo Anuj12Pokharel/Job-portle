@@ -21,17 +21,24 @@ interface Props {
             duration: string;
             responsibilities?: string;
         }>;
-        skills: string[];
+        skills: Array<{ name: string; level: number } | string>;
+        languages?: Array<{ name: string; level: number }>;
         projects: Array<{
             name: string;
             description: string;
             link?: string;
         }>;
+        references?: Array<{
+            name: string;
+            company: string;
+            email: string;
+            phone: string;
+        }>;
     };
 }
 
 const CVPreview: React.FC<Props> = ({ data }) => {
-    const { personalInfo, education, experience, skills, projects } = data;
+    const { personalInfo, education, experience, skills, projects, languages, references } = data;
 
     return (
         <div className="bg-white shadow-2xl rounded-sm w-full min-h-[841px] p-[40px] text-gray-800 border overflow-y-auto print:shadow-none" id="cv-preview">
@@ -110,9 +117,9 @@ const CVPreview: React.FC<Props> = ({ data }) => {
                 <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Skills</h2>
                 <div className="flex flex-wrap gap-2">
                     {skills && skills.length > 0 ? (
-                        skills.map((skill: string, index: number) => (
+                        skills.map((skill: any, index: number) => (
                             <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
-                                {skill}
+                                {typeof skill === 'string' ? skill : `${skill.name} (Lvl ${skill.level})`}
                             </span>
                         ))
                     ) : (
@@ -120,6 +127,20 @@ const CVPreview: React.FC<Props> = ({ data }) => {
                     )}
                 </div>
             </div>
+
+            {/* Languages */}
+            {languages && languages.length > 0 && (
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">Languages</h2>
+                    <div className="flex flex-wrap gap-2">
+                        {languages.map((lang: any, index: number) => (
+                            <span key={index} className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs">
+                                {lang.name} (Lvl {lang.level})
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Projects */}
             {projects && projects.length > 0 && (
@@ -131,6 +152,24 @@ const CVPreview: React.FC<Props> = ({ data }) => {
                                 <h3 className="text-sm font-bold text-gray-800">{proj.name}</h3>
                                 <p className="text-xs text-gray-700 mt-1">{proj.description}</p>
                                 {proj.link && <a href={proj.link} className="text-xs text-blue-500 mt-1 hover:underline" target="_blank" rel="noopener noreferrer">{proj.link}</a>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* References */}
+            {references && references.length > 0 && (
+                <div className="mb-6">
+                    <h2 className="text-lg font-bold text-blue-600 uppercase border-b border-gray-200 mb-2">References</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {references.map((ref: any, index: number) => (
+                            <div key={index} className="text-sm">
+                                <div className="font-bold text-gray-800">{ref.name}</div>
+                                <div className="italic text-gray-600">{ref.company}</div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                    {ref.email} | {ref.phone}
+                                </div>
                             </div>
                         ))}
                     </div>

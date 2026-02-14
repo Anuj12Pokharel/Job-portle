@@ -28,7 +28,7 @@ export default function Jobcard() {
     import.meta.env.VITE_API_BASE_URL ||
     "http://localhost:5000";
 
-const buildLogoUrl = (logo?: string) => {
+  const buildLogoUrl = (logo?: string) => {
     if (!logo) return "";
     const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
     return cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
@@ -43,7 +43,7 @@ const buildLogoUrl = (logo?: string) => {
       setLoading(true);
       const backendLevel = LEVELS_MAP[level]; // Map UI tab to backend enum
       const response = await axios.get(
-        `${import.meta.env.VITE_API_BASE_URL}/api/jobs/by-level`,
+        `${backendBase}/api/jobs/by-level`,
         { params: { level: backendLevel } }
       );
       // Ensure jobs is always an array
@@ -57,68 +57,67 @@ const buildLogoUrl = (logo?: string) => {
   };
 
   return (
-   <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 w-full max-w-sm mx-auto lg:mx-0">
-  <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
-    Explore Jobs By Level
-  </h2>
+    <div className="bg-slate-50 rounded-2xl p-4 sm:p-6 w-full max-w-sm mx-auto lg:mx-0">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
+        Explore Jobs By Level
+      </h2>
 
-  {/* Tabs */}
-  <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
-    {LEVELS_UI.map((level) => (
-      <button
-        key={level}
-        onClick={() => setActiveLevel(level)}
-        className={`px-3 sm:px-4 py-1.5 rounded-full border text-xs sm:text-sm transition ${
-          activeLevel === level
-            ? "bg-blue-600 text-white border-blue-600"
-            : "border-gray-300 text-gray-600"
-        }`}
-      >
-        {level}
-      </button>
-    ))}
-  </div>
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-2 mb-6 justify-center sm:justify-start">
+        {LEVELS_UI.map((level) => (
+          <button
+            key={level}
+            onClick={() => setActiveLevel(level)}
+            className={`px-3 sm:px-4 py-1.5 rounded-full border text-xs sm:text-sm transition ${activeLevel === level
+                ? "bg-blue-600 text-white border-blue-600"
+                : "border-gray-300 text-gray-600"
+              }`}
+          >
+            {level}
+          </button>
+        ))}
+      </div>
 
-  {/* Job Cards */}
-  {loading ? (
-    <p className="text-center text-gray-500">Loading...</p>
-  ) : jobs.length === 0 ? (
-    <p className="text-center text-gray-400">No jobs found</p>
-  ) : (
-    <div className="flex flex-col gap-3">
-      {jobs.slice(0, 4).map((job) => (
-        <div
-          key={job._id}
-          className="flex items-start sm:items-center gap-3 bg-white p-3 sm:p-4 rounded-xl shadow-sm"
-        >
-          <img
-            src={buildLogoUrl(job.logo)}
-            alt={job.companyName}
-            className="w-10 h-10 object-contain flex-shrink-0"
-          />
-          <div>
-            <p className="font-medium text-sm sm:text-base">
-              {job.position}
-            </p>
-            <p className="text-xs sm:text-sm text-gray-500">
-              {job.companyName}
-            </p>
-          </div>
+      {/* Job Cards */}
+      {loading ? (
+        <p className="text-center text-gray-500">Loading...</p>
+      ) : jobs.length === 0 ? (
+        <p className="text-center text-gray-400">No jobs found</p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {jobs.slice(0, 4).map((job) => (
+            <div
+              key={job._id}
+              className="flex items-start sm:items-center gap-3 bg-white p-3 sm:p-4 rounded-xl shadow-sm"
+            >
+              <img
+                src={buildLogoUrl(job.logo)}
+                alt={job.companyName}
+                className="w-10 h-10 object-contain flex-shrink-0"
+              />
+              <div>
+                <p className="font-medium text-sm sm:text-base">
+                  {job.position}
+                </p>
+                <p className="text-xs sm:text-sm text-gray-500">
+                  {job.companyName}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
-  )}
+      )}
 
-  {/* View All */}
-  <div className="text-center mt-6">
-    <a
-      href={`/jobs?level=${LEVELS_MAP[activeLevel]}`}
-      className="text-blue-600 font-medium hover:underline text-sm"
-    >
-      View All →
-    </a>
-  </div>
-</div>
+      {/* View All */}
+      <div className="text-center mt-6">
+        <a
+          href={`/jobs?level=${LEVELS_MAP[activeLevel]}`}
+          className="text-blue-600 font-medium hover:underline text-sm"
+        >
+          View All →
+        </a>
+      </div>
+    </div>
 
   );
 }

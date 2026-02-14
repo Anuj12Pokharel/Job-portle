@@ -122,7 +122,7 @@ export const modernTemplate = (data: any) => {
 };
 
 export const advancedTemplate = (data: any) => {
-  const { personalInfo, education, experience, skills, languages } = data;
+  const { personalInfo, education, experience, skills, languages, references } = data;
 
   // Helper for rating dots/bars
   const renderRating = (level: number) => {
@@ -233,6 +233,21 @@ export const advancedTemplate = (data: any) => {
         </div>
       </div>
       ` : ''}
+
+       ${references && references.length > 0 ? `
+       <div class="section">
+         <div class="section-title">References</div>
+         ${references.map((ref: any) => `
+           <div class="item">
+             <div class="item-left">${ref.name}</div>
+             <div class="item-right">
+                 <div class="item-title">${ref.company}</div>
+                 <div>${ref.email} ${ref.phone ? `| ${ref.phone}` : ''}</div>
+             </div>
+           </div>
+         `).join('')}
+       </div>
+       ` : ''}
     </body>
     </html>
     `;
