@@ -43,7 +43,7 @@ export function LeadershipProfile({
   <img
     src={image}
     alt={name}
-    className="w-full h-[580px] object-cover hover:scale-105 transition-transform duration-500"
+    className="w-full h-[450px] object-cover object-top hover:scale-105 transition-transform duration-500"
   />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300"></div>

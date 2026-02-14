@@ -7,9 +7,9 @@ const features = [
   "Joblink360 provides free one-on-one career counseling to help individuals plan their career path effectively. ",
   "Jobseekers can attend regular job preparedness workshops focused on resume building, interview techniques, and LinkedIn optimization.",
   "The platform offers direct employer interaction events such as online and offline job fairs and networking sessions. ",
-  "Users can upload their CVs and receive instant feedback through an automated CV review system. ",
+  "Users can upload their CVs and receive instant feedback through an  CV review system. ",
   "Joblink360 assigns a job readiness score to help jobseekers understand their profile strength in the job market.",
-  "Access online courses, certifications, and learning materials to strengthen in-demand skills and boost employability.",
+  "Access online courses, certifications, and learning materials to strengthen in-demand skills.",
 ];
 
 // Container variants control staggered children animation
@@ -54,7 +54,7 @@ const Jobseeker = () => {
                   variants={childVariants}
                 >
                   <CheckCircle className="h-5 w-5 text-lime-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-black dark:text-black">{feature}</span>
+                  <span className="text-lg leading-relaxed text-gray-600 text-justify max-w-xl">{feature}</span>
                 </motion.div>
               ))}
             </motion.div>

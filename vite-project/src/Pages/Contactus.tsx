@@ -51,13 +51,6 @@ const Contactus = () => {
   return (
     <>
       <div
-        className="relative bg-cover bg-center h-[350px] flex flex-col items-center justify-center text-center px-4"
-        style={{ backgroundImage: `url(${backgroundImage})` }}
-      >
-        {" "}
-        <p className="text-white font-bold text-2xl"> Contact us </p>
-      </div>
-      <div
         id="contact"
         className="bg-white w-full flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
       >
