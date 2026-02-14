@@ -65,6 +65,17 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const profileRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+  function handleClickOutside(event: MouseEvent) {
+    if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+      setIsProfileOpen(false); // close dropdown if clicked outside
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
   return (
     <div className="bg-white/90 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50 ">
@@ -221,7 +232,9 @@ export default function Navbar() {
                 </button>
 
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
+                  <div
+                    ref={profileRef}
+                    className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
                     <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
                       <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
