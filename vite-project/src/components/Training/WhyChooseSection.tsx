@@ -41,7 +41,7 @@ const WhyChooseSection = () => {
         <div className="max-w-8xl mx-auto">
           {/* Heading */}
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-cyan-600">
               Why Choose Training at JobLink360?
             </h2>
             <p className="text-lg text-black max-w-2xl mx-auto">

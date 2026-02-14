@@ -22,7 +22,7 @@ const Hero: React.FC = () => {
         {/* Main SEO Heading */}
         <h1
           id="blog-heading"
-          className="text-4xl md:text-6xl font-bold mb-6  bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent"
+          className="text-3xl md:text-4xl font-bold mb-6  bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent"
         >
           Career Tips, Job Search Guides &{" "}
           <span className="text-cyan-900 ">Blogs</span>

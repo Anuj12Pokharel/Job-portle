@@ -54,7 +54,7 @@ const Employer = () => {
                   variants={childVariants}
                 >
                   <CheckCircle className="h-5 w-5 text-lime-600 mt-0.5 flex-shrink-0" />
-                  <span className="text-black dark:text-black">{feature}</span>
+                  <span className="text-lg leading-relaxed text-gray-600 text-justify max-w-xl">{feature}</span>
                 </motion.div>
               ))}
             </motion.div>
