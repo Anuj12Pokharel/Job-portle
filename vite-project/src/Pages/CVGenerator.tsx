@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 import { cvApi } from "../services/cvApi";
 import CVForm from "../components/CV/CVForm";
 import CVPreview from "../components/CV/CVPreview";
-import { Download, Save, Loader2 } from "lucide-react";
+import { Download, Loader2 } from "lucide-react";
 
 const initialCVData = {
     personalInfo: {
@@ -16,50 +16,19 @@ const initialCVData = {
     education: [],
     experience: [],
     skills: [],
+    languages: [],
     projects: []
 };
 
 const CVGenerator: React.FC = () => {
     const [cvData, setCVData] = useState(initialCVData);
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
     const [generating, setGenerating] = useState(false);
-
-    useEffect(() => {
-        fetchCVData();
-    }, []);
-
-    const fetchCVData = async () => {
-        try {
-            const response = await cvApi.getCVProfile();
-            if (response.data && response.data.personalInfo) {
-                setCVData(response.data);
-            }
-        } catch (error: any) {
-            console.error("Error fetching CV data:", error);
-            toast.error("Failed to load CV data");
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const handleSave = async () => {
-        setSaving(true);
-        try {
-            await cvApi.updateCVProfile(cvData);
-            toast.success("CV data saved successfully");
-        } catch (error: any) {
-            console.error("Error saving CV data:", error);
-            toast.error("Failed to save CV data");
-        } finally {
-            setSaving(false);
-        }
-    };
 
     const handleDownload = async () => {
         setGenerating(true);
         try {
-            const response = await cvApi.generatePDF();
+            // Pass current cvData to generatePDF with advanced template
+            const response = await cvApi.generatePDF({ ...cvData, templateId: "advanced" });
 
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
@@ -77,14 +46,6 @@ const CVGenerator: React.FC = () => {
         }
     };
 
-    if (loading) {
-        return (
-            <div className="flex items-center justify-center min-h-[60vh]">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-            </div>
-        );
-    }
-
     return (
         <div className="max-w-[1600px] mx-auto px-4 py-8 mt-16">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
@@ -93,14 +54,6 @@ const CVGenerator: React.FC = () => {
                     <p className="text-gray-500">Fill in your details and preview your professional CV in real-time.</p>
                 </div>
                 <div className="flex gap-3">
-                    <button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="flex items-center gap-2 bg-white text-blue-600 border border-blue-600 px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-50 transition disabled:opacity-50"
-                    >
-                        {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
-                        Save Data
-                    </button>
                     <button
                         onClick={handleDownload}
                         disabled={generating}

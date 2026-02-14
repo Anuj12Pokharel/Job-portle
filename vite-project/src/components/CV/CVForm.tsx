@@ -22,7 +22,8 @@ interface Props {
             startYear: string;
             endYear: string;
         }>;
-        skills: string[];
+        skills: Array<{ name: string; level: number } | string>;
+        languages?: Array<{ name: string; level: number }>;
         projects: Array<{
             name: string;
             description: string;
@@ -216,9 +217,9 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
             <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Skills</h3>
                 <div className="flex flex-wrap gap-2 mb-4">
-                    {data.skills.map((skill: string, index: number) => (
-                        <span key={index} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-1">
-                            {skill}
+                    {data.skills.map((skill: any, index: number) => (
+                        <span key={index} className="bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {skill.name || skill} <span className="text-xs bg-blue-100 px-1 rounded">Lvl {skill.level || 5}</span>
                             <button onClick={() => removeItem("skills", index)} className="hover:text-red-500 transition-colors">
                                 <X className="w-3 h-3" />
                             </button>
@@ -228,18 +229,72 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                 <div className="flex gap-2">
                     <input
                         type="text"
-                        placeholder="Add a skill and press Enter"
+                        id="skill-input"
+                        placeholder="Add a skill"
                         className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                const value = e.currentTarget.value.trim();
-                                if (value) {
-                                    addItem("skills", value);
-                                    e.currentTarget.value = "";
-                                }
+                    />
+                    <select id="skill-level" className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="5">Expert (5)</option>
+                        <option value="4">Advanced (4)</option>
+                        <option value="3">Intermediate (3)</option>
+                        <option value="2">Beginner (2)</option>
+                        <option value="1">Novice (1)</option>
+                    </select>
+                    <button
+                        onClick={() => {
+                            const input = document.getElementById('skill-input') as HTMLInputElement;
+                            const levelInput = document.getElementById('skill-level') as HTMLSelectElement;
+                            if (input.value.trim()) {
+                                addItem("skills", { name: input.value.trim(), level: parseInt(levelInput.value) });
+                                input.value = "";
                             }
                         }}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                    >
+                        <Plus className="w-4 h-4" />
+                    </button>
+                </div>
+            </section>
+
+            {/* Languages */}
+            <section className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 border-b pb-2">Languages</h3>
+                <div className="flex flex-wrap gap-2 mb-4">
+                    {(data.languages || []).map((lang: any, index: number) => (
+                        <span key={index} className="bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                            {lang.name} <span className="text-xs bg-green-100 px-1 rounded">Lvl {lang.level || 5}</span>
+                            <button onClick={() => removeItem("languages", index)} className="hover:text-red-500 transition-colors">
+                                <X className="w-3 h-3" />
+                            </button>
+                        </span>
+                    ))}
+                </div>
+                <div className="flex gap-2">
+                    <input
+                        type="text"
+                        id="lang-input"
+                        placeholder="Add a language"
+                        className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
                     />
+                    <select id="lang-level" className="p-2 border rounded-lg focus:ring-2 focus:ring-green-500">
+                        <option value="5">Native (5)</option>
+                        <option value="4">Fluent (4)</option>
+                        <option value="3">Intermediate (3)</option>
+                        <option value="2">Basic (2)</option>
+                    </select>
+                    <button
+                        onClick={() => {
+                            const input = document.getElementById('lang-input') as HTMLInputElement;
+                            const levelInput = document.getElementById('lang-level') as HTMLSelectElement;
+                            if (input.value.trim()) {
+                                addItem("languages", { name: input.value.trim(), level: parseInt(levelInput.value) });
+                                input.value = "";
+                            }
+                        }}
+                        className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+                    >
+                        <Plus className="w-4 h-4" />
+                    </button>
                 </div>
             </section>
 

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User, { ICVData } from "../models/User";
 import { PDFService } from "../services/pdfService";
-import { minimalistTemplate, modernTemplate } from "../templates/cvTemplates";
+import { minimalistTemplate, modernTemplate, advancedTemplate } from "../templates/cvTemplates";
 
 /**
  * Get CV data for the authenticated user
@@ -42,19 +42,21 @@ export const updateCVData = async (req: Request, res: Response) => {
  */
 export const generateCV = async (req: Request, res: Response) => {
   try {
-    const { templateId = "modern" } = req.body;
-    const user = await User.findById(req.user?.id);
+    const { templateId = "modern", ...cvData } = req.body;
 
-    if (!user || !user.cvData) {
-      return res.status(404).json({ message: "CV data not found. Please fill in your details first." });
+    // Direct use of body data - no DB fetch required
+    if (!cvData || !cvData.personalInfo) {
+      return res.status(400).json({ message: "CV data is missing in request body." });
     }
 
-    const { cvData } = user;
     let htmlContent = "";
 
     switch (templateId) {
       case "minimalist":
         htmlContent = minimalistTemplate(cvData);
+        break;
+      case "advanced":
+        htmlContent = advancedTemplate(cvData);
         break;
       case "modern":
       default:
@@ -65,7 +67,7 @@ export const generateCV = async (req: Request, res: Response) => {
     const pdfBuffer = await PDFService.generateFromHtml(htmlContent);
 
     res.contentType("application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="${user.fullName.replace(/\s+/g, '_')}_CV.pdf"`);
+    res.setHeader("Content-Disposition", `attachment; filename="${cvData.personalInfo?.fullName?.replace(/\s+/g, '_') || 'Resume'}_CV.pdf"`);
     res.send(pdfBuffer);
   } catch (error: any) {
     console.error("PDF generation error:", error);
