@@ -44,16 +44,18 @@ exports.updateCVData = updateCVData;
  */
 const generateCV = async (req, res) => {
     try {
-        const { templateId = "modern" } = req.body;
-        const user = await User_1.default.findById(req.user?.id);
-        if (!user || !user.cvData) {
-            return res.status(404).json({ message: "CV data not found. Please fill in your details first." });
+        const { templateId = "modern", ...cvData } = req.body;
+        // Direct use of body data - no DB fetch required
+        if (!cvData || !cvData.personalInfo) {
+            return res.status(400).json({ message: "CV data is missing in request body." });
         }
-        const { cvData } = user;
         let htmlContent = "";
         switch (templateId) {
             case "minimalist":
                 htmlContent = (0, cvTemplates_1.minimalistTemplate)(cvData);
+                break;
+            case "advanced":
+                htmlContent = (0, cvTemplates_1.advancedTemplate)(cvData);
                 break;
             case "modern":
             default:
@@ -62,7 +64,7 @@ const generateCV = async (req, res) => {
         }
         const pdfBuffer = await pdfService_1.PDFService.generateFromHtml(htmlContent);
         res.contentType("application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename="${user.fullName.replace(/\s+/g, '_')}_CV.pdf"`);
+        res.setHeader("Content-Disposition", `attachment; filename="${cvData.personalInfo?.fullName?.replace(/\s+/g, '_') || 'Resume'}_CV.pdf"`);
         res.send(pdfBuffer);
     }
     catch (error) {

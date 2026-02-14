@@ -32,7 +32,7 @@ const fileFilter = (_req, file, cb) => {
 };
 const uploadBanner = (0, multer_1.default)({
     storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit for banners
+    limits: { fileSize: 10 * 1024 * 1024 },
     fileFilter: fileFilter,
 });
 exports.default = uploadBanner;

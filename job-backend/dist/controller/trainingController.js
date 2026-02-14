@@ -55,7 +55,7 @@ const updateTraining = async (req, res) => {
             ...(req.file && { image: `/uploads/trainings/${req.file.filename}` })
         };
         const updatedTraining = await Training_1.default.findByIdAndUpdate(id, updateData, {
-            new: true, // return updated document
+            new: true,
             runValidators: true, // validate schema
         });
         if (!updatedTraining) {

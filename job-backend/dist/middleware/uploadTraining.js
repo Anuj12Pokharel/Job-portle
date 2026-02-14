@@ -32,7 +32,7 @@ const fileFilter = (_req, file, cb) => {
 };
 const uploadTraining = (0, multer_1.default)({
     storage: storage,
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    limits: { fileSize: 5 * 1024 * 1024 },
     fileFilter: fileFilter,
 });
 exports.default = uploadTraining;

@@ -6,10 +6,10 @@ const applicationSchema = new mongoose_1.Schema({
     user: { type: mongoose_1.Schema.Types.ObjectId, ref: "User", required: true },
     resume: { type: String },
     coverLetter: { type: String },
-    totalExperience: { type: Number }, // New field
-    expectedSalary: { type: String }, // New field
-    fieldOfExpertise: { type: String }, // New field
-    additionalInfo: { type: String }, // New field
+    totalExperience: { type: Number },
+    expectedSalary: { type: String },
+    fieldOfExpertise: { type: String },
+    additionalInfo: { type: String },
     status: {
         type: String,
         enum: ["applied", "viewing", "hiring-process", "hired", "rejected"],

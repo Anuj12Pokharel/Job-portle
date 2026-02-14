@@ -85,7 +85,7 @@ const googleSignIn = async (req, res) => {
                 id: user._id,
                 companyName: user.companyName,
                 email: user.email,
-                role: user.role, // 'admin' or 'superadmin'
+                role: user.role,
                 status: user.status
             };
             // Also send 'admin' key for clarity if needed, but frontend might just use 'user'

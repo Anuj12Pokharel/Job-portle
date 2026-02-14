@@ -24,6 +24,8 @@ const statisticsRoutes_1 = __importDefault(require("./routes/statisticsRoutes"))
 const enrollmentRoutes_1 = __importDefault(require("./routes/enrollmentRoutes"));
 const userRoutes_1 = __importDefault(require("./routes/userRoutes"));
 const BlogRoutes_1 = __importDefault(require("./routes/BlogRoutes"));
+const talentRoutes_1 = __importDefault(require("./routes/talentRoutes"));
+const ServiceInquiry_1 = __importDefault(require("./routes/ServiceInquiry"));
 // Load environment variables from .env.production in the root directory
 dotenv_1.default.config({ path: path_1.default.join(__dirname, "..", ".env.production") });
 const app = (0, express_1.default)();
@@ -56,6 +58,8 @@ app.use("/api/banners", bannerRoutes_1.default);
 app.use("/api/cv", cvRoutes_1.default);
 app.use("/api/statistics", statisticsRoutes_1.default);
 app.use("/api/enrollments", enrollmentRoutes_1.default);
+app.use("/api/talent", talentRoutes_1.default);
+app.use("/api", ServiceInquiry_1.default);
 const logsDir = path_1.default.join(__dirname, "logs");
 if (!fs_1.default.existsSync(logsDir))
     fs_1.default.mkdirSync(logsDir, { recursive: true });

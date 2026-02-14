@@ -117,22 +117,25 @@ export const modernTemplate = (data: any) => {
         </div>
       ` : ""}
     </body>
+    </html>
+  `;
 };
 
 export const advancedTemplate = (data: any) => {
-    const { personalInfo, education, experience, skills, languages } = data;
-    
-    // Helper for rating dots/bars
-    const renderRating = (level: number) => {
-        const max = 5;
-        let dots = '';
-        for (let i = 1; i <= max; i++) {
-            dots += `< span style = "display:inline-block; width:12px; height:12px; background-color:${i <= level ? '#333' : '#ccc'}; margin-right:2px;" > </span>`;
-}
-return dots;
-    };
+  const { personalInfo, education, experience, skills, languages } = data;
 
-return `
+  // Helper for rating dots/bars
+  const renderRating = (level: number) => {
+    const max = 5;
+    let dots = '';
+    for (let i = 1; i <= max; i++) {
+      const color = i <= level ? '#333' : '#ccc';
+      dots += '<span style="display:inline-block; width:12px; height:12px; background-color:' + color + '; margin-right:2px;"></span>';
+    }
+    return dots;
+  };
+
+  return `
     <!DOCTYPE html>
     <html lang="en">
     <head>
