@@ -21,9 +21,9 @@ export const cvApi = {
   updateCVProfile: (cvData: any) =>
     axios.put(`${API_BASE_URL}/api/cv/profile`, cvData, getAuthConfig()),
 
-  // Generate PDF CV
-  generatePDF: () =>
-    axios.post(`${API_BASE_URL}/api/cv/generate`, {}, {
+  // Generate PDF CV (Stateless)
+  generatePDF: (cvData: any) =>
+    axios.post(`${API_BASE_URL}/api/cv/generate`, cvData, {
       ...getAuthConfig(),
       responseType: 'blob'
     }),
