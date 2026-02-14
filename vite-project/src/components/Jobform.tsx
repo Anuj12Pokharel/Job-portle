@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Form from "./Form";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
 export default function Jobform() {
   const [formData, setFormData] = useState({
@@ -52,7 +53,7 @@ export default function Jobform() {
 
       // Send POST request (do NOT manually set Content-Type)
       const res = await axios.post(
-        "http://localhost:5000/api/talent/submit",
+        `${API_BASE_URL}/api/talent/submit`,
         formDataToSend
       );
 
