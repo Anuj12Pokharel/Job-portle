@@ -22,6 +22,7 @@ import enrollmentRoutes from "./routes/enrollmentRoutes";
 import userRoutes from "./routes/userRoutes";
 import BlogRoutes from "./routes/BlogRoutes";
 import talentRoutes from "./routes/talentRoutes";
+import ServiceInquiryRoutes from "./routes/ServiceInquiry";
 
 // Load environment variables from .env.production in the root directory
 dotenv.config({ path: path.join(__dirname, "..", ".env.production") });
@@ -63,6 +64,7 @@ app.use("/api/cv", cvRoutes);
 app.use("/api/statistics", statisticsRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/talent", talentRoutes);
+app.use("/api", ServiceInquiryRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
