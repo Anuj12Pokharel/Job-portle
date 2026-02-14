@@ -1,3 +1,4 @@
+
 export const minimalistTemplate = (data: any) => {
   const { personalInfo, education, experience, skills } = data;
   return `
@@ -122,18 +123,7 @@ export const modernTemplate = (data: any) => {
 };
 
 export const advancedTemplate = (data: any) => {
-  const { personalInfo, education, experience, skills, languages, references } = data;
-
-  // Helper for rating dots/bars
-  const renderRating = (level: number) => {
-    const max = 5;
-    let dots = '';
-    for (let i = 1; i <= max; i++) {
-      const color = i <= level ? '#333' : '#ccc';
-      dots += '<span style="display:inline-block; width:12px; height:12px; background-color:' + color + '; margin-right:2px;"></span>';
-    }
-    return dots;
-  };
+  const { personalInfo, education, experience, skills, languages, references, projects } = data;
 
   return `
     <!DOCTYPE html>
@@ -142,113 +132,229 @@ export const advancedTemplate = (data: any) => {
       <meta charset="UTF-8">
       <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-        body { font-family: 'Roboto', Helvetica, Arial, sans-serif; line-height: 1.5; color: #333; padding: 40px; }
-        
-        .header { margin-bottom: 40px; }
-        .header h1 { font-size: 2.8rem; margin: 0; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; color: #000; }
-        .header-role { font-size: 1.2rem; margin-top: 5px; color: #555; font-weight: bold; }
-        .contact-info { margin-top: 15px; display: flex; flex-wrap: wrap; gap: 20px; font-size: 0.9rem; color: #444; }
-        
-        .section { margin-bottom: 30px; }
-        .section-title { 
-            font-size: 1.1rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            border-bottom: 2px solid #000; 
-            padding-bottom: 8px; 
-            margin-bottom: 20px; 
+        body { 
+            font-family: 'Roboto', Helvetica, Arial, sans-serif; 
+            line-height: 1.5; 
+            color: #1f2937; /* gray-800 */
+            padding: 40px; 
+            max-width: 210mm;
+            margin: 0 auto;
+            background: white;
         }
         
-        .item { display: flex; margin-bottom: 20px; }
-        .item-left { width: 25%; font-weight: bold; font-size: 0.95rem; color: #000; padding-right: 15px; }
-        .item-right { width: 75%; }
+        .header { 
+            text-align: center; 
+            border-bottom: 2px solid #2563eb; /* primary-blue / blue-600 */
+            padding-bottom: 16px; 
+            margin-bottom: 24px; 
+        }
         
-        .item-title { font-weight: bold; font-size: 1.1rem; color: #000; }
-        .item-subtitle { font-style: italic; color: #555; margin-bottom: 5px; }
+        .header h1 { 
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; 
+            color: #111827; /* gray-900 */
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; /* tracking-wider */
+            margin: 0;
+        }
         
-        .skills-grid { display: flex; flex-wrap: wrap; gap: 20px; }
-        .skill-item { width: 45%; display: flex; justify-content: space-between; align-items: center; }
+        .contact-info { 
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+            margin-top: 8px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 12px; 
+        }
+        
+        .address {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* gray-600 */
+            margin-top: 4px;
+        }
+        
+        .section { margin-bottom: 24px; }
+        
+        .section-title { 
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700; 
+            color: #2563eb; /* blue-600 */
+            text-transform: uppercase; 
+            border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
+            margin-bottom: 8px; /* mb-2 */
+            padding-bottom: 2px;
+        }
+        
+        .summary-text {
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.625; /* leading-relaxed */
+            color: #374151; /* text-gray-700 */
+        }
+
+        .item { margin-bottom: 12px; }
+        
+        .item-header { 
+            display: flex; 
+            justify-content: space-between; 
+            font-weight: 700; 
+            font-size: 0.875rem; /* text-sm */
+            color: #1f2937; /* gray-800 */
+        }
+        
+        .item-date {
+            font-weight: 400;
+            color: #6b7280; /* text-gray-500 */
+        }
+        
+        .item-subtitle { 
+            font-size: 0.875rem; /* text-sm */
+            font-style: italic; 
+            color: #4b5563; /* text-gray-600 */
+            margin-bottom: 4px; 
+        }
+        
+        .responsibilities ul {
+            list-style-type: disc;
+            list-style-position: inside;
+            font-size: 0.75rem; /* text-xs */
+            color: #374151; /* text-gray-700 */
+            margin-left: 8px;
+            padding: 0;
+        }
+        
+        .responsibilities li {
+            margin-bottom: 4px; /* space-y-1 */
+        }
+        
+        .skills-container, .languages-container { 
+            display: flex; 
+            flex-wrap: wrap; 
+            column-gap: 16px; /* gap-x-4 */
+            row-gap: 8px; /* gap-y-2 */
+        }
+        
+        .skill-item, .language-item {
+            font-size: 0.875rem; /* text-sm */
+            color: #1f2937; /* text-gray-800 */
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        a { color: #3b82f6; text-decoration: none; } /* blue-500 */
+        a:hover { text-decoration: underline; }
+
       </style>
     </head>
     <body>
       <div class="header">
-        <h1>${personalInfo.fullName}</h1>
+        <h1>${personalInfo.fullName || "Your Name"}</h1>
         <div class="contact-info">
-            <span>📞 ${personalInfo.phone}</span>
-            <span>✉️ ${personalInfo.email}</span>
-            <span>📍 ${personalInfo.address}</span>
+            <span>${personalInfo.email || "email@example.com"}</span>
+            ${personalInfo.phone ? `<span>|</span><span>${personalInfo.phone}</span>` : ''}
         </div>
-        ${personalInfo.summary ? `<p style="margin-top:20px; color:#666;">${personalInfo.summary}</p>` : ''}
+        <div class="address">${personalInfo.address}</div>
       </div>
 
+      ${personalInfo.summary ? `
       <div class="section">
-        <div class="section-title">Experience</div>
-        ${experience.map((exp: any) => `
+        <div class="section-title">Professional Summary</div>
+        <p class="summary-text">${personalInfo.summary}</p>
+      </div>` : ''}
+
+      <div class="section">
+        <div class="section-title">Work Experience</div>
+        ${experience && experience.length > 0 ? experience.map((exp: any) => `
           <div class="item">
-            <div class="item-left">${exp.duration}</div>
-            <div class="item-right">
-                <div class="item-title">${exp.role}</div>
-                <div class="item-subtitle">${exp.company}</div>
-                <div>${(exp.responsibilities || "").split('\n').join('<br>')}</div>
+            <div class="item-header">
+                <span>${exp.role || "Role"}</span>
+                <span class="item-date">${exp.duration}</span>
             </div>
+            <div class="item-subtitle">${exp.company}</div>
+            ${exp.responsibilities ? `
+            <div class="responsibilities">
+                <ul>
+                    ${exp.responsibilities.split('\n').filter((l: string) => l.trim()).map((line: string) => `
+                        <li>${line.trim().startsWith('•') ? line.trim().substring(1).trim() : line.trim()}</li>
+                    `).join('')}
+                </ul>
+            </div>` : ''}
           </div>
-        `).join('')}
+        `).join('') : '<p style="font-size:0.75rem; font-style:italic; color:#9ca3af;">No experience added yet</p>'}
       </div>
 
       <div class="section">
         <div class="section-title">Education</div>
-        ${education.map((edu: any) => `
+        ${education && education.length > 0 ? education.map((edu: any) => `
           <div class="item">
-            <div class="item-left">${edu.startYear} - ${edu.endYear}</div>
-            <div class="item-right">
-                <div class="item-title">${edu.degree}</div>
-                <div class="item-subtitle">${edu.institution}</div>
+            <div class="item-header">
+                <span>${edu.degree || "Degree"}</span>
+                <span class="item-date">${edu.startYear} - ${edu.endYear}</span>
             </div>
+            <div class="item-subtitle">${edu.institution}</div>
           </div>
-        `).join('')}
+        `).join('') : '<p style="font-size:0.75rem; font-style:italic; color:#9ca3af;">No education added yet</p>'}
       </div>
 
       <div class="section">
         <div class="section-title">Skills</div>
-        <div class="skills-grid">
-            ${skills.map((s: any) => `
-                <div class="skill-item">
-                    <span>${s.name || s}</span>
-                    <span>${renderRating(s.level || 5)}</span>
-                </div>
-            `).join('')}
+        <div class="skills-container">
+            ${skills && skills.length > 0 ? skills.map((skill: any) => `
+                <span class="skill-item">
+                    ${typeof skill === 'string' ? skill : `${skill.name} (Lvl ${skill.level})`}
+                </span>
+            `).join('') : '<p style="font-size:0.75rem; font-style:italic; color:#9ca3af;">No skills added yet</p>'}
         </div>
       </div>
 
       ${languages && languages.length > 0 ? `
       <div class="section">
         <div class="section-title">Languages</div>
-        <div class="skills-grid">
+        <div class="languages-container">
             ${languages.map((l: any) => `
-                <div class="skill-item">
-                    <span>${l.name}</span>
-                    <span>${renderRating(l.level || 5)}</span>
+                <span class="language-item">
+                    ${l.name} (Lvl ${l.level})
+                </span>
+            `).join('')}
+        </div>
+      </div>
+      ` : ''}
+
+      ${projects && projects.length > 0 ? `
+      <div class="section">
+        <div class="section-title">Projects</div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${projects.map((proj: any) => `
+                <div>
+                    <h3 style="font-size: 0.875rem; font-weight: 700; color: #1f2937; margin: 0;">${proj.name}</h3>
+                    <p style="font-size: 0.75rem; color: #374151; margin-top: 4px; margin-bottom: 0;">${proj.description}</p>
+                    ${proj.link ? `<a href="${proj.link}" target="_blank" style="font-size: 0.75rem; margin-top: 4px; display: inline-block;">${proj.link}</a>` : ''}
                 </div>
             `).join('')}
         </div>
       </div>
       ` : ''}
 
-       ${references && references.length > 0 ? `
-       <div class="section">
-         <div class="section-title">References</div>
-         ${references.map((ref: any) => `
-           <div class="item">
-             <div class="item-left">${ref.name}</div>
-             <div class="item-right">
-                 <div class="item-title">${ref.company}</div>
-                 <div>${ref.email} ${ref.phone ? `| ${ref.phone}` : ''}</div>
-             </div>
-           </div>
-         `).join('')}
-       </div>
-       ` : ''}
+      ${references && references.length > 0 ? `
+      <div class="section">
+        <div class="section-title">References</div>
+        <div class="grid-2">
+            ${references.map((ref: any) => `
+                <div style="font-size: 0.875rem;">
+                    <div style="font-weight: 700; color: #1f2937;">${ref.name}</div>
+                    <div style="font-style: italic; color: #4b5563;">${ref.company}</div>
+                    <div style="font-size: 0.75rem; color: #6b7280; margin-top: 4px;">
+                        ${ref.email} | ${ref.phone}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+      </div>
+      ` : ''}
     </body>
     </html>
-    `;
+  `;
 };
