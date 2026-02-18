@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useSearchParams } from "react-router-dom";
 import { Clock, Calendar, User, X, ArrowRight } from "lucide-react";
 
 interface Training {
@@ -25,6 +26,7 @@ const AvailableTrainings = () => {
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
 
     // Enrollment modal state
     const [showModal, setShowModal] = useState(false);
@@ -52,6 +54,17 @@ const AvailableTrainings = () => {
 
         fetchTrainings();
     }, []);
+
+    // Auto-open modal if ?enroll= query param is present (e.g. from Home page)
+    useEffect(() => {
+        const enrollCourse = searchParams.get("enroll");
+        if (enrollCourse) {
+            setFormData({ name: "", email: "", phone: "", shift: "", course: decodeURIComponent(enrollCourse) });
+            setShowModal(true);
+            // Remove the query param from URL without re-navigating
+            setSearchParams({});
+        }
+    }, [searchParams]);
 
     const handleEnroll = (courseTitle: string) => {
         setFormData({ name: "", email: "", phone: "", shift: "", course: courseTitle });
