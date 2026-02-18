@@ -76,7 +76,12 @@ const AvailableTrainings = () => {
     };
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        if (field === "phone") {
+            const numericOnly = value.replace(/\D/g, "").slice(0, 15);
+            setFormData((prev) => ({ ...prev, [field]: numericOnly }));
+        } else {
+            setFormData((prev) => ({ ...prev, [field]: value }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
