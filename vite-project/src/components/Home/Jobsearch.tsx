@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -14,6 +15,7 @@ interface Statistics {
 }
 
 export default function Jobsearch() {
+  const navigate = useNavigate();
   const [stats, setStats] = useState<Statistics>({
     totalCandidates: 0,
     dailyJobs: 0,
@@ -63,11 +65,14 @@ export default function Jobsearch() {
           is here to help you get connected to your dream job.
         </p>
 
-        {/* Plain Tailwind "button" */}
-        <div className="inline-flex items-center justify-center bg-white text-cyan-600 hover:bg-gray-50 px-8 py-2 rounded-lg font-semibold text-lg mb-10 cursor-pointer transition">
+        {/* Search Jobs Now button */}
+        <button
+          onClick={() => navigate("/jobs")}
+          className="inline-flex items-center justify-center bg-white text-cyan-600 hover:bg-gray-50 px-8 py-2 rounded-lg font-semibold text-lg mb-10 cursor-pointer transition"
+        >
           Search Jobs Now
           <ArrowRight className="ml-2 h-5 w-5" />
-        </div>
+        </button>
 
         {/* Statistics Section */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 md:gap-12">
