@@ -117,7 +117,12 @@ export default function TrainingsHome() {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === "phone") {
+      const numericOnly = value.replace(/\D/g, "").slice(0, 15);
+      setFormData((prev) => ({ ...prev, [field]: numericOnly }));
+    } else {
+      setFormData((prev) => ({ ...prev, [field]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -349,8 +354,8 @@ export default function TrainingsHome() {
                 type="submit"
                 disabled={submitting}
                 className={`w-full flex items-center justify-center text-lg px-4 py-2 rounded-lg font-semibold shadow-md transition group ${submitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-teal-600 text-white hover:bg-teal-700"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-teal-600 text-white hover:bg-teal-700"
                   }`}
               >
                 {submitting ? "Submitting..." : "Submit Registration"}
