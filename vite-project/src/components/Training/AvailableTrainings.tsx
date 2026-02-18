@@ -104,7 +104,7 @@ const AvailableTrainings = () => {
     return (
         <section className="p-6 bg-gray-50">
             <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-500 to-teal-600 bg-clip-text text-transparent">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-cyan-600">
                     Training Gallery
                 </h2>
                 <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
@@ -269,8 +269,8 @@ const AvailableTrainings = () => {
                                 type="submit"
                                 disabled={submitting}
                                 className={`w-full flex items-center justify-center text-lg px-4 py-2 rounded-lg font-semibold shadow-md transition group ${submitting
-                                        ? "bg-gray-400 cursor-not-allowed"
-                                        : "bg-teal-600 text-white hover:bg-teal-700"
+                                    ? "bg-gray-400 cursor-not-allowed"
+                                    : "bg-teal-600 text-white hover:bg-teal-700"
                                     }`}
                             >
                                 {submitting ? "Submitting..." : "Submit Registration"}
