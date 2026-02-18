@@ -472,7 +472,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value.replace(/\D/g, '').slice(0, 15) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Permanent Address</label>
@@ -519,7 +519,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value.replace(/\D/g, '').slice(0, 15) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                             </>
                         )}
