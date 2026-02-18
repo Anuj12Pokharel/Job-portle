@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { h1 } from "framer-motion/m";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 const CreateTeam = () => {

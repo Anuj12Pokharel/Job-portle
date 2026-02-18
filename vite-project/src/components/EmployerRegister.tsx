@@ -21,7 +21,13 @@ const EmployerRegister = () => {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "mobileNumber") {
+      const numericOnly = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, [name]: numericOnly });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validateForm = () => {
@@ -171,27 +177,27 @@ const EmployerRegister = () => {
             />
           </div>
 
-            <div className=" flex justify-center">
-              <button
-                type="submit"
-                disabled={loading}
-                className=" items-center  w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
-              >
-                {loading ? "Creating..." : "Create jobseeker account"}
-              </button>
-            </div>
-            <p className="text-balck font-bold text-center">
-              {" "}
-              Already have jobseeker account?
-              <a href="/Employeer-Login" className="text-cyan-600 hover:underline">
-                {" "} Login
-              </a>
-            </p>
-          </form>
-        </div>
+          <div className=" flex justify-center">
+            <button
+              type="submit"
+              disabled={loading}
+              className=" items-center  w-1/2 bg-gradient-to-r from-teal-600 to-cyan-600 text-white py-2 rounded-lg hover:bg-orange-800"
+            >
+              {loading ? "Creating..." : "Create Employer account"}
+            </button>
+          </div>
+          <p className="text-balck font-bold text-center">
+            {" "}
+            Already have Employer account?
+            <a href="/Employeer-Login" className="text-cyan-600 hover:underline">
+              {" "} Login
+            </a>
+          </p>
+        </form>
       </div>
-      
-  
+    </div>
+
+
   );
 };
 

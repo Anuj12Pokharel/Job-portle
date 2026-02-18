@@ -2,12 +2,13 @@
 import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase, LayoutDashboard } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Categories from "./Job/Categories";
 
 export default function Navbar() {
+  const location = useLocation();
   const [user, setUser] = useState<any>(null);
-  
+
 
   useEffect(() => {
     const loadUser = () => {
@@ -65,6 +66,17 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  const profileRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false); // close dropdown if clicked outside
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="bg-white/90 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50 ">
@@ -72,14 +84,14 @@ export default function Navbar() {
         <div className="flex justify-between items-center h-20">
           {/* Left: Logo */}
           <div className="flex items-center flex-shrink-0">
-             <Link to="/" className="flex items-center gap-2">
-    {/* Circular Logo */}
-    <img
-      src={logo}
-      alt="JobLink 360 Logo"
-      className="h-14 sm:h-16 md:h-18 w-auto"
-    />
-  </Link>
+            <Link to="/" className="flex items-center gap-2">
+              {/* Circular Logo */}
+              <img
+                src={logo}
+                alt="JobLink 360 Logo"
+                className="h-14 sm:h-16 md:h-18 w-auto"
+              />
+            </Link>
 
           </div>
 
@@ -92,11 +104,16 @@ export default function Navbar() {
               onMouseLeave={() => setCategoryOpen(false)}
             >
               <button
-                className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200 py-2"
+                className={`flex items-center gap-1 text-sm font-medium transition-colors duration-200 py-2 relative group ${location.pathname === "/jobs" || location.pathname.startsWith("/jobs/")
+                  ? "text-cyan-600 font-semibold"
+                  : "text-gray-700 hover:text-cyan-600"
+                  }`}
                 aria-expanded={categoryOpen}
               >
                 JOB CATEGORY
                 <ChevronDown className={`w-4 h-4 transition-transform ${categoryOpen ? "rotate-180" : ""}`} />
+                <span className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${location.pathname === "/jobs" || location.pathname.startsWith("/jobs/") ? "w-full" : "w-0 group-hover:w-full"
+                  }`} />
               </button>
 
               {categoryOpen && (
@@ -116,9 +133,16 @@ export default function Navbar() {
               <Link
                 key={index}
                 to={item.path}
-                className="text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
+                className={`relative group text-sm font-medium transition-colors duration-200 pb-1 ${location.pathname === item.path
+                  ? "text-cyan-600 font-semibold"
+                  : "text-gray-700 hover:text-cyan-600"
+                  }`}
               >
                 {item.name}
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${location.pathname === item.path ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                />
               </Link>
             ))}
 
@@ -129,16 +153,23 @@ export default function Navbar() {
               onMouseLeave={() => setServicesOpen(false)}
             >
               <button
-                className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-sm font-medium transition-colors duration-200 py-2"
+                className={`flex items-center gap-1 text-sm font-medium transition-colors duration-200 py-2 relative group ${location.pathname.startsWith("/services")
+                  ? "text-cyan-600 font-semibold"
+                  : "text-gray-700 hover:text-cyan-600"
+                  }`}
                 aria-expanded={servicesOpen}
               >
                 SERVICES
                 <ChevronDown className={`w-4 h-4 transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 bg-cyan-500 transition-all duration-300 ${location.pathname.startsWith("/services") ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                />
               </button>
 
               {servicesOpen && (
                 <div className="absolute top-full left-0 mt-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-                 
+
                   <Link
                     to="/services/recruitment"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
@@ -153,14 +184,14 @@ export default function Navbar() {
                   >
                     Staff Outsourcing
                   </Link>
-                   <Link
+                  <Link
                     to="/services/payroll-management"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     onClick={() => setServicesOpen(false)}
                   >
                     Payroll Management
                   </Link>
-                 
+
                   <Link
                     to="/services/hr-consulting"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
@@ -175,15 +206,15 @@ export default function Navbar() {
                   >
                     Training and Development
                   </Link>
-                  
-                     <Link
+
+                  <Link
                     to="/services/job-posting"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                     onClick={() => setServicesOpen(false)}
                   >
                     Job Posting Platform
                   </Link>
-                   <Link
+                  <Link
                     to="/services/corporate&eventmanagement"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 border-b border-gray-50"
                     onClick={() => setServicesOpen(false)}
@@ -221,7 +252,9 @@ export default function Navbar() {
                 </button>
 
                 {isProfileOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
+                  <div
+                    ref={profileRef}
+                    className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
                     <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
                       <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
@@ -285,36 +318,36 @@ export default function Navbar() {
             ) : (
               <>
                 {/* For Jobseekers */}
-<div
-  className="relative h-full flex items-center"
-  onMouseEnter={() => setJobseekerOpen(true)}
-  onMouseLeave={() => setJobseekerOpen(false)}
->
-  <button
-    className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-lg font-medium transition-colors duration-200 py-2"
-    aria-expanded={jobseekerOpen}
-  >
-    For Jobseekers
-    <ChevronDown className={`w-4 h-4 transition-transform ${jobseekerOpen ? "rotate-180" : ""}`} />
-  </button>
+                <div
+                  className="relative h-full flex items-center"
+                  onMouseEnter={() => setJobseekerOpen(true)}
+                  onMouseLeave={() => setJobseekerOpen(false)}
+                >
+                  <button
+                    className="flex items-center gap-1 text-gray-700 hover:text-gray-900 text-lg font-medium transition-colors duration-200 py-2"
+                    aria-expanded={jobseekerOpen}
+                  >
+                    For Jobseekers
+                    <ChevronDown className={`w-4 h-4 transition-transform ${jobseekerOpen ? "rotate-180" : ""}`} />
+                  </button>
 
-  {jobseekerOpen && (
-    <div className="absolute top-full right-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
-      <Link
-        to="/Jobseeker-Login"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        Login
-      </Link>
-      <Link
-        to="/Jobseeker-Register"
-        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-      >
-        Register
-      </Link>
-    </div>
-  )}
-</div>
+                  {jobseekerOpen && (
+                    <div className="absolute top-full right-0 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                      <Link
+                        to="/Jobseeker-Login"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Login
+                      </Link>
+                      <Link
+                        to="/Jobseeker-Register"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        Register
+                      </Link>
+                    </div>
+                  )}
+                </div>
 
 
                 {/* For Employers */}
@@ -323,27 +356,26 @@ export default function Navbar() {
                   onMouseLeave={() => setEmployerOpen(false)}
                 >
                   <button className="flex items-center gap-1 text-lg text-gray-700 hover:text-gray-900 font-medium py-2">
-    For Employers
-    <ChevronDown
-      className={`w-4 h-4 transition-transform ${
-        employerOpen ? "rotate-180" : ""
-      }`}
-    />
-  </button>
+                    For Employers
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform ${employerOpen ? "rotate-180" : ""
+                        }`}
+                    />
+                  </button>
 
                   {employerOpen && (
                     <div className="absolute top-full right-0  w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
                       <Link
                         to="/Employeer-Login"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        
+
                       >
                         Login
                       </Link>
                       <Link
                         to="/Employeer-Register"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-            
+
                       >
                         Register
                       </Link>
@@ -375,13 +407,13 @@ export default function Navbar() {
             <div className="px-4 pt-4 pb-4 space-y-4 bg-gray-50">
               {/* Job Category Dropdown for Mobile */}
               <div>
-               <button
-  onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
-  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
->
-  JOB CATEGORY
-  <span>{mobileCategoryOpen ? "−" : "+"}</span>
-</button>
+                <button
+                  onClick={() => setMobileCategoryOpen(!mobileCategoryOpen)}
+                  className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
+                >
+                  JOB CATEGORY
+                  <span>{mobileCategoryOpen ? "−" : "+"}</span>
+                </button>
 
                 {mobileCategoryOpen && (
                   <div className="mt-2 bg-white rounded-md border border-gray-200 shadow-sm">
@@ -408,7 +440,10 @@ export default function Navbar() {
                 <Link
                   key={index}
                   to={item.path}
-                  className="text-gray-700 hover:text-gray-900 block text-base font-medium"
+                  className={`block text-base font-medium py-1 border-l-4 pl-3 transition-all duration-200 ${location.pathname === item.path
+                      ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
+                      : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
+                    }`}
                   onClick={closeMobileMenu}
                 >
                   {item.name}
@@ -416,7 +451,10 @@ export default function Navbar() {
               ))}
               <Link
                 to="/services"
-                className="text-gray-700 hover:text-gray-900 block text-base font-medium"
+                className={`block text-base font-medium py-1 border-l-4 pl-3 transition-all duration-200 ${location.pathname.startsWith("/services")
+                    ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
+                    : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
+                  }`}
                 onClick={closeMobileMenu}
               >
                 SERVICES
@@ -427,7 +465,7 @@ export default function Navbar() {
                 <button
                   onClick={() => setJobseekerOpen(!jobseekerOpen)}
                   className="w-full flex justify-between items-center text-gray-900 font-semibold text-lg py-2"
-                  
+
                 >
                   For Jobseekers
                   <span>{jobseekerOpen ? "−" : "+"}</span>

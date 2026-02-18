@@ -351,7 +351,7 @@ const SuperAdminDashboard = () => {
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
-                skills: "", expiryDate: "", desiredCandidate: ""
+                skills: "", expiryDate: "", desiredCandidate: "", isFeatured: false,
             });
             setJobLogo(null);
         } catch (err) {
@@ -472,7 +472,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value.replace(/\D/g, '').slice(0, 15) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Permanent Address</label>
@@ -519,7 +519,7 @@ const SuperAdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Mobile</label>
-                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    <input type="text" value={editFormData.mobileNumber || ''} onChange={(e) => setEditFormData({ ...editFormData, mobileNumber: e.target.value.replace(/\D/g, '').slice(0, 15) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                             </>
                         )}
@@ -736,7 +736,7 @@ const SuperAdminDashboard = () => {
             </div>
 
             {/* Main Content */}
-            <div className="flex-1 overflow-auto p-8 relative">
+            <div className="flex-1 overflow-y-auto p-8">
                 <h2 className="text-2xl font-bold mb-6 text-gray-800 capitalize">{activeTab === 'dashboard' ? 'Dashboard Overview' : `Manage ${activeTab}`}</h2>
 
                 {loading ? (
@@ -1066,7 +1066,7 @@ const SuperAdminDashboard = () => {
                         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left">
-                                    <thead className="bg-gray-50 border-b border-gray-200">
+                                    <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
                                         <tr>
                                             {activeTab === "users" && (
                                                 <>

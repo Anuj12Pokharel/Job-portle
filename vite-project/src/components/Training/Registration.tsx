@@ -1,27 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ArrowRight, Users, BookOpen, Award, Clock } from "lucide-react";
+import { Users, BookOpen, Award, Clock, Rocket, Star, TrendingUp, Shield, CheckCircle } from "lucide-react";
 import axios from "axios";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
-
-const courses = [
-  "Digital Marketing",
-  "Web Development",
-  "Data Analysis",
-  "Graphic Design",
-  "Project Management",
-  "Business Analytics",
-  "Mobile App Development",
-  "UI/UX Design",
-  "Content Writing",
-  "Social Media Management",
-];
-
-const shifts = [
-  { value: "morning", label: "Morning (6:00 AM - 12:00 PM)" },
-  { value: "day", label: "Day (12:00 PM - 6:00 PM)" },
-  { value: "evening", label: "Evening (6:00 PM - 10:00 PM)" },
-];
 
 interface TrainingStats {
   studentsTrained: number;
@@ -31,22 +12,13 @@ interface TrainingStats {
 }
 
 const Registration = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    shift: "",
-    course: "",
-  });
-
   const [stats, setStats] = useState<TrainingStats>({
     studentsTrained: 0,
     coursesAvailable: 0,
     successRate: 0,
-    supportAvailable: "24/7"
+    supportAvailable: "24/7",
   });
   const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     fetchTrainingStatistics();
@@ -65,39 +37,6 @@ const Registration = () => {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-
-    try {
-      const response = await axios.post(`${API_BASE_URL}/api/enrollments`, formData);
-
-      if (response.data.success) {
-        alert(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
-        // Reset form
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          shift: "",
-          course: "",
-        });
-        // Refresh statistics to show the new enrollment
-        fetchTrainingStatistics();
-      }
-    } catch (error: any) {
-      console.error("Error submitting enrollment:", error);
-      const errorMessage = error.response?.data?.message || "Failed to submit enrollment. Please try again.";
-      alert(errorMessage);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
   const formatNumber = (num: number): string => {
     if (num >= 1000) {
       return `${Math.floor(num / 1000)}K+`;
@@ -106,201 +45,144 @@ const Registration = () => {
   };
 
   return (
-    <section className="py-20 bg-gray-100">
-      <div className="container mx-auto px-4">
-        <div className="max-w-8xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-cyan-600">
-              Ready to Transform Your Career?
-            </h2>
-            <p className="text-lg text-black max-w-2xl mx-auto">
-              Join thousands of professionals who have advanced their careers
-              through our comprehensive training programs.
-            </p>
-          </div>
+    <section className="py-12 bg-gray-100">
+      <div className="max-w-6xl mx-auto px-4 lg:px-8">
 
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Stats Cards */}
-            <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white text-center p-6 rounded-lg shadow">
-                  <Users className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">
-                    {loading ? "..." : formatNumber(stats.studentsTrained)}
-                  </div>
-                  <div className="text-sm text-black">Students Trained</div>
-                </div>
+        {/* Section Header */}
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 text-cyan-600">
+            Ready to Transform Your Career?
+          </h2>
+          <p className="text-base text-gray-600 max-w-xl mx-auto leading-relaxed">
+            Join thousands of professionals who have advanced their careers
+            through our comprehensive training programs.
+          </p>
+        </div>
 
-                <div className="bg-white text-center p-6 rounded-lg shadow">
-                  <BookOpen className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">
-                    {loading ? "..." : `${stats.coursesAvailable}+`}
-                  </div>
-                  <div className="text-sm text-black">Courses Available</div>
-                </div>
+        {/* Two-column layout */}
+        <div className="grid lg:grid-cols-2 gap-24 items-stretch">
 
-                <div className="bg-white text-center p-6 rounded-lg shadow">
-                  <Award className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">
-                    {loading ? "..." : `${stats.successRate}%`}
-                  </div>
-                  <div className="text-sm text-black">Success Rate</div>
+          {/* LEFT — Stats Cards + Why Choose */}
+          <div className="flex flex-col gap-6">
+            {/* Stats grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <Users className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
+                <div className="text-2xl font-bold text-cyan-600">
+                  {loading ? "..." : formatNumber(stats.studentsTrained)}
                 </div>
-
-                <div className="bg-white text-center p-6 rounded-lg shadow">
-                  <Clock className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
-                  <div className="text-2xl font-bold text-cyan-600">
-                    {loading ? "..." : stats.supportAvailable}
-                  </div>
-                  <div className="text-sm text-black">Support Available</div>
-                </div>
+                <div className="text-sm text-gray-500 mt-1">Students Trained</div>
               </div>
 
-              {/* Why Choose */}
-              <div className="bg-gradient-to-r from-blue-100 to-cyan-100 p-6 rounded-lg">
-                <h3 className="font-semibold mb-2">Why Choose JobLink360?</h3>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li>Industry-certified instructors</li>
-                  <li> Hands-on practical training</li>
-                  <li>Job placement assistance</li>
-                  <li> Flexible scheduling options</li>
-                </ul>
+              <div className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <BookOpen className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
+                <div className="text-2xl font-bold text-cyan-600">
+                  {loading ? "..." : `${stats.coursesAvailable}+`}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">Courses Available</div>
+              </div>
+
+              <div className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <Award className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
+                <div className="text-2xl font-bold text-cyan-600">
+                  {loading ? "..." : `${stats.successRate}%`}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">Success Rate</div>
+              </div>
+
+              <div className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <Clock className="h-8 w-8 text-cyan-600 mx-auto mb-3" />
+                <div className="text-2xl font-bold text-cyan-600">
+                  {loading ? "..." : stats.supportAvailable}
+                </div>
+                <div className="text-sm text-gray-500 mt-1">Support Available</div>
               </div>
             </div>
 
-            {/* Registration Form */}
-            <div className="bg-white rounded-lg shadow-lg p-6 ">
-              <h3 className="text-2xl font-semibold mb-2 text-cyan-600 text-center">
-                Register Now
+            {/* Why Choose */}
+            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-cyan-100 p-6 rounded-xl flex-1">
+              <h3 className="font-bold text-gray-800 text-base mb-4">Why Choose JobLink360?</h3>
+              <ul className="space-y-3">
+                {[
+                  "Industry-certified instructors",
+                  "Hands-on practical training",
+                  "Job placement assistance",
+                  "Flexible scheduling options",
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-gray-600">
+                    <CheckCircle className="h-4 w-4 text-cyan-500 flex-shrink-0" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* RIGHT — Attractive CTA Panel */}
+          <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-cyan-500 via-teal-600 to-blue-700 p-10 text-white flex flex-col justify-between">
+            {/* Decorative blobs */}
+            <div className="absolute top-0 right-0 w-56 h-56 bg-white opacity-5 rounded-full -translate-y-1/3 translate-x-1/3 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-72 h-72 bg-white opacity-5 rounded-full translate-y-1/3 -translate-x-1/3 pointer-events-none" />
+            <div className="absolute top-1/2 left-1/2 w-40 h-40 bg-yellow-300 opacity-5 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
+
+            {/* Top content */}
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-1.5 bg-white bg-opacity-20 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-6">
+                <Star className="h-3.5 w-3.5 fill-yellow-300 text-yellow-300" />
+                Top Rated Training Platform
+              </span>
+
+              <h3 className="text-3xl md:text-4xl font-extrabold mb-4 leading-tight">
+                Launch Your Career <br />
+                <span className="text-yellow-300">to the Next Level</span>
               </h3>
-              <p className="text-gray-500 mb-6 text-center">
-                Fill out the form below to start your learning journey with us.
+              <p className="text-cyan-100 text-sm leading-relaxed max-w-sm">
+                Enroll in any of our industry-leading courses and gain the skills
+                employers are looking for. Real projects, real mentors, real results.
               </p>
+            </div>
 
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Full Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
+            {/* Feature highlights */}
+            <div className="relative z-10 space-y-4 my-8">
+              {[
+                {
+                  icon: <Rocket className="h-5 w-5 text-yellow-300" />,
+                  title: "Fast-Track Learning",
+                  desc: "Complete courses in weeks, not years",
+                },
+                {
+                  icon: <TrendingUp className="h-5 w-5 text-yellow-300" />,
+                  title: "Career Growth Guaranteed",
+                  desc: "Placement support until you land the job",
+                },
+                {
+                  icon: <Shield className="h-5 w-5 text-yellow-300" />,
+                  title: "Certified & Recognized",
+                  desc: "Industry-recognized certificates upon completion",
+                },
+              ].map((feature) => (
+                <div key={feature.title} className="flex items-start gap-4">
+                  <div className="bg-white bg-opacity-15 p-2.5 rounded-xl flex-shrink-0">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">{feature.title}</p>
+                    <p className="text-cyan-200 text-xs mt-0.5">{feature.desc}</p>
+                  </div>
                 </div>
+              ))}
+            </div>
 
-                {/* Email */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Email Address
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Phone */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Phone Number
-                  </label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange("phone", e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                {/* Shift */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="shift"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Preferred Shift
-                  </label>
-                  <select
-                    id="shift"
-                    value={formData.shift}
-                    onChange={(e) => handleInputChange("shift", e.target.value)}
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select your preferred shift</option>
-                    {shifts.map((shift) => (
-                      <option key={shift.value} value={shift.value}>
-                        {shift.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Course */}
-                <div className="space-y-2">
-                  <label
-                    htmlFor="course"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Course of Interest
-                  </label>
-                  <select
-                    id="course"
-                    value={formData.course}
-                    onChange={(e) =>
-                      handleInputChange("course", e.target.value)
-                    }
-                    required
-                    className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select a course</option>
-                    {courses.map((course) => (
-                      <option key={course} value={course}>
-                        {course}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Submit */}
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className={`w-1/2 flex items-center justify-center text-lg px-2 py-2 rounded-lg font-semibold shadow-md transition group ${submitting
-                      ? 'bg-gray-400 cursor-not-allowed'
-                      : 'bg-teal-600 text-white hover:bg-teal-700'
-                    }`}
-                >
-                  {submitting ? "Submitting..." : "Submit Registration"}
-                  {!submitting && <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />}
-                </button>
-              </form>
+            {/* Bottom CTA hint */}
+            <div className="relative z-10 border-t border-white border-opacity-20 pt-5">
+              <p className="text-cyan-100 text-xs text-center leading-relaxed">
+                🎯 Click{" "}
+                <span className="font-bold text-white">"Enroll Now"</span>{" "}
+                on any course in the gallery above to get started instantly.
+              </p>
             </div>
           </div>
+
         </div>
       </div>
     </section>

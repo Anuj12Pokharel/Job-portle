@@ -20,7 +20,13 @@ const RegisterForm: React.FC = () => {
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === "mobileNumber") {
+      const numericOnly = value.replace(/\D/g, "").slice(0, 10);
+      setFormData({ ...formData, [name]: numericOnly });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const validateForm = () => {

@@ -8,9 +8,9 @@ const Trainings = () => {
   return (
     <div>
       <Hero />
+      <AvailableTrainings />
       <Registration />
       <WhyChooseSection />
-      <AvailableTrainings />
     </div>
   );
 };
