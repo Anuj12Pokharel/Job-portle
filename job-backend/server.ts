@@ -21,6 +21,7 @@ import enrollmentRoutes from "./routes/enrollmentRoutes";
 
 import userRoutes from "./routes/userRoutes";
 import BlogRoutes from "./routes/BlogRoutes";
+import teamRoutes from "./routes/teamRoutes";
 
 // Load environment variables from .env.production in the root directory
 dotenv.config({ path: path.join(__dirname, "..", ".env.production") });
@@ -57,6 +58,8 @@ app.use("/api/training", trainingRoutes);
 app.use("/api/client-logos", clientLogoRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/blog", BlogRoutes);
+app.use("/api/blogs", BlogRoutes);
+app.use("/api/team", teamRoutes);
 app.use("/api/banners", bannerRoutes);
 app.use("/api/cv", cvRoutes);
 app.use("/api/statistics", statisticsRoutes);
