@@ -1,4 +1,7 @@
 import History from "../models/History";
+import Job from "../models/Job";
+import Admin from "../models/Admin";
+import User from "../models/User";
 import { Types } from "mongoose";
 
 export const logHistory = async (
@@ -65,6 +68,26 @@ export const getHistory = async (filters: any = {}, limit: number = 100, skip: n
         return { history, total };
     } catch (err) {
         console.error("Failed to fetch history:", err);
+        throw err;
+    }
+};
+
+
+export const getHeroStats = async () => {
+    try {
+        const [jobsCount, companiesCount, candidatesCount] = await Promise.all([
+            Job.countDocuments(),
+            Admin.countDocuments({ role: "admin" }),
+            User.countDocuments({ role: "user" })
+        ]);
+
+        return {
+            jobs: jobsCount,
+            companies: companiesCount,
+            candidates: candidatesCount
+        };
+    } catch (err) {
+        console.error("Error getting hero stats:", err);
         throw err;
     }
 };
