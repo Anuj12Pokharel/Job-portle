@@ -1,11 +1,16 @@
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 
 // Blog images
 const blogStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, "uploads/blogs"); // save blog images here
+    const dir = "uploads/blogs";
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    cb(null, dir); // save blog images here
   },
   filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
