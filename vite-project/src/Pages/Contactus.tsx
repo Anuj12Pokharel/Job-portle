@@ -15,10 +15,13 @@ const Contactus = () => {
   const [status, setStatus] = useState("");
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    if (name === "phone") {
+      const numericOnly = value.replace(/\D/g, "").slice(0, 15);
+      setFormData({ ...formData, [name]: numericOnly });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
