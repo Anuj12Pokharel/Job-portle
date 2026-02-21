@@ -67,7 +67,7 @@ const BannerManagement = () => {
       data.append("title", formData.title);
       data.append("subtitle", formData.subtitle);
       data.append("isActive", String(formData.isActive));
-      
+
       if (selectedFile) {
         data.append("backgroundImage", selectedFile);
       }
@@ -147,16 +147,13 @@ const BannerManagement = () => {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Banner Type
                     </label>
-                    <select
+                    <input
+                      type="text"
                       value={formData.type}
                       onChange={(e) => setFormData({ ...formData, type: e.target.value })}
                       className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                    >
-                      <option value="job-search">Job Search Banner</option>
-                      <option value="home">Home Banner</option>
-                      <option value="training">Training Banner</option>
-                      <option value="about">About Banner</option>
-                    </select>
+                      placeholder="e.g. home, job-search, training"
+                    />
                   </div>
 
                   <div>
