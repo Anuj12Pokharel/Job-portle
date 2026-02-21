@@ -19,7 +19,6 @@ const ProfileSettings = () => {
         email: "",
         mobileNumber: "",
         location: "",
-        preferredJobCategory: "",
     });
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -43,7 +42,6 @@ const ProfileSettings = () => {
                 email: res.data.email || "",
                 mobileNumber: res.data.mobileNumber || "",
                 location: res.data.location || "",
-                preferredJobCategory: res.data.preferredJobCategory || "",
             });
             setPreviewImage(res.data.profilePicture);
             setLoading(false);
@@ -83,9 +81,6 @@ const ProfileSettings = () => {
         if (!formData.location) {
             newErrors.location = "Required";
         }
-        if (!formData.preferredJobCategory) {
-            newErrors.preferredJobCategory = "Required";
-        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -107,7 +102,6 @@ const ProfileSettings = () => {
             data.append("email", formData.email);
             data.append("mobileNumber", formData.mobileNumber);
             data.append("location", formData.location);
-            data.append("preferredJobCategory", formData.preferredJobCategory);
             if (selectedFile) {
                 data.append("profilePicture", selectedFile);
             }
@@ -140,16 +134,6 @@ const ProfileSettings = () => {
         }
     };
 
-    const jobCategories = [
-        "Software Development",
-        "Design",
-        "Marketing",
-        "Sales",
-        "Customer Support",
-        "Human Resources",
-        "Finance",
-        "Operations",
-    ];
 
     if (loading) {
         return (
@@ -311,31 +295,6 @@ const ProfileSettings = () => {
                                     </div>
                                 </div>
 
-                                {/* Preferred Job Category */}
-                                <div className="col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1 flex justify-between">
-                                        <span>Preferred Job Category</span>
-                                        {errors.preferredJobCategory && <span className="text-red-500 text-xs ml-2">{errors.preferredJobCategory}</span>}
-                                    </label>
-                                    <div className="relative">
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Briefcase className="h-5 w-5 text-gray-400" />
-                                        </div>
-                                        <select
-                                            name="preferredJobCategory"
-                                            value={formData.preferredJobCategory}
-                                            onChange={handleChange}
-                                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white"
-                                        >
-                                            <option value="">Select a category</option>
-                                            {jobCategories.map((cat) => (
-                                                <option key={cat} value={cat}>
-                                                    {cat}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                </div>
                             </div>
 
                             {/* Action Buttons */}
