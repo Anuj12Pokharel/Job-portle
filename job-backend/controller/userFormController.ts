@@ -4,7 +4,7 @@ import Userform from "../models/Userform";
 export const submitForm = async (req: Request, res: Response) => {
   try {
     const { fullName, designation, email, contact, field, employmentStatus } = req.body as Record<string, string>;
-    const resumePath = req.file ? req.file.path : "";
+    const resumePath = req.file ? req.file.path.replace(/\\/g, "/") : "";
 
     const form = new Userform({
       fullName,
@@ -20,6 +20,16 @@ export const submitForm = async (req: Request, res: Response) => {
     res.status(201).json({ message: "Form submitted successfully", form });
   } catch (error) {
     console.error("Form submission error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getAllForms = async (req: Request, res: Response) => {
+  try {
+    const forms = await Userform.find().sort({ createdAt: -1 });
+    res.status(200).json(forms);
+  } catch (error) {
+    console.error("Fetch forms error:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
