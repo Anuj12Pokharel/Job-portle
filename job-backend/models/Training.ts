@@ -8,6 +8,7 @@ export interface ITraining extends Document {
     price: string;
     startDate: Date;
     image: string;
+    shifts: string[];
 }
 
 const trainingSchema = new Schema<ITraining>(
@@ -19,6 +20,7 @@ const trainingSchema = new Schema<ITraining>(
         price: { type: String, required: true },
         startDate: { type: Date, required: true },
         image: { type: String, required: true },
+        shifts: { type: [String], default: [] },
     },
     { timestamps: true }
 );
