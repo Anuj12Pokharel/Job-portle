@@ -75,7 +75,14 @@ const AdminDashboard = () => {
                 });
                 setMyJobs(res.data);
                 setStats(prev => ({ ...prev, totalJobs: res.data.length }));
-            } catch (err) { console.error(err); }
+            } catch (err) {
+                console.error(err);
+                // Check if it's an approval status error
+                const errorMessage = err.response?.data?.message;
+                if (errorMessage && (errorMessage.includes("pending approval") || errorMessage.includes("rejected"))) {
+                    alert(errorMessage + "\n\nPlease contact the Super Admin for approval.");
+                }
+            }
             setLoading(false);
         };
         loadMyJobs();
@@ -253,7 +260,13 @@ const AdminDashboard = () => {
         } catch (err) {
             console.error(err);
             const msg = err.response?.data?.message || "Failed to post job";
-            alert(msg);
+
+            // Check if it's an approval status error
+            if (msg.includes("pending approval") || msg.includes("rejected")) {
+                alert(msg + "\n\nPlease contact the Super Admin for approval.");
+            } else {
+                alert(msg);
+            }
         }
     };
 
@@ -335,6 +348,9 @@ const AdminDashboard = () => {
                     </button>
                     <button onClick={() => { setActiveTab("post-job"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'post-job' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <PlusCircle className="w-5 h-5 mr-3" /> Post New Job
+                    </button>
+                    <button onClick={() => window.location.assign("/employer-profile-settings")} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${location.pathname === '/employer-profile-settings' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
+                        <Briefcase className="w-5 h-5 mr-3" /> Company Profile
                     </button>
                     <button onClick={() => { setActiveTab("my-jobs"); setViewApplicantsJobId(null); }} className={`flex items-center w-full px-4 py-3 rounded-lg transition-colors ${activeTab === 'my-jobs' ? 'bg-teal-600' : 'hover:bg-slate-800'}`}>
                         <Briefcase className="w-5 h-5 mr-3" /> My Jobs
@@ -562,50 +578,34 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
-                                    <select value={jobData.jobType} onChange={e => setJobData({ ...jobData, jobType: e.target.value })} className="w-full border rounded-lg px-4 py-2">
-                                        <option>Full-time</option>
-                                        <option>Part-time</option>
-                                        <option>Contract</option>
-                                        <option>Internship</option>
-                                        <option>Remote</option>
-                                    </select>
+                                    <input
+                                        type="text"
+                                        value={jobData.jobType}
+                                        onChange={e => setJobData({ ...jobData, jobType: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. Full-time, Remote"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                                    <select value={jobData.category} onChange={e => setJobData({ ...jobData, category: e.target.value })} className="w-full border rounded-lg px-4 py-2" required>
-                                        <option value="">Select Category</option>
-                                        <option>Information Technology</option>
-                                        <option>Marketing</option>
-                                        <option>Sales</option>
-                                        <option>Human Resources</option>
-                                        <option>Finance & Accounting</option>
-                                        <option>Customer Service</option>
-                                        <option>Engineering</option>
-                                        <option>Healthcare</option>
-                                        <option>Education</option>
-                                        <option>Design</option>
-                                        <option>Operations</option>
-                                        <option>Management</option>
-                                        <option>Legal</option>
-                                        <option>Construction</option>
-                                        <option>Hospitality</option>
-                                        <option>Retail</option>
-                                        <option>Manufacturing</option>
-                                        <option>Banking</option>
-                                        <option>Telecommunications</option>
-                                        <option>Other</option>
-                                    </select>
+                                    <input
+                                        type="text"
+                                        value={jobData.category}
+                                        onChange={e => setJobData({ ...jobData, category: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. Software Development"
+                                        required
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Level</label>
-                                    <select value={jobData.jobLevel} onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })} className="w-full border rounded-lg px-4 py-2">
-                                        <option value="">Select Level (Optional)</option>
-                                        <option>Entry-level</option>
-                                        <option>Mid-level</option>
-                                        <option>Senior-level</option>
-                                        <option>Junior</option>
-                                        <option>Executive</option>
-                                    </select>
+                                    <input
+                                        type="text"
+                                        value={jobData.jobLevel}
+                                        onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. Mid-level"
+                                    />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
