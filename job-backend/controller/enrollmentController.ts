@@ -45,10 +45,7 @@ export const getEnrollments = async (_req: Request, res: Response) => {
     try {
         const enrollments = await Enrollment.find().sort({ createdAt: -1 });
 
-        res.status(200).json({
-            success: true,
-            data: enrollments
-        });
+        res.status(200).json(enrollments);
     } catch (error) {
         console.error("Error fetching enrollments:", error);
         res.status(500).json({
