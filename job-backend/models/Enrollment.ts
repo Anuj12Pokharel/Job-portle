@@ -17,7 +17,7 @@ const enrollmentSchema = new Schema<IEnrollment>(
         email: { type: String, required: true },
         phone: { type: String, required: true },
         course: { type: String, required: true },
-        shift: { type: String, required: true, enum: ["morning", "day", "evening"] },
+        shift: { type: String, required: true },
         status: {
             type: String,
             required: true,
