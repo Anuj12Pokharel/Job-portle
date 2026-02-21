@@ -79,11 +79,6 @@ const trainings = [
   },
 ];
 
-const shifts = [
-  { value: "morning", label: "Morning (6:00 AM - 12:00 PM)" },
-  { value: "day", label: "Day (12:00 PM - 6:00 PM)" },
-  { value: "evening", label: "Evening (6:00 PM - 10:00 PM)" },
-];
 
 interface Training {
   id: number;
@@ -321,19 +316,14 @@ export default function TrainingsHome() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Preferred Shift
                 </label>
-                <select
+                <input
+                  type="text"
+                  placeholder="e.g. Morning (6-12), Evening, etc."
                   value={formData.shift}
                   onChange={(e) => handleInputChange("shift", e.target.value)}
                   required
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                >
-                  <option value="">Select your preferred shift</option>
-                  {shifts.map((shift) => (
-                    <option key={shift.value} value={shift.value}>
-                      {shift.label}
-                    </option>
-                  ))}
-                </select>
+                />
               </div>
 
               {/* Course (pre-filled, read-only) */}

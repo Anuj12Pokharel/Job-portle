@@ -121,27 +121,15 @@ export default function Form({
             >
               Field of Expertise *
             </label>
-            <select
+            <input
               id="fieldOfExpertise"
+              type="text"
               value={formData.expertise}
-              onChange={(e) =>
-                onInputChange("expertise", e.target.value)
-              }
+              onChange={(e) => onInputChange("expertise", e.target.value)}
               className="border rounded px-3 py-2 w-full"
+              placeholder="e.g. Information Technology, Nursing, etc."
               required
-            >
-              <option value="">Select your field</option>
-              <option value="information-technology">
-                Information Technology
-              </option>
-              <option value="finance-banking">Finance & Banking</option>
-              <option value="healthcare">Healthcare</option>
-              <option value="marketing-sales">Marketing & Sales</option>
-              <option value="engineering">Engineering</option>
-              <option value="education">Education</option>
-              <option value="design-creative">Design & Creative</option>
-              <option value="other">Other</option>
-            </select>
+            />
           </div>
 
           {/* Current Employment Status */}

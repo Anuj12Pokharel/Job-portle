@@ -259,14 +259,25 @@ export default function Navbar() {
                       <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     </div>
-                    <Link
-                      to="/profile-settings"
-                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsProfileOpen(false)}
-                    >
-                      <Settings className="w-4 h-4" />
-                      Profile Settings
-                    </Link>
+                    {(user.role === "admin" || user.role === "superadmin") ? (
+                      <Link
+                        to="/employer-profile-settings"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Company Settings
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/profile-settings"
+                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                        onClick={() => setIsProfileOpen(false)}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Profile Settings
+                      </Link>
+                    )}
                     {(user.role === "admin" || user.role === "superadmin") && (
                       <Link
                         to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
@@ -441,8 +452,8 @@ export default function Navbar() {
                   key={index}
                   to={item.path}
                   className={`block text-base font-medium py-1 border-l-4 pl-3 transition-all duration-200 ${location.pathname === item.path
-                      ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
-                      : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
+                    ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
+                    : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
                     }`}
                   onClick={closeMobileMenu}
                 >
@@ -452,8 +463,8 @@ export default function Navbar() {
               <Link
                 to="/services"
                 className={`block text-base font-medium py-1 border-l-4 pl-3 transition-all duration-200 ${location.pathname.startsWith("/services")
-                    ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
-                    : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
+                  ? "border-cyan-500 text-cyan-600 bg-cyan-50 rounded-r"
+                  : "border-transparent text-gray-700 hover:text-cyan-600 hover:border-cyan-300"
                   }`}
                 onClick={closeMobileMenu}
               >
@@ -552,14 +563,25 @@ export default function Navbar() {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Link
-                      to="/profile-settings"
-                      className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                      onClick={closeMobileMenu}
-                    >
-                      <Settings className="w-4 h-4" />
-                      Profile Settings
-                    </Link>
+                    {(user.role === "admin" || user.role === "superadmin") ? (
+                      <Link
+                        to="/employer-profile-settings"
+                        className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        onClick={closeMobileMenu}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Company Settings
+                      </Link>
+                    ) : (
+                      <Link
+                        to="/profile-settings"
+                        className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        onClick={closeMobileMenu}
+                      >
+                        <Settings className="w-4 h-4" />
+                        Profile Settings
+                      </Link>
+                    )}
                     {(user.role === "admin" || user.role === "superadmin") && (
                       <Link
                         to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}

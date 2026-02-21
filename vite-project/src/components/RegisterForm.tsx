@@ -10,6 +10,9 @@ const RegisterForm: React.FC = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    permanentAddress: "",
+    temporaryAddress: "",
+    academicDegree: "",
   });
 
   const [errors, setErrors] = useState<any>({});
@@ -54,6 +57,14 @@ const RegisterForm: React.FC = () => {
       newErrors.confirmPassword = "Passwords do not match";
     }
 
+    if (!formData.permanentAddress.trim()) {
+      newErrors.permanentAddress = "Permanent address is required";
+    }
+
+    if (!formData.academicDegree.trim()) {
+      newErrors.academicDegree = "Academic degree is required";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -96,7 +107,7 @@ const RegisterForm: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+      <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg mt-10">
         <h2 className="text-3xl font-bold text-center text-cyan-600 mb-2">
           Create Jobseeker Account
         </h2>
@@ -156,6 +167,54 @@ const RegisterForm: React.FC = () => {
               onChange={handleChange}
               className="w-full border rounded-lg px-4 py-3"
               required
+            />
+          </div>
+
+          {/* Academic (Last Degree) */}
+          <div>
+            {errors.academicDegree && (
+              <p className="text-red-500 text-xs mb-1">
+                {errors.academicDegree}
+              </p>
+            )}
+            <input
+              type="text"
+              name="academicDegree"
+              placeholder="Academic (Last Degree)"
+              value={formData.academicDegree}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-4 py-3"
+              required
+            />
+          </div>
+
+          {/* Permanent Address */}
+          <div>
+            {errors.permanentAddress && (
+              <p className="text-red-500 text-xs mb-1">
+                {errors.permanentAddress}
+              </p>
+            )}
+            <input
+              type="text"
+              name="permanentAddress"
+              placeholder="Permanent Address"
+              value={formData.permanentAddress}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-4 py-3"
+              required
+            />
+          </div>
+
+          {/* Temporary Address */}
+          <div>
+            <input
+              type="text"
+              name="temporaryAddress"
+              placeholder="Temporary Address"
+              value={formData.temporaryAddress}
+              onChange={handleChange}
+              className="w-full border rounded-lg px-4 py-3"
             />
           </div>
 

@@ -32,9 +32,12 @@ const Hero = () => {
           </p>
 
           {/* Button */}
-          <button className=" bg-slate-300 inline-flex items-center text-lg px-8 py-4 rounded-2xl bg-primary text-teal-500 font-semibold shadow-md hover:text-teal-600 transition group">
+          <button
+            onClick={() => document.getElementById('available-trainings')?.scrollIntoView({ behavior: 'smooth' })}
+            className="inline-flex items-center text-lg px-8 py-4 rounded-2xl bg-cyan-600 text-white font-semibold shadow-lg hover:bg-cyan-700 transition-all duration-300 group"
+          >
             Start Your Journey
-            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-2" />
           </button>
         </div>
       </div>

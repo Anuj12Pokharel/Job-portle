@@ -12,6 +12,7 @@ interface Training {
     price: string;
     startDate: string;
     image: string;
+    shifts?: string[];
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -37,6 +38,7 @@ const AvailableTrainings = () => {
         phone: "",
         shift: "",
         course: "",
+        availableShifts: [] as string[],
     });
 
     useEffect(() => {
@@ -59,15 +61,31 @@ const AvailableTrainings = () => {
     useEffect(() => {
         const enrollCourse = searchParams.get("enroll");
         if (enrollCourse) {
-            setFormData({ name: "", email: "", phone: "", shift: "", course: decodeURIComponent(enrollCourse) });
+            const courseTitle = decodeURIComponent(enrollCourse);
+            const training = trainings.find(t => t.title === courseTitle);
+            setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                shift: "",
+                course: courseTitle,
+                availableShifts: training?.shifts || []
+            });
             setShowModal(true);
             // Remove the query param from URL without re-navigating
             setSearchParams({});
         }
     }, [searchParams]);
 
-    const handleEnroll = (courseTitle: string) => {
-        setFormData({ name: "", email: "", phone: "", shift: "", course: courseTitle });
+    const handleEnroll = (training: Training) => {
+        setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            shift: "",
+            course: training.title,
+            availableShifts: training.shifts || []
+        });
         setShowModal(true);
     };
 
@@ -92,7 +110,7 @@ const AvailableTrainings = () => {
             if (response.data.success) {
                 alert(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
                 setShowModal(false);
-                setFormData({ name: "", email: "", phone: "", shift: "", course: "" });
+                setFormData({ name: "", email: "", phone: "", shift: "", course: "", availableShifts: [] });
             }
         } catch (error: any) {
             console.error("Error submitting enrollment:", error);
@@ -120,7 +138,7 @@ const AvailableTrainings = () => {
     }
 
     return (
-        <section className="p-6 bg-gray-50">
+        <section id="available-trainings" className="p-6 bg-gray-50">
             <div className="text-center mb-16">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-cyan-600">
                     Training Gallery
@@ -172,7 +190,7 @@ const AvailableTrainings = () => {
                                         <span className="font-semibold"> Rs {training.price} </span>
                                     </div>
                                     <button
-                                        onClick={() => handleEnroll(training.title)}
+                                        onClick={() => handleEnroll(training)}
                                         className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors"
                                     >
                                         Enroll Now
@@ -261,11 +279,19 @@ const AvailableTrainings = () => {
                                     className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
                                 >
                                     <option value="">Select your preferred shift</option>
-                                    {shifts.map((shift) => (
-                                        <option key={shift.value} value={shift.value}>
-                                            {shift.label}
-                                        </option>
-                                    ))}
+                                    {formData.availableShifts && formData.availableShifts.length > 0 ? (
+                                        formData.availableShifts.map((shift, idx) => (
+                                            <option key={idx} value={shift}>
+                                                {shift}
+                                            </option>
+                                        ))
+                                    ) : (
+                                        shifts.map((shift) => (
+                                            <option key={shift.value} value={shift.value}>
+                                                {shift.label}
+                                            </option>
+                                        ))
+                                    )}
                                 </select>
                             </div>
 

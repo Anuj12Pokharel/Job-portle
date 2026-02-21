@@ -46,8 +46,16 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
             );
             setStatus(newStatus);
             onStatusUpdate(application._id, newStatus);
-        } catch (err) {
+        } catch (err: any) {
             console.error("Failed to update status", err);
+            const msg = err.response?.data?.message || "Failed to update status";
+
+            // Check if it's an approval status error
+            if (msg.includes("pending approval") || msg.includes("rejected")) {
+                alert(msg + "\n\nPlease contact the Super Admin for approval.");
+            } else {
+                alert(msg);
+            }
         } finally {
             setLoading(false);
         }

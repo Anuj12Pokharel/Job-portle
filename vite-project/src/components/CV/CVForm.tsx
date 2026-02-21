@@ -41,9 +41,9 @@ interface Props {
 
 const CVForm: React.FC<Props> = ({ data, onChange }) => {
     const [skillInput, setSkillInput] = useState("");
-    const [skillLevel, setSkillLevel] = useState(5);
+    const [skillLevel, setSkillLevel] = useState<any>(5);
     const [langInput, setLangInput] = useState("");
-    const [langLevel, setLangLevel] = useState(5);
+    const [langLevel, setLangLevel] = useState<any>(5);
     const handleChange = (section: string, field: string, value: any, index?: number) => {
         const newData = { ...data };
         if (index !== undefined && Array.isArray(newData[section as keyof typeof data])) {
@@ -244,17 +244,13 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                         placeholder="Add a skill"
                         className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                     />
-                    <select
+                    <input
+                        type="text"
                         value={skillLevel}
-                        onChange={(e) => setSkillLevel(parseInt(e.target.value))}
-                        className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                    >
-                        <option value="5">Expert (5)</option>
-                        <option value="4">Advanced (4)</option>
-                        <option value="3">Intermediate (3)</option>
-                        <option value="2">Beginner (2)</option>
-                        <option value="1">Novice (1)</option>
-                    </select>
+                        onChange={(e) => setSkillLevel(e.target.value)}
+                        placeholder="Level (e.g. Expert, 5)"
+                        className="p-2 border rounded-lg focus:ring-2 focus:ring-blue-500 w-32"
+                    />
                     <button
                         onClick={() => {
                             if (skillInput.trim()) {
@@ -291,16 +287,13 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                         placeholder="Add a language"
                         className="flex-1 p-2 border rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
                     />
-                    <select
+                    <input
+                        type="text"
                         value={langLevel}
-                        onChange={(e) => setLangLevel(parseInt(e.target.value))}
-                        className="p-2 border rounded-lg focus:ring-2 focus:ring-green-500"
-                    >
-                        <option value="5">Native (5)</option>
-                        <option value="4">Fluent (4)</option>
-                        <option value="3">Intermediate (3)</option>
-                        <option value="2">Basic (2)</option>
-                    </select>
+                        onChange={(e) => setLangLevel(e.target.value)}
+                        placeholder="Level (e.g. Native, 5)"
+                        className="p-2 border rounded-lg focus:ring-2 focus:ring-green-500 w-32"
+                    />
                     <button
                         onClick={() => {
                             if (langInput.trim()) {
