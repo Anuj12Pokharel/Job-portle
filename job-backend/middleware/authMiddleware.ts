@@ -37,6 +37,13 @@ export const protect = async (req: Request, res: Response, next: NextFunction) =
         id: userDoc._id,
       };
 
+      console.log("Auth Middleware - User authenticated:", {
+        role: decoded.role,
+        userId: decoded.id,
+        userFound: !!userDoc,
+        isEmployer: decoded.role === "admin"
+      });
+
       return next();
     } catch (error: any) {
       console.error("Auth Error:", error.message);
