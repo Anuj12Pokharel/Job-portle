@@ -112,19 +112,6 @@ export default function Jobs() {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Header Section */}
-            <div className="bg-gradient-to-r from-cyan-600 to-blue-600 text-white py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4">
-                        {category ? `${category} Jobs` : search ? `Search Results` : "All Jobs"}
-                    </h1>
-                    <p className="text-lg text-cyan-50">
-                        {jobs.length} {jobs.length === 1 ? "job" : "jobs"} found
-                        {category && ` in ${category}`}
-                        {search && ` for "${search}"`}
-                    </p>
-                </div>
-            </div>
-
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Sidebar - Filters */}
