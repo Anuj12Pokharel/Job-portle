@@ -23,6 +23,9 @@ export const registerUser = async (req: Request, res: Response) => {
       email,
       password,
       confirmPassword,
+      permanentAddress,
+      temporaryAddress,
+      academicDegree,
     } = req.body as Partial<IUser> & { confirmPassword?: string };
 
     const validCategories = [
@@ -56,6 +59,9 @@ export const registerUser = async (req: Request, res: Response) => {
       email,
       password,
       confirmPassword,
+      permanentAddress,
+      temporaryAddress,
+      academicDegree,
       role: "user",
     });
 
