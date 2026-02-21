@@ -32,7 +32,7 @@ const app = express();
 
 // Serve static files from uploads directory
 // Use absolute path to ensure it works in both dev and production
-const uploadsPath = path.join(__dirname, "..", "uploads");
+const uploadsPath = path.join(__dirname, "uploads");
 app.use("/uploads", express.static(uploadsPath));
 
 // Log uploads path for debugging
@@ -54,6 +54,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/form", userFormRoutes);
 app.use("/api/jobs", jobRoutes);
+// Mount admin routes without global middleware
+// Note: AdminRoutes already has individual route protection
 app.use("/api/admin", AdminRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/training", trainingRoutes);
@@ -67,7 +69,7 @@ app.use("/api/cv", cvRoutes);
 app.use("/api/statistics", statisticsRoutes);
 app.use("/api/enrollments", enrollmentRoutes);
 app.use("/api/talent", talentRoutes);
-app.use("/api", ServiceInquiryRoutes);
+app.use("/api/service-inquiry", ServiceInquiryRoutes);
 
 const logsDir = path.join(__dirname, "logs");
 if (!fs.existsSync(logsDir)) fs.mkdirSync(logsDir, { recursive: true });
