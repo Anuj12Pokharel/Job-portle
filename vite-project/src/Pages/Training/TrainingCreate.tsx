@@ -10,6 +10,7 @@ const CreateTraining = () => {
     duration: "",
     price: "",
     startDate: "",
+    shifts: "",
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -65,6 +66,9 @@ const CreateTraining = () => {
       data.append("duration", formData.duration);
       data.append("price", formData.price);
       data.append("startDate", formData.startDate);
+      // Process shifts as an array of trimmed strings
+      const shiftsArray = formData.shifts.split(",").map(s => s.trim()).filter(s => s !== "");
+      shiftsArray.forEach(shift => data.append("shifts[]", shift));
       data.append("image", imageFile);
 
       // 3. Include the token in the headers
@@ -76,7 +80,7 @@ const CreateTraining = () => {
       };
 
       await axios.post(`${API_BASE_URL}/api/training`, data, config);
-      
+
       alert("Training created successfully");
 
       setFormData({
@@ -86,6 +90,7 @@ const CreateTraining = () => {
         duration: "",
         price: "",
         startDate: "",
+        shifts: "",
       });
       setImageFile(null);
       setImagePreview("");
@@ -119,94 +124,105 @@ const CreateTraining = () => {
 
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Title</label>
-                <input
+              <label className="text-sm font-semibold text-gray-700 mb-1">Title</label>
+              <input
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="Training Title"
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
+              />
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Instructor</label>
-                <input
+              <label className="text-sm font-semibold text-gray-700 mb-1">Instructor</label>
+              <input
                 name="instructor"
                 value={formData.instructor}
                 onChange={handleChange}
                 placeholder="Instructor Name"
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
+              />
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Duration</label>
-                <input
+              <label className="text-sm font-semibold text-gray-700 mb-1">Duration</label>
+              <input
                 name="duration"
                 value={formData.duration}
                 onChange={handleChange}
                 placeholder="Duration (e.g. 6 Weeks)"
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
+              />
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Price</label>
-                <div className="flex items-center border rounded-lg overflow-hidden">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Price</label>
+              <div className="flex items-center border rounded-lg overflow-hidden">
                 <span className="px-4 font-semibold bg-gray-100">Rs</span>
                 <input
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    placeholder="Price"
-                    className="w-full p-3 focus:outline-none"
-                    required
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  placeholder="Price"
+                  className="w-full p-3 focus:outline-none"
+                  required
                 />
-                </div>
+              </div>
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Start Date</label>
-                <input
+              <label className="text-sm font-semibold text-gray-700 mb-1">Start Date</label>
+              <input
                 type="date"
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
+              />
             </div>
 
             <div className="flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Training Image</label>
-                <input
+              <label className="text-sm font-semibold text-gray-700 mb-1">Training Image</label>
+              <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
-                {imagePreview && (
-                  <div className="mt-2">
-                    <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border" />
-                  </div>
-                )}
+              />
+              {imagePreview && (
+                <div className="mt-2">
+                  <img src={imagePreview} alt="Preview" className="w-32 h-32 object-cover rounded-lg border" />
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Preferred Shifts (Comma separated)</label>
+              <input
+                name="shifts"
+                value={formData.shifts}
+                onChange={handleChange}
+                placeholder="Morning, Day, Evening"
+                className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              />
             </div>
 
             <div className="md:col-span-2 flex flex-col">
-                <label className="text-sm font-semibold text-gray-700 mb-1">Description</label>
-                <textarea
+              <label className="text-sm font-semibold text-gray-700 mb-1">Description</label>
+              <textarea
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 placeholder="Training Description"
                 className="border rounded-lg p-3 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-cyan-500"
                 required
-                />
+              />
             </div>
 
             <div className="md:col-span-2 text-right">
