@@ -4,52 +4,112 @@ import Admin from "../models/Admin";
 import Job from "../models/Job";
 import Training from "../models/Training";
 
+import Statistic from "../models/Statistic";
+
 export const getStatistics = async (_req: Request, res: Response) => {
     try {
-        // Count total jobseekers (users with role "user")
-        const totalCandidates = await User.countDocuments({ role: "user" });
+        // Check for manual statistics first
+        const manualStats = await Statistic.findOne();
 
-        // Count total employers (admins)
-        const totalCompanies = await Admin.countDocuments();
+        // Count dynamic stats as fallback or for merging
+        const totalCandidatesCount = await User.countDocuments({ role: "user" });
+        const totalCompaniesCount = await Admin.countDocuments();
+        const totalJobsCount = await Job.countDocuments();
 
-        // Count total jobs
-        const totalJobs = await Job.countDocuments();
-
-        // Calculate jobs posted in last 24 hours (daily jobs)
         const oneDayAgo = new Date();
         oneDayAgo.setDate(oneDayAgo.getDate() - 1);
-        const dailyJobs = await Job.countDocuments({
+        const dailyJobsCount = await Job.countDocuments({
             createdAt: { $gte: oneDayAgo }
         });
 
-        // Calculate platform age in years (from first user registration)
         const firstUser = await User.findOne().sort({ createdAt: 1 });
-        let platformYears = 0;
+        let platformYearsCount = 0;
         if (firstUser && firstUser.createdAt) {
             const firstDate = new Date(firstUser.createdAt);
             const now = new Date();
             const diffTime = Math.abs(now.getTime() - firstDate.getTime());
-            platformYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+            platformYearsCount = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
         }
+        const dailyVisitsCount = Math.floor(totalCandidatesCount * 0.1);
 
-        // For daily visits, you would typically use analytics data
-        // For now, we'll calculate based on recent job applications/activity
-        // You can integrate with Google Analytics API or track visits in database
-        const dailyVisits = Math.floor(totalCandidates * 0.1); // Approximate 10% daily active users
+        // If manual stats exist and isManual is true, use them
+        if (manualStats && manualStats.isManual) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    totalCandidates: manualStats.totalCandidates || totalCandidatesCount,
+                    dailyJobs: manualStats.dailyJobs || dailyJobsCount,
+                    totalCompanies: manualStats.totalCompanies || totalCompaniesCount,
+                    platformYears: manualStats.platformYears || platformYearsCount || 1,
+                    dailyVisits: manualStats.dailyVisits || dailyVisitsCount,
+                    totalJobs: manualStats.totalJobs || totalJobsCount
+                }
+            });
+        }
 
         res.status(200).json({
             success: true,
             data: {
-                totalCandidates,
-                dailyJobs,
-                totalCompanies,
-                platformYears: platformYears || 1, // Minimum 1 year
-                dailyVisits,
-                totalJobs
+                totalCandidates: totalCandidatesCount,
+                dailyJobs: dailyJobsCount,
+                totalCompanies: totalCompaniesCount,
+                platformYears: platformYearsCount || 1,
+                dailyVisits: dailyVisitsCount,
+                totalJobs: totalJobsCount
             }
         });
     } catch (error) {
         console.error("Error fetching statistics:", error);
+        res.status(500).json({
+            success: false,
+            message: "Server Error",
+            error: error instanceof Error ? error.message : "Unknown error"
+        });
+    }
+};
+
+export const updateStatistics = async (req: Request, res: Response) => {
+    try {
+        const {
+            totalCandidates,
+            dailyJobs,
+            totalCompanies,
+            platformYears,
+            dailyVisits,
+            totalJobs,
+            isManual
+        } = req.body;
+
+        let stats = await Statistic.findOne();
+
+        if (stats) {
+            stats.totalCandidates = totalCandidates;
+            stats.dailyJobs = dailyJobs;
+            stats.totalCompanies = totalCompanies;
+            stats.platformYears = platformYears;
+            stats.dailyVisits = dailyVisits;
+            stats.totalJobs = totalJobs;
+            stats.isManual = isManual;
+            await stats.save();
+        } else {
+            stats = await Statistic.create({
+                totalCandidates,
+                dailyJobs,
+                totalCompanies,
+                platformYears,
+                dailyVisits,
+                totalJobs,
+                isManual
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Statistics updated successfully",
+            data: stats
+        });
+    } catch (error) {
+        console.error("Error updating statistics:", error);
         res.status(500).json({
             success: false,
             message: "Server Error",
