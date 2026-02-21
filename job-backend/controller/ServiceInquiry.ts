@@ -52,3 +52,18 @@ export const createServiceInquiry = async (
     });
   }
 };
+
+export const getServiceInquiries = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const inquiries = await ServiceInquiry.find().sort({ createdAt: -1 });
+    return res.status(200).json(inquiries);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Server error",
+    });
+  }
+};
