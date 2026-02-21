@@ -6,6 +6,8 @@ import Admin, { IAdmin } from "../models/Admin";
 import User from "../models/User";
 import { sendEmail } from "../utils/mailer";
 import { logHistory } from "../services/historyService";
+import fs from "fs";
+import path from "path";
 
 // DEPLOY FIX TIMESTAMP: 2026-02-04 20:20 - FINAL ATTEMPT
 const jwtSecret = process.env.JWT_SECRET;
@@ -326,5 +328,98 @@ export const verifyEmployer = async (req: Request, res: Response) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to verify employer" });
+  }
+};
+
+// Employer Profile Endpoints - FOR EMPLOYERS TO MANAGE THEIR OWN PROFILES
+export const getEmployerProfile = async (req: Request, res: Response) => {
+  try {
+    const adminId = req.user?._id || req.user?.id;
+    console.log("Get employer profile - Admin ID:", adminId);
+    console.log("User object:", req.user);
+
+    // Check if adminId exists
+    if (!adminId) {
+      return res.status(401).json({ message: "No admin ID found in token" });
+    }
+
+    const admin = await Admin.findById(adminId).select("-password");
+
+    if (!admin) {
+      console.log("Admin not found in database for ID:", adminId);
+      return res.status(404).json({ message: "Employer not found. Please check if your account exists and is approved." });
+    }
+
+    // Construct full URL for profile picture if it exists and is a relative path
+    let profilePictureUrl = admin.profilePicture;
+    if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
+    }
+
+    res.status(200).json({
+      ...admin.toObject(),
+      profilePicture: profilePictureUrl,
+    });
+  } catch (error) {
+    console.error("Get employer profile error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+export const updateEmployerProfile = async (req: Request, res: Response) => {
+  try {
+    const adminId = req.user?._id || req.user?.id;
+    const { companyName, companyLocation, email, mobileNumber } = req.body;
+
+    const admin = await Admin.findById(adminId);
+    if (!admin) {
+      return res.status(404).json({ message: "Employer not found" });
+    }
+
+    if (companyName) admin.companyName = companyName;
+    if (companyLocation) admin.companyLocation = companyLocation;
+    if (mobileNumber) admin.mobileNumber = mobileNumber;
+
+    // Handle profile picture upload
+    if (req.file) {
+      // Delete old profile picture if it exists and is local
+      if (admin.profilePicture && !admin.profilePicture.startsWith("http")) {
+        const oldPath = path.join(__dirname, "..", admin.profilePicture);
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+      }
+      admin.profilePicture = req.file.path.replace(/\\/g, "/");
+    }
+
+    // Note: Email update might require verification in a real app, keeping it simple here
+    if (email && email !== admin.email) {
+      const existing = await Admin.findOne({ email });
+      if (existing && existing._id.toString() !== adminId) {
+        return res.status(400).json({ message: "Email already in use" });
+      }
+      admin.email = email;
+    }
+
+    await admin.save();
+
+    // Return updated admin
+    let profilePictureUrl = admin.profilePicture;
+    if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      admin: {
+        ...admin.toObject(),
+        profilePicture: profilePictureUrl,
+      },
+    });
+  } catch (error) {
+    console.error("Update employer profile error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
