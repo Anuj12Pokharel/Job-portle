@@ -23,6 +23,7 @@ import Trainings from "./Pages/Trainings";
 import Blog from "./Pages/Blog";
 import Customerservice from "./Pages/Training/Customerservice";
 import ProfileSettings from "./Pages/ProfileSettings";
+import EmployerProfileSettings from "./Pages/EmployerProfileSettings";
 import ForgotPassword from "./components/ForgotPassword";
 import ForgotPasswordEmployer from "./components/ForgotPasswordEmployer";
 import JobDetails from "./Pages/JobDetails";
@@ -39,7 +40,7 @@ import ProtectedRoute from "./components/routes/ProtectedRoute";
 import CreateTeam from "./Pages/CreateTeam";
 import CVGenerator from "./Pages/CVGenerator";
 import BannerManagement from "./Pages/BannerManagement";
-import { ToastContainer } from "react-toastify";    
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
@@ -95,7 +96,6 @@ function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/admin-dashboard" element={<AdminDashboard />}></Route>
             <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />}></Route>
-            <Route path="/super-admin-dashboard/create-team" element={<CreateTeam />}></Route>
             <Route path="/banner-management" element={<BannerManagement />}></Route>
           </Route>
 
@@ -114,7 +114,6 @@ function App() {
           ></Route>
 
           <Route path="/super-admin-login" element={<SuperAdminLogin />}></Route>
-          <Route path="/super-admin/create-blog" element={<Createblog />} />
           <Route path="/contact" element={<Contactus />}></Route>
           <Route path="/aboutus" element={<Aboutus />}></Route>
           <Route path="/services" element={<Services />}></Route>
@@ -137,6 +136,7 @@ function App() {
             element={<Customerservice />}
           ></Route>
           <Route path="/profile-settings" element={<ProfileSettings />}></Route>
+          <Route path="/employer-profile-settings" element={<EmployerProfileSettings />}></Route>
           <Route path="/blogs" element={<Blog />}></Route>
           <Route path="/blog/:id" element={<BlogDetails />}></Route>
           <Route path="/forgot-password" element={<ForgotPassword />}></Route>
