@@ -121,7 +121,7 @@ const Footer = () => {
       {/* BOTTOM BAR */}
       <div className="border-t border-white/30 mt-10 pt-6 text-sm flex flex-col lg:flex-row justify-between items-center">
         <p>
-          &copy; {new Date().getFullYear()} Hamro Job PVT.LTD. All rights reserved.
+          &copy; {new Date().getFullYear()} Hamro Job Pvt. Ltd. All rights reserved.
         </p>
         <p className="mt-3 lg:mt-0">
           Designed & Developed by JobLink360 Team

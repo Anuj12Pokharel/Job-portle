@@ -12,7 +12,7 @@ import photo from "../assets/depraaj.jpeg"
 export default function Aboutus() {
   return (
     <>
-       <LeadershipProfile
+      <LeadershipProfile
         role="Chairman"
         name="Diparaj kulung Rai"
         image={photo}
@@ -30,7 +30,7 @@ force in HR and recruitment solutions in Nepal."
         personalTouch="We grow together as one team."
         alignment="left"
       />
-       <LeadershipProfile
+      <LeadershipProfile
         role="Managing Director"
         name="Tirth Purbachhane"
         image={managerImg}
@@ -56,12 +56,12 @@ name in HR solutions. We appreciate you joining us on our path.
       <section className="bg-white px-6 lg:px-10 py-6 space-y-10">
         {/* Intro */}
         <div className="flex flex-col lg:flex-row items-center gap-5 p-2">
-          <div className="flex-1 space-y-4"> 
+          <div className="flex-1 space-y-4">
             <h2 className="font-bold text-xl text-teal-600">
               JobLink360 | Linking Talent and Opportunity
             </h2>
             <p className="text-lg leading-relaxed text-foreground/80 font-light tracking-wide text-justify">
-              JobLink360, operating under the registered name HAMRO JOB PVT.LTD. is
+              JobLink360, operating under the registered name Hamro Job Pvt. Ltd. is
               becoming a Leading company in Nepal for professional and honest HR
               services. Established with a keen understanding of the nation's
               dynamic job market, our company is committed to bringing talented
@@ -123,7 +123,7 @@ name in HR solutions. We appreciate you joining us on our path.
           </div>
         </div>
 
-       
+
         {/* Why Choose Us */}
         <div className="flex flex-col lg:flex-row-reverse items-center  p-2  md:gap-5">
           <div className="flex-1 space-y-4">
