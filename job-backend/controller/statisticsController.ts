@@ -123,11 +123,14 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
         // Count total trainings (courses available)
         const totalCourses = await Training.countDocuments();
 
-        // Import Enrollment model
-        const Enrollment = (await import("../models/Enrollment")).default;
+        // Sum the 'students' field across all trainings (set by admin per training)
+        const studentsAgg = await Training.aggregate([
+            { $group: { _id: null, total: { $sum: "$students" } } }
+        ]);
+        const totalStudents = studentsAgg.length > 0 ? studentsAgg[0].total : 0;
 
-        // Count total students who enrolled (any status)
-        const totalEnrollments = await Enrollment.countDocuments();
+        // Import Enrollment model for success rate calculation
+        const Enrollment = (await import("../models/Enrollment")).default;
 
         // Count completed enrollments for success rate
         const completedEnrollments = await Enrollment.countDocuments({
@@ -135,7 +138,6 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
         });
 
         // Calculate success rate (percentage of completed vs enrolled students)
-        // Only count enrolled and completed students for the calculation
         const activeEnrollments = await Enrollment.countDocuments({
             status: { $in: ["enrolled", "completed"] }
         });
@@ -144,16 +146,13 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
             ? Math.round((completedEnrollments / activeEnrollments) * 100)
             : 95; // Default to 95% if no data yet
 
-        // Support available is always 24/7 (static but included for completeness)
-        const supportAvailable = "24/7";
-
         res.status(200).json({
             success: true,
             data: {
-                studentsTrained: totalEnrollments,
+                studentsTrained: totalStudents,
                 coursesAvailable: totalCourses,
                 successRate: successRate,
-                supportAvailable: supportAvailable
+                supportAvailable: "24/7"
             }
         });
     } catch (error) {
