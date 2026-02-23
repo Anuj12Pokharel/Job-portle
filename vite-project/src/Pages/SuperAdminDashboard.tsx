@@ -1379,12 +1379,13 @@ const SuperAdminDashboard = () => {
                                                 )}
                                                 {activeTab === "user_forms" && (
                                                     <>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Name</th>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Designation</th>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Email</th>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Contact</th>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Field</th>
-                                                        <th className="px-6 py-4 font-semibold text-gray-600">Resume</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Full Name</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Current/Last Designation</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Professional Email</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Contact Number</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Field of Expertise</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Employment Status</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">CV</th>
                                                     </>
                                                 )}
                                                 {activeTab === "contact_messages" && (
@@ -1548,10 +1549,24 @@ const SuperAdminDashboard = () => {
                                                     <td className="px-6 py-4 font-medium">{f.fullName}</td>
                                                     <td className="px-6 py-4">{f.designation}</td>
                                                     <td className="px-6 py-4">{f.email}</td>
-                                                    <td className="px-6 py-4">{f.contact}</td>
-                                                    <td className="px-6 py-4">{f.field}</td>
+                                                    <td className="px-6 py-4">{f.phone}</td>
+                                                    <td className="px-6 py-4">{f.expertise}</td>
+                                                    <td className="px-6 py-4">
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${f.employmentStatus === 'Still Working'
+                                                                ? 'bg-green-100 text-green-700'
+                                                                : 'bg-orange-100 text-orange-700'
+                                                            }`}>{f.employmentStatus || '—'}</span>
+                                                    </td>
                                                     <td className="px-6 py-4 text-blue-600">
-                                                        {f.resume && <a href={`${API_BASE_URL}/${f.resume.replace(/\\/g, '/')}`} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:underline"><FileText className="w-4 h-4" /> View Resume</a>}
+                                                        {f.cv && (
+                                                            <a
+                                                                href={`${API_BASE_URL}/${f.cv.replace(/\\/g, '/')}`}
+                                                                download
+                                                                className="flex items-center gap-1 bg-cyan-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-700 transition"
+                                                            >
+                                                                <FileText className="w-3.5 h-3.5" /> Download CV
+                                                            </a>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))}
