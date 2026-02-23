@@ -1407,6 +1407,7 @@ const SuperAdminDashboard = () => {
                                                         <th className="px-6 py-4 font-semibold text-gray-600">Field of Expertise</th>
                                                         <th className="px-6 py-4 font-semibold text-gray-600">Employment Status</th>
                                                         <th className="px-6 py-4 font-semibold text-gray-600">CV</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Submitted Date</th>
                                                     </>
                                                 )}
                                                 {activeTab === "contact_messages" && (
@@ -1600,6 +1601,7 @@ const SuperAdminDashboard = () => {
                                                             </button>
                                                         </div>
                                                     </td>
+                                                    <td className="px-6 py-4 text-sm text-gray-500">{f.createdAt ? new Date(f.createdAt).toLocaleDateString() : '—'}</td>
                                                 </tr>
                                             ))}
                                             {activeTab === "contact_messages" && contacts.map((c: any) => (
