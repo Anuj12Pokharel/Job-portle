@@ -48,6 +48,9 @@ function App() {
 
   // Dynamic page title based on route
   useEffect(() => {
+    // Scroll to top on every route change
+    window.scrollTo({ top: 0, behavior: "instant" });
+
     const pageTitles: { [key: string]: string } = {
       '/': 'JobLink360 - Find Your Dream Job',
       '/jobs': 'Browse Jobs - JobLink360',

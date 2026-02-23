@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import { useNavigate, Link } from "react-router-dom";
@@ -91,7 +91,7 @@ const RegisterForm: React.FC = () => {
 
       setTimeout(() => {
         navigate("/Jobseeker-Login");
-      }, 1000);
+      }, 2500);
     } catch (err: any) {
       const msg = err.response?.data?.message || "Registration failed";
 
@@ -107,6 +107,26 @@ const RegisterForm: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
+
+      {/* Success Modal Overlay */}
+      {success && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-2xl shadow-2xl p-10 flex flex-col items-center gap-4 max-w-sm w-full mx-4 animate-bounce-in">
+            <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+              <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-gray-800">Registration Successful!</h3>
+            <p className="text-gray-500 text-center">Your account has been created.<br />Redirecting you to login...</p>
+            <div className="w-full bg-gray-200 rounded-full h-1.5 mt-2">
+              <div className="bg-green-500 h-1.5 rounded-full animate-[shrink_2.5s_linear_forwards]"
+                style={{ animation: "shrink 2.5s linear forwards" }} />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-lg mt-10">
         <h2 className="text-3xl font-bold text-center text-cyan-600 mb-2">
           Create Jobseeker Account
@@ -117,7 +137,6 @@ const RegisterForm: React.FC = () => {
         </p>
 
         {error && <p className="text-red-500 text-center mb-3">{error}</p>}
-        {success && <p className="text-green-500 text-center mb-3">{success}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Full Name */}
