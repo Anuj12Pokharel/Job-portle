@@ -1313,8 +1313,29 @@ const SuperAdminDashboard = () => {
                                     </div>
                                 )}
                                 {activeTab === "user_forms" && (
-                                    <div className="p-4 border-b bg-gray-50">
+                                    <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
                                         <h3 className="font-bold text-gray-700">New Opportunity Form Submissions (Home Page)</h3>
+                                        <button
+                                            onClick={() => {
+                                                const data = userForms.map((f: any) => ({
+                                                    "Full Name": f.fullName || "",
+                                                    "Designation": f.designation || "",
+                                                    "Email": f.email || "",
+                                                    "Contact Number": f.phone || "",
+                                                    "Field of Expertise": f.expertise || "",
+                                                    "Employment Status": f.employmentStatus || "",
+                                                    "CV": f.cv ? "Yes" : "No",
+                                                    "Submitted Date": f.createdAt ? new Date(f.createdAt).toLocaleDateString() : "",
+                                                }));
+                                                const ws = XLSX.utils.json_to_sheet(data);
+                                                const wb = XLSX.utils.book_new();
+                                                XLSX.utils.book_append_sheet(wb, ws, "Submissions");
+                                                XLSX.writeFile(wb, `New_Opportunity_Submissions_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                                            }}
+                                            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition"
+                                        >
+                                            <FileText className="w-4 h-4" /> Export to Excel
+                                        </button>
                                     </div>
                                 )}
                                 {activeTab === "contact_messages" && (
