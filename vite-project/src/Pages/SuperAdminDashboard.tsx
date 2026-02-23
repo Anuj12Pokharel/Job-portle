@@ -163,7 +163,7 @@ const SuperAdminDashboard = () => {
                 const res = await axios.get(`${API_BASE_URL}/api/blogs`);
                 setBlogs(res.data.blogs);
             } else if (activeTab === "user_forms") {
-                const res = await axios.get(`${API_BASE_URL}/api/form/all`, config);
+                const res = await axios.get(`${API_BASE_URL}/api/talent/all`, config);
                 setUserForms(res.data);
             } else if (activeTab === "contact_messages") {
                 const res = await axios.get(`${API_BASE_URL}/api/contact/get`, config);
