@@ -23,6 +23,69 @@ const shifts = [
     { value: "evening", label: "Evening (6:00 PM - 10:00 PM)" },
 ];
 
+const TrainingCard: React.FC<{ training: Training, handleEnroll: (t: Training) => void }> = ({ training, handleEnroll }) => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
+            <div className="h-48 overflow-hidden shrink-0">
+                <img
+                    src={training.image}
+                    alt={training.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+            </div>
+
+            <div className="p-6 flex flex-col flex-grow">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {training.title}
+                </h3>
+
+                <div className="mb-4">
+                    <p className={`text-gray-600 ${isExpanded ? '' : 'line-clamp-2'}`}>
+                        {training.description}
+                    </p>
+                    {training.description && training.description.length > 80 && (
+                        <button
+                            onClick={() => setIsExpanded(!isExpanded)}
+                            className="text-cyan-600 text-sm font-semibold hover:underline mt-1 focus:outline-none"
+                        >
+                            {isExpanded ? "Show Less" : "Show More"}
+                        </button>
+                    )}
+                </div>
+
+                <div className="space-y-2 mb-4 mt-auto">
+                    <div className="flex items-center text-gray-600">
+                        <User className="h-4 w-4 mr-2 text-cyan-500" />
+                        <span className="text-sm">{training.instructor}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                        <Clock className="h-4 w-4 mr-2 text-cyan-500" />
+                        <span className="text-sm">{training.duration}</span>
+                    </div>
+                    <div className="flex items-center text-gray-600">
+                        <Calendar className="h-4 w-4 mr-2 text-cyan-500" />
+                        <span className="text-sm">Starts: {training.startDate}</span>
+                    </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="flex items-center font-bold text-cyan-600 text-lg">
+                        <span className="font-semibold"> Rs {training.price} </span>
+                    </div>
+                    <button
+                        onClick={() => handleEnroll(training)}
+                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors"
+                    >
+                        Enroll Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const AvailableTrainings = () => {
     const [trainings, setTrainings] = useState<Training[]>([]);
     const [loading, setLoading] = useState(true);
@@ -150,54 +213,7 @@ const AvailableTrainings = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {trainings.map((training) => (
-                        <div
-                            key={training.id}
-                            className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                        >
-                            <div className="h-48 overflow-hidden">
-                                <img
-                                    src={training.image}
-                                    alt={training.title}
-                                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                                />
-                            </div>
-
-                            <div className="p-6">
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                    {training.title}
-                                </h3>
-                                <p className="text-gray-600 mb-4 line-clamp-2">
-                                    {training.description}
-                                </p>
-
-                                <div className="space-y-2 mb-4">
-                                    <div className="flex items-center text-gray-600">
-                                        <User className="h-4 w-4 mr-2 text-cyan-500" />
-                                        <span className="text-sm">{training.instructor}</span>
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Clock className="h-4 w-4 mr-2 text-cyan-500" />
-                                        <span className="text-sm">{training.duration}</span>
-                                    </div>
-                                    <div className="flex items-center text-gray-600">
-                                        <Calendar className="h-4 w-4 mr-2 text-cyan-500" />
-                                        <span className="text-sm">Starts: {training.startDate}</span>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                    <div className="flex items-center font-bold text-cyan-600 text-lg">
-                                        <span className="font-semibold"> Rs {training.price} </span>
-                                    </div>
-                                    <button
-                                        onClick={() => handleEnroll(training)}
-                                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors"
-                                    >
-                                        Enroll Now
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <TrainingCard key={training.id} training={training} handleEnroll={handleEnroll} />
                     ))}
                 </div>
             </div>
