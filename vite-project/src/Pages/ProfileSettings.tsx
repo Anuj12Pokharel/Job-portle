@@ -43,7 +43,7 @@ const ProfileSettings = () => {
                 mobileNumber: res.data.mobileNumber || "",
                 location: res.data.location || "",
             });
-            setPreviewImage(res.data.profilePicture);
+            setPreviewImage(res.data.profilePicture ? `${API_BASE_URL}/${res.data.profilePicture}` : null);
             setLoading(false);
         } catch (err) {
             console.error("Failed to fetch profile", err);

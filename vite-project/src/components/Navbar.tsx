@@ -5,6 +5,8 @@ import logo from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
 import Categories from "./Job/Categories";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
+
 export default function Navbar() {
   const location = useLocation();
   const [user, setUser] = useState<any>(null);
@@ -236,7 +238,7 @@ export default function Navbar() {
                 >
                   {user.profilePicture ? (
                     <img
-                      src={user.profilePicture}
+                      src={`${API_BASE_URL}/${user.profilePicture}`}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover border border-gray-200"
                     />
@@ -548,7 +550,7 @@ export default function Navbar() {
                   <div className="flex items-center gap-3 mb-3 px-2">
                     {user.profilePicture ? (
                       <img
-                        src={user.profilePicture}
+                        src={`${API_BASE_URL}/${user.profilePicture}`}
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover border border-gray-200"
                       />

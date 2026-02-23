@@ -49,7 +49,7 @@ const EmployerProfileSettings = () => {
                 email: res.data.email || "",
                 mobileNumber: res.data.mobileNumber || "",
             });
-            setPreviewImage(res.data.profilePicture);
+            setPreviewImage(res.data.profilePicture ? `${API_BASE_URL}/${res.data.profilePicture}` : null);
             setLoading(false);
         } catch (err: any) {
             console.error("Employer Profile - Failed to fetch profile", err);
