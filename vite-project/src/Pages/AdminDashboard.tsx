@@ -212,7 +212,11 @@ const AdminDashboard = () => {
         e.preventDefault();
         const token = localStorage.getItem("token");
         const formData = new FormData();
-        Object.entries(jobData).forEach(([key, value]) => formData.append(key, value));
+        Object.entries(jobData).forEach(([key, value]) => {
+            if (value !== undefined && value !== null && value !== "") {
+                formData.append(key, String(value));
+            }
+        });
         if (logo) formData.append("logo", logo);
 
         try {

@@ -20,6 +20,16 @@ export const createJob = async (req: Request, res: Response) => {
     const jobData = { ...req.body, postedBy: adminObjectId } as any;
     if (req.file) jobData.logo = req.file.path.replace(/\\/g, "/");
 
+    // Remove empty string values for optional enum fields to prevent validation errors
+    const optionalFields = ["jobLevel", "jobType", "salary", "educationLevel", "desiredCandidate",
+      "experience", "description", "noOfOpenings", "industry", "vehicleLicense", "twoFourWheeler",
+      "skills", "aboutCompany", "companyWebsite", "expiryDate"];
+    for (const field of optionalFields) {
+      if (jobData[field] === "" || jobData[field] === undefined) {
+        delete jobData[field];
+      }
+    }
+
     const job = new Job(jobData);
     await job.save();
     console.log("createJob - Job saved with postedBy:", job.postedBy);
@@ -34,9 +44,12 @@ export const createJob = async (req: Request, res: Response) => {
     await logHistory("job", "created", job._id as unknown as string | ObjectId, job.toObject(), String(adminObjectId), req.user?.role || "admin", `Job created: ${job.position}`, adminObjectId as unknown as string | ObjectId);
 
     res.status(201).json({ message: "Job posted successfully", job });
-  } catch (err) {
+  } catch (err: any) {
     console.error(err);
-    res.status(500).json({ message: "Failed to post job" });
+    const message = err.name === "ValidationError"
+      ? `Validation error: ${Object.values(err.errors).map((e: any) => e.message).join(", ")}`
+      : "Failed to post job";
+    res.status(500).json({ message });
   }
 };
 
