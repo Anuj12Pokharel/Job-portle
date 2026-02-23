@@ -1553,20 +1553,31 @@ const SuperAdminDashboard = () => {
                                                     <td className="px-6 py-4">{f.expertise}</td>
                                                     <td className="px-6 py-4">
                                                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${f.employmentStatus === 'Still Working'
-                                                                ? 'bg-green-100 text-green-700'
-                                                                : 'bg-orange-100 text-orange-700'
+                                                            ? 'bg-green-100 text-green-700'
+                                                            : 'bg-orange-100 text-orange-700'
                                                             }`}>{f.employmentStatus || '—'}</span>
                                                     </td>
-                                                    <td className="px-6 py-4 text-blue-600">
-                                                        {f.cv && (
-                                                            <a
-                                                                href={`${API_BASE_URL}/${f.cv.replace(/\\/g, '/')}`}
-                                                                download
-                                                                className="flex items-center gap-1 bg-cyan-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-700 transition"
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            {f.cv && (
+                                                                <a href={`${API_BASE_URL}/${f.cv.replace(/\\/g, '/')}`} download className="flex items-center gap-1 bg-cyan-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-cyan-700 transition">
+                                                                    <FileText className="w-3.5 h-3.5" /> Download CV
+                                                                </a>
+                                                            )}
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (!window.confirm(`Delete submission from ${f.fullName}? This will also remove the CV file.`)) return;
+                                                                    try {
+                                                                        const token = localStorage.getItem("token");
+                                                                        await axios.delete(`${API_BASE_URL}/api/talent/${f._id}`, { headers: { Authorization: `Bearer ${token}` } });
+                                                                        setUserForms((prev: any[]) => prev.filter((u: any) => u._id !== f._id));
+                                                                    } catch { alert("Failed to delete. Please try again."); }
+                                                                }}
+                                                                className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600 transition"
                                                             >
-                                                                <FileText className="w-3.5 h-3.5" /> Download CV
-                                                            </a>
-                                                        )}
+                                                                <Trash2 className="w-3.5 h-3.5" /> Delete
+                                                            </button>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             ))}
