@@ -18,15 +18,27 @@ const BlogDetails = () => {
     const fetchBlog = async () => {
       const res = await axios.get(`${API_BASE_URL}/api/blog/${id}`);
       setBlog(res.data);
-      console.log(res.data);  
+      console.log(res.data);
     };
 
     fetchBlog();
   }, [id]);
-  const buildLogoUrl = (logo?: string) => {
-  if (!logo) return "/placeholder.png";
-  return `${API_BASE_URL}/uploads/blogs/${logo.replace(/\\/g, "/")}`;
-};
+  const buildLogoUrl = (image?: string) => {
+    if (!image) return "/placeholder.png";
+    // Backend returns full URL like http://job-backend:5000/uploads/blogs/file.jpg
+    // Extract just the pathname and combine with the public API_BASE_URL
+    if (image.startsWith("http")) {
+      try {
+        const url = new URL(image);
+        return `${API_BASE_URL}${url.pathname}`;
+      } catch {
+        return image;
+      }
+    }
+    // Fallback: relative path
+    const cleanPath = image.replace(/\\/g, "/").replace(/^\/+/, "");
+    return `${API_BASE_URL}/${cleanPath}`;
+  };
 
   if (!blog) return <p className="text-center mt-10">Loading...</p>;
 

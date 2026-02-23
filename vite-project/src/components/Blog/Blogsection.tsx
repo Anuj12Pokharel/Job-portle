@@ -50,6 +50,23 @@ const Blogsection: React.FC<BlogsectionProps> = ({
     fetchBlogs();
   }, [currentPage, itemsPerPage]);
 
+  const buildImageUrl = (image: string) => {
+    if (!image) return "";
+    // Backend returns full URL like http://job-backend:5000/uploads/blogs/file.jpg
+    // We need to replace the host with the configured API_BASE_URL
+    if (image.startsWith("http")) {
+      try {
+        const url = new URL(image);
+        return `${API_BASE_URL}${url.pathname}`;
+      } catch {
+        return image;
+      }
+    }
+    // Relative path: ensure single slash separator
+    const cleanPath = image.replace(/\\/g, "/").replace(/^\/+/, "");
+    return `${API_BASE_URL}/${cleanPath}`;
+  };
+
   return (
     <section className="p-6">
       {loading ? (
@@ -72,12 +89,14 @@ const Blogsection: React.FC<BlogsectionProps> = ({
               className="bg-white border rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition"
             >
               {/* Blog Image */}
-              <img
-                src={blog.image ? `${API_BASE_URL}${blog.image}` : ""}
-                alt={blog.title}
-                className="w-full h-48 object-cover"
-                style={!blog.image ? { display: 'none' } : {}}
-              />
+              {blog.image && (
+                <img
+                  src={buildImageUrl(blog.image)}
+                  alt={blog.title}
+                  className="w-full h-48 object-cover"
+                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+              )}
 
               {/* Blog Content */}
               <div className="p-4">
