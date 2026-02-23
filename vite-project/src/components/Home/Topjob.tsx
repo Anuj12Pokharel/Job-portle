@@ -15,10 +15,13 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
 
   const buildLogoUrl = (logo?: string) => {
     if (!logo) return "";
-    const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
-    // Append timestamp to bust cache
-    const url = cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
-    return `${url}?t=${new Date().getTime()}`;
+    const cleaned = String(logo).replace(/\\/g, "/");
+    // If it's already a full http URL, use it directly
+    if (cleaned.startsWith("http")) return cleaned;
+    // Extract the relative part starting from 'uploads/'
+    const uploadsIndex = cleaned.indexOf("uploads/");
+    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
+    return `${backendBase}/${relativePath}`;
   };
 
   useEffect(() => {
