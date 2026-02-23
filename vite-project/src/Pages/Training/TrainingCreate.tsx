@@ -11,6 +11,7 @@ const CreateTraining = () => {
     price: "",
     startDate: "",
     shifts: "",
+    students: "",
   });
 
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -69,6 +70,7 @@ const CreateTraining = () => {
       // Process shifts as an array of trimmed strings
       const shiftsArray = formData.shifts.split(",").map(s => s.trim()).filter(s => s !== "");
       shiftsArray.forEach(shift => data.append("shifts[]", shift));
+      data.append("students", formData.students || "0");
       data.append("image", imageFile);
 
       // 3. Include the token in the headers
@@ -91,6 +93,7 @@ const CreateTraining = () => {
         price: "",
         startDate: "",
         shifts: "",
+        students: "",
       });
       setImageFile(null);
       setImagePreview("");
@@ -209,6 +212,19 @@ const CreateTraining = () => {
                 value={formData.shifts}
                 onChange={handleChange}
                 placeholder="Morning, Day, Evening"
+                className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Number of Students</label>
+              <input
+                type="number"
+                name="students"
+                value={formData.students}
+                onChange={handleChange}
+                placeholder="e.g. 200"
+                min="0"
                 className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
               />
             </div>

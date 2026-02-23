@@ -326,6 +326,7 @@ const SuperAdminDashboard = () => {
                 formData.append('description', editFormData.description || '');
                 formData.append('duration', editFormData.duration || '');
                 formData.append('startDate', editFormData.startDate || '');
+                formData.append('students', String(editFormData.students || 0));
 
                 // Handle shifts: convert to array/string format backend expects
                 let shiftsVal = editFormData.shifts;
@@ -546,6 +547,10 @@ const SuperAdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Shifts (Comma separated)</label>
                                     <input type="text" placeholder="Morning, Day, Evening" value={Array.isArray(editFormData.shifts) ? editFormData.shifts.join(', ') : (editFormData.shifts || '')} onChange={(e) => setEditFormData({ ...editFormData, shifts: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Students</label>
+                                    <input type="number" placeholder="e.g. 200" min="0" value={editFormData.students || 0} onChange={(e) => setEditFormData({ ...editFormData, students: Number(e.target.value) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>

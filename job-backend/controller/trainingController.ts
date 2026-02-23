@@ -53,6 +53,7 @@ export const updateTraining = async (req: Request, res: Response) => {
     if (req.body.duration !== undefined) updateData.duration = req.body.duration;
     if (req.body.price !== undefined) updateData.price = req.body.price;
     if (req.body.startDate !== undefined) updateData.startDate = req.body.startDate;
+    if (req.body.students !== undefined) updateData.students = Number(req.body.students);
 
     // Handle shifts: support both shifts[] and shifts keys from FormData
     const shifts = req.body['shifts[]'] || req.body.shifts;
