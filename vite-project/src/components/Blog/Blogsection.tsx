@@ -31,7 +31,7 @@ const Blogsection: React.FC<BlogsectionProps> = ({
       try {
         setLoading(true);
         const res = await axios.get(
-          `${API_BASE_URL}/api/blog?page=${currentPage}&limit=${itemsPerPage}`
+          `${API_BASE_URL}/api/blogs?page=${currentPage}&limit=${itemsPerPage}`
         );
 
         // Extract blogs from response (API now returns { totalBlogs, currentPage, totalPages, blogs })
@@ -73,19 +73,17 @@ const Blogsection: React.FC<BlogsectionProps> = ({
             >
               {/* Blog Image */}
               <img
-                src={blog.image || "https://via.placeholder.com/400x250?text=No+Image"}
+                src={blog.image ? `${API_BASE_URL}${blog.image}` : ""}
                 alt={blog.title}
                 className="w-full h-48 object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x250?text=Image+Not+Found";
-                }}
+                style={!blog.image ? { display: 'none' } : {}}
               />
 
               {/* Blog Content */}
               <div className="p-4">
                 {/* Meta info */}
                 <div className="flex justify-between text-xs text-gray-500 mb-2">
-                  <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
+                  <span>{blog.createdAt && !isNaN(Date.parse(blog.createdAt)) ? new Date(blog.createdAt).toLocaleDateString() : ""}</span>
                   <span>• {blog.author}</span>
                 </div>
 
