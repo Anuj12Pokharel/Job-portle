@@ -189,8 +189,8 @@ const JobDetails = () => {
                             <span className="text-gray-800 font-medium">: {job.educationLevel || "Bachelor"}</span>
                         </div>
                         <div className="flex">
-                            <span className="w-48 text-gray-500 font-medium shrink-0">Desired Candidate</span>
-                            <span className="text-gray-800 font-medium">: {job.desiredCandidate || "Both"}</span>
+                            <span className="w-48 text-gray-500 font-medium shrink-0">Company Name</span>
+                            <span className="text-gray-800 font-medium">: {job.companyName || "Not Specified"}</span>
                         </div>
                         <div className="flex">
                             <span className="w-48 text-gray-500 font-medium shrink-0">Experience</span>
@@ -206,16 +206,16 @@ const JobDetails = () => {
                             </span>
                         </div>
                         <div className="flex">
-                            <span className="w-48 text-gray-500 font-medium shrink-0">Vehicle License</span>
-                            <span className="text-gray-800 font-medium">: {job.vehicleLicense || "Not Specified"}</span>
+                            <span className="w-48 text-gray-500 font-medium shrink-0">Company Address</span>
+                            <span className="text-gray-800 font-medium">: {job.location || "Not Specified"}</span>
                         </div>
                         <div className="flex">
-                            <span className="w-48 text-gray-500 font-medium shrink-0">Two/Four Wheeler</span>
-                            <span className="text-gray-800 font-medium">: {job.twoFourWheeler || "Not Specified"}</span>
-                        </div>
-                        <div className="flex">
-                            <span className="w-48 text-gray-500 font-medium shrink-0">Skills</span>
-                            <span className="text-gray-800 font-medium">: {job.skills || "Not Specified"}</span>
+                            <span className="w-48 text-gray-500 font-medium shrink-0">Company Website</span>
+                            <span className="text-gray-800 font-medium">
+                                : {job.companyWebsite
+                                    ? <a href={job.companyWebsite.startsWith("http") ? job.companyWebsite : `https://${job.companyWebsite}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{job.companyWebsite}</a>
+                                    : "Not Specified"}
+                            </span>
                         </div>
                     </div>
                 </div>

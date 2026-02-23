@@ -53,10 +53,7 @@ const AdminDashboard = () => {
         noOfOpenings: "",
         industry: "",
         vehicleLicense: "",
-        twoFourWheeler: "",
-        skills: "",
         expiryDate: "",
-        desiredCandidate: ""
     });
     const [logo, setLogo] = useState<File | null>(null);
     const [editingJobId, setEditingJobId] = useState<string | null>(null);
@@ -94,7 +91,8 @@ const AdminDashboard = () => {
                     setJobData(prev => ({
                         ...prev,
                         companyName: user.companyName || "",
-                        location: user.companyLocation || ""
+                        location: user.companyLocation || "",
+                        companyWebsite: user.companyWebsite || "",
                     }));
                 }
             } catch (e) {
@@ -257,9 +255,17 @@ const AdminDashboard = () => {
                 companyName: "", position: "", category: "", jobLevel: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
-                noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
-                skills: "", expiryDate: "", desiredCandidate: ""
+                noOfOpenings: "", industry: "", vehicleLicense: "",
+                expiryDate: "",
             });
+            // Re-fill company fields from localStorage after reset
+            const storedUser = localStorage.getItem("user");
+            if (storedUser) {
+                try {
+                    const user = JSON.parse(storedUser);
+                    if (user) setJobData(prev => ({ ...prev, companyName: user.companyName || "", location: user.companyLocation || "", companyWebsite: user.companyWebsite || "" }));
+                } catch (e) { }
+            }
             setLogo(null);
         } catch (err) {
             console.error(err);
@@ -559,26 +565,34 @@ const AdminDashboard = () => {
                                     <input
                                         type="text"
                                         value={jobData.companyName}
-                                        onChange={e => setJobData({ ...jobData, companyName: e.target.value })}
-                                        readOnly={!!jobData.companyName && jobData.companyName.length > 0}
-                                        className={`w-full border rounded-lg px-4 py-2 ${jobData.companyName ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
-                                        required
+                                        readOnly
+                                        className="w-full border rounded-lg px-4 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
                                     />
+                                    <p className="text-xs text-gray-400 mt-1">Auto-filled from your company profile</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Position / Job Title</label>
                                     <input type="text" value={jobData.position} onChange={e => setJobData({ ...jobData, position: e.target.value })} className="w-full border rounded-lg px-4 py-2" required />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Address</label>
                                     <input
                                         type="text"
                                         value={jobData.location}
-                                        onChange={e => setJobData({ ...jobData, location: e.target.value })}
-                                        readOnly={!!jobData.location && jobData.location.length > 0}
-                                        className={`w-full border rounded-lg px-4 py-2 ${jobData.location ? 'bg-gray-100 text-gray-500 cursor-not-allowed' : ''}`}
-                                        required
+                                        readOnly
+                                        className="w-full border rounded-lg px-4 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
                                     />
+                                    <p className="text-xs text-gray-400 mt-1">Auto-filled from your company profile</p>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
+                                    <input
+                                        type="text"
+                                        value={jobData.companyWebsite}
+                                        readOnly
+                                        className="w-full border rounded-lg px-4 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+                                    />
+                                    <p className="text-xs text-gray-400 mt-1">Auto-filled from your company profile</p>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
@@ -640,25 +654,9 @@ const AdminDashboard = () => {
                                     <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Two/Four Wheeler</label>
-                                    <input type="text" value={jobData.twoFourWheeler} onChange={e => setJobData({ ...jobData, twoFourWheeler: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
-                                    <input type="text" value={jobData.skills} onChange={e => setJobData({ ...jobData, skills: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
-                                    <input type="text" value={jobData.companyWebsite} onChange={e => setJobData({ ...jobData, companyWebsite: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                </div>
-                                <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
                                     <input type="text" value={jobData.aboutCompany} onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Desired Candidate</label>
-                                <textarea rows={3} value={jobData.desiredCandidate} onChange={e => setJobData({ ...jobData, desiredCandidate: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
                             </div>
 
                             <div>
