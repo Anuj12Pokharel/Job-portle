@@ -75,7 +75,7 @@ const Footer = () => {
           <ul className="space-y-3 text-sm">
             <li className="flex items-center gap-2">
               <IoLocationSharp className="text-cyan-900 text-xl" />
-              <span>Chabahil, Kathmandu</span>
+              <span>Gopikrishnapul, Chabahil, Kathmandu</span>
             </li>
             <li className="flex items-center gap-2">
               <FaPhone className="text-cyan-900 text-lg space-y-2" />
