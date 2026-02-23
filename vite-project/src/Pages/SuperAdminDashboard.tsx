@@ -1349,8 +1349,28 @@ const SuperAdminDashboard = () => {
                                     </div>
                                 )}
                                 {activeTab === "course_enrollments" && (
-                                    <div className="p-4 border-b bg-gray-50">
+                                    <div className="p-4 border-b bg-gray-50 flex items-center justify-between">
                                         <h3 className="font-bold text-gray-700">Course Enrollment Requests</h3>
+                                        <button
+                                            onClick={() => {
+                                                const data = enrollments.map((e: any) => ({
+                                                    "Name": e.name || "",
+                                                    "Course": e.course || "",
+                                                    "Shift": e.shift || "",
+                                                    "Email": e.email || "",
+                                                    "Phone": e.phone || "",
+                                                    "Status": e.status || "",
+                                                    "Date": e.createdAt ? new Date(e.createdAt).toLocaleDateString() : "",
+                                                }));
+                                                const ws = XLSX.utils.json_to_sheet(data);
+                                                const wb = XLSX.utils.book_new();
+                                                XLSX.utils.book_append_sheet(wb, ws, "Enrollments");
+                                                XLSX.writeFile(wb, `Course_Enrollments_${new Date().toISOString().slice(0, 10)}.xlsx`);
+                                            }}
+                                            className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-700 transition"
+                                        >
+                                            <FileText className="w-4 h-4" /> Export to Excel
+                                        </button>
                                     </div>
                                 )}
                                 <div className="overflow-auto max-h-[calc(100vh-280px)]">
@@ -1436,6 +1456,7 @@ const SuperAdminDashboard = () => {
                                                         <th className="px-6 py-4 font-semibold text-gray-600">Contact</th>
                                                         <th className="px-6 py-4 font-semibold text-gray-600">Status</th>
                                                         <th className="px-6 py-4 font-semibold text-gray-600">Date</th>
+                                                        <th className="px-6 py-4 font-semibold text-gray-600">Action</th>
                                                     </>
                                                 )}
                                             </tr>
@@ -1646,6 +1667,53 @@ const SuperAdminDashboard = () => {
                                                         </span>
                                                     </td>
                                                     <td className="px-6 py-4 text-sm">{new Date(e.createdAt).toLocaleDateString()}</td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            {e.status === 'pending' && (
+                                                                <>
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            try {
+                                                                                const token = localStorage.getItem("token");
+                                                                                await axios.put(`${API_BASE_URL}/api/enrollments/${e._id}`, { status: "enrolled" }, { headers: { Authorization: `Bearer ${token}` } });
+                                                                                setEnrollments((prev: any[]) => prev.map((en: any) => en._id === e._id ? { ...en, status: "enrolled" } : en));
+                                                                            } catch { alert("Failed to approve."); }
+                                                                        }}
+                                                                        className="flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-green-600 transition"
+                                                                    >
+                                                                        <CheckCircle className="w-3.5 h-3.5" /> Approve
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={async () => {
+                                                                            try {
+                                                                                const token = localStorage.getItem("token");
+                                                                                await axios.put(`${API_BASE_URL}/api/enrollments/${e._id}`, { status: "cancelled" }, { headers: { Authorization: `Bearer ${token}` } });
+                                                                                setEnrollments((prev: any[]) => prev.map((en: any) => en._id === e._id ? { ...en, status: "cancelled" } : en));
+                                                                            } catch { alert("Failed to reject."); }
+                                                                        }}
+                                                                        className="flex items-center gap-1 bg-red-500 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-600 transition"
+                                                                    >
+                                                                        <XCircle className="w-3.5 h-3.5" /> Reject
+                                                                    </button>
+                                                                </>
+                                                            )}
+                                                            {e.status === 'enrolled' && <span className="text-green-600 text-xs font-semibold">✓ Approved</span>}
+                                                            {e.status === 'cancelled' && <span className="text-red-600 text-xs font-semibold">✗ Rejected</span>}
+                                                            <button
+                                                                onClick={async () => {
+                                                                    if (!window.confirm(`Delete enrollment for ${e.name}?`)) return;
+                                                                    try {
+                                                                        const token = localStorage.getItem("token");
+                                                                        await axios.delete(`${API_BASE_URL}/api/enrollments/${e._id}`, { headers: { Authorization: `Bearer ${token}` } });
+                                                                        setEnrollments((prev: any[]) => prev.filter((en: any) => en._id !== e._id));
+                                                                    } catch { alert("Failed to delete."); }
+                                                                }}
+                                                                className="flex items-center gap-1 bg-gray-400 text-white px-3 py-1 rounded-lg text-xs hover:bg-gray-500 transition"
+                                                            >
+                                                                <Trash2 className="w-3.5 h-3.5" /> Delete
+                                                            </button>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             ))}
                                             {activeTab === "partner_logos" && (
