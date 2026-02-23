@@ -30,9 +30,9 @@ dotenv.config({ path: path.join(__dirname, "..", ".env.production") });
 
 const app = express();
 
-// Serve static files from uploads directory
 // Use absolute path to ensure it works in both dev and production
-const uploadsPath = path.join(__dirname, "uploads");
+// In production: __dirname = /app/dist, so we go up one level to /app/uploads
+const uploadsPath = path.join(__dirname, "..", "uploads");
 app.use("/uploads", express.static(uploadsPath));
 
 // Log uploads path for debugging

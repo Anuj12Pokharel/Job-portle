@@ -6,7 +6,7 @@ import fs from "fs";
 // Blog images
 const blogStorage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    const dir = "uploads/blogs";
+    const dir = path.join(__dirname, "..", "..", "uploads", "blogs");
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
