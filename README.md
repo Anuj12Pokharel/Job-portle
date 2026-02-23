@@ -11,6 +11,7 @@ Quick start (development):
 
 ```bash
 cd job-backend
+running services 
 npm install
 npm run dev
 ```
