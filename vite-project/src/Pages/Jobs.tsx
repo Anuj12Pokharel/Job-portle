@@ -43,7 +43,7 @@ export default function Jobs() {
         "https://job-portle-backend-fsai.onrender.com";
 
     const buildLogoUrl = (logo?: string) => {
-        if (!logo) return "";
+        if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
         const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
         return cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
     };

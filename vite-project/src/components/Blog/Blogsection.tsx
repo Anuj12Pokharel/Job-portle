@@ -51,7 +51,7 @@ const Blogsection: React.FC<BlogsectionProps> = ({
   }, [currentPage, itemsPerPage]);
 
   const buildImageUrl = (image: string) => {
-    if (!image) return "";
+    if (!image || String(image) === "undefined" || String(image) === "null") return "";
     // Backend returns full URL like http://job-backend:5000/uploads/blogs/file.jpg
     // We need to replace the host with the configured API_BASE_URL
     if (image.startsWith("http")) {

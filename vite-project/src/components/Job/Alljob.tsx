@@ -6,7 +6,7 @@ import { MapPin, Calendar } from "lucide-react";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://job-portle-backend-fsai.onrender.com";
 
 const buildLogoUrl = (logo?: string) => {
-  if (!logo) return "";
+  if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
   const cleaned = String(logo).replace(/\\/g, "/");
   if (cleaned.startsWith("http")) return cleaned;
   const uploadsIndex = cleaned.indexOf("uploads/");

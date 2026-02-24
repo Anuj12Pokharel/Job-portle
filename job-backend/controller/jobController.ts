@@ -18,7 +18,11 @@ export const createJob = async (req: Request, res: Response) => {
     const adminObjectId = ensureObjectId(String(adminId));
 
     const jobData = { ...req.body, postedBy: adminObjectId } as any;
-    if (req.file) jobData.logo = req.file.path.replace(/\\/g, "/");
+    if (req.file) {
+      jobData.logo = req.file.path.replace(/\\/g, "/");
+    } else if (jobData.logo === "undefined" || jobData.logo === "null") {
+      delete jobData.logo;
+    }
 
     // Remove empty string values for optional enum fields to prevent validation errors
     const optionalFields = ["jobLevel", "jobType", "salary", "educationLevel", "desiredCandidate",
@@ -65,6 +69,8 @@ export const updateJob = async (req: Request, res: Response) => {
     const updatedData: any = { ...req.body };
     if (req.file) {
       updatedData.logo = req.file.path.replace(/\\/g, "/");
+    } else if (updatedData.logo === "undefined" || updatedData.logo === "null") {
+      delete updatedData.logo;
     }
 
     const updatedJob = await Job.findByIdAndUpdate(req.params.id, updatedData, { new: true });

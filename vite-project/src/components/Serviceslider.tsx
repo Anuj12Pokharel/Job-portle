@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
 import {
@@ -53,6 +53,11 @@ const data = [
 const Serviceslider = () => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
+  const [expanded, setExpanded] = useState<Record<number, boolean>>({});
+
+  const toggleExpand = (index: number) => {
+    setExpanded((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
 
   return (
     <div className="w-full m-auto relative py-2 px-11">
@@ -102,16 +107,18 @@ const Serviceslider = () => {
                   <p className="font-bold text-xl mt-2">{d.name}</p>
                   <p className="text-lg">{d.title}</p>
                   <p className="text-sm">
-                    {d.description.length > 100
-                      ? d.description.slice(0, 100) + "..."
-                      : d.description}
+                    {expanded[index] || d.description.length <= 100
+                      ? d.description
+                      : d.description.slice(0, 100) + "..."}
                   </p>
-                  <Link
-                    to={d.link}
-                    className="bg-white text-cyan-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition"
-                  >
-                    Read More
-                  </Link>
+                  {d.description.length > 100 && (
+                    <button
+                      onClick={() => toggleExpand(index)}
+                      className="bg-white text-cyan-600 px-4 py-2 rounded-md font-medium hover:bg-gray-100 transition"
+                    >
+                      {expanded[index] ? "Show Less" : "Read More"}
+                    </button>
+                  )}
                 </div>
               </div>
             </SwiperSlide>

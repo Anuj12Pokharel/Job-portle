@@ -30,6 +30,14 @@ const SuperAdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
+    const buildImageUrl = (imagePath?: string) => {
+        if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
+        const cleaned = String(imagePath).replace(/\\/g, "/");
+        if (cleaned.startsWith("http")) return cleaned;
+        const uploadsIndex = cleaned.indexOf("uploads/");
+        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
+        return `${API_BASE_URL}/${relativePath}`;
+    };
 
     // Job Posting State
     const [jobData, setJobData] = useState({
@@ -706,7 +714,7 @@ const SuperAdminDashboard = () => {
                                         {selectedFile ? (
                                             <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
                                         ) : editFormData.logo ? (
-                                            <img src={`${API_BASE_URL}/${editFormData.logo}`} alt="Current" className="w-full h-full object-cover" />
+                                            <img src={buildImageUrl(editFormData.logo)} alt="Current" className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-gray-400"><ImageIcon /></div>
                                         )}
@@ -1572,7 +1580,7 @@ const SuperAdminDashboard = () => {
                                                 <tr key={j._id} className="hover:bg-gray-50 transition-colors">
                                                     <td className="px-6 py-4" onClick={() => handleEdit(j, "job")}>
                                                         <div className="w-10 h-10 rounded-lg bg-gray-200 overflow-hidden">
-                                                            {j.logo ? <img src={`${API_BASE_URL}/${j.logo}`} alt="" className="w-full h-full object-cover" /> : <Briefcase className="p-2 w-full h-full text-gray-400" />}
+                                                            {j.logo ? <img src={buildImageUrl(j.logo)} alt="" className="w-full h-full object-cover" /> : <Briefcase className="p-2 w-full h-full text-gray-400" />}
                                                         </div>
                                                     </td>
                                                     <td className="px-6 py-4 font-medium" onClick={() => handleEdit(j, "job")}>{j.position}</td>

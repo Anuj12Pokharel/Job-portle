@@ -36,7 +36,7 @@ export default function JobList({
     "https://job-portle-backend-fsai.onrender.com";
 
   const buildLogoUrl = (logo?: string) => {
-    if (!logo) return "";
+    if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
     const cleaned = String(logo).replace(/\\/g, "/");
     // If it's already a full http URL, use it directly
     if (cleaned.startsWith("http")) return cleaned;

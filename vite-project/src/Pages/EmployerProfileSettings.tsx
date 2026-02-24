@@ -12,6 +12,15 @@ const EmployerProfileSettings = () => {
     const [errors, setErrors] = useState<any>({});
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const buildImageUrl = (imagePath?: string | null) => {
+        if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
+        const cleaned = String(imagePath).replace(/\\/g, "/");
+        if (cleaned.startsWith("http")) return cleaned;
+        const uploadsIndex = cleaned.indexOf("uploads/");
+        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
+        return `${API_BASE_URL}/${relativePath}`;
+    };
+
     // Form State
     const [formData, setFormData] = useState({
         companyName: "",
@@ -49,7 +58,7 @@ const EmployerProfileSettings = () => {
                 email: res.data.email || "",
                 mobileNumber: res.data.mobileNumber || "",
             });
-            setPreviewImage(res.data.profilePicture ? `${API_BASE_URL}/${res.data.profilePicture}` : null);
+            setPreviewImage(res.data.profilePicture ? buildImageUrl(res.data.profilePicture) : null);
             setLoading(false);
         } catch (err: any) {
             console.error("Employer Profile - Failed to fetch profile", err);
@@ -184,7 +193,7 @@ const EmployerProfileSettings = () => {
                         <form onSubmit={handleSubmit} className="space-y-6">
                             {/* Profile Picture Section */}
                             <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4 sm:gap-6 mb-6 sm:mb-8">
-                                <div className="relative group">
+                                <div className="relative group cursor-pointer hover:opacity-90 transition-opacity" onClick={() => fileInputRef.current?.click()}>
                                     <div className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-gray-100 shadow-md bg-gray-200">
                                         {previewImage ? (
                                             <img

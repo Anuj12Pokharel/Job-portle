@@ -80,6 +80,15 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const buildImageUrl = (imagePath?: string | null) => {
+    if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
+    const cleaned = String(imagePath).replace(/\\/g, "/");
+    if (cleaned.startsWith("http")) return cleaned;
+    const uploadsIndex = cleaned.indexOf("uploads/");
+    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
+    return `${API_BASE_URL}/${relativePath}`;
+  };
+
   return (
     <div className="bg-white/90 backdrop-blur-md shadow-sm fixed top-0 left-0 w-full z-50 ">
       <nav className="mx-auto px-4 sm:px-6 lg:px-8">
@@ -238,7 +247,7 @@ export default function Navbar() {
                 >
                   {user.profilePicture ? (
                     <img
-                      src={`${API_BASE_URL}/${user.profilePicture}`}
+                      src={buildImageUrl(user.profilePicture)}
                       alt="Profile"
                       className="w-8 h-8 rounded-full object-cover border border-gray-200"
                     />
@@ -550,7 +559,7 @@ export default function Navbar() {
                   <div className="flex items-center gap-3 mb-3 px-2">
                     {user.profilePicture ? (
                       <img
-                        src={`${API_BASE_URL}/${user.profilePicture}`}
+                        src={buildImageUrl(user.profilePicture)}
                         alt="Profile"
                         className="w-10 h-10 rounded-full object-cover border border-gray-200"
                       />
