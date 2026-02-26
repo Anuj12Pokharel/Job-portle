@@ -209,10 +209,10 @@ const ProfileSettings = () => {
                                 </div>
                                 <div className="text-center sm:text-left pt-2">
                                     <h3 className="text-base sm:text-lg font-medium text-gray-900">
-                                        Profile Picture
+                                        Company Logo
                                     </h3>
                                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                                        Upload a new photo to personalize your profile.
+                                        Upload your company logo to personalize your profile.
                                         <br className="hidden sm:block" />
                                         <span className="block sm:inline"> JPG, GIF or PNG. Max size of 5MB.</span>
                                     </p>

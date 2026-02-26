@@ -124,7 +124,7 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
 
 export const getJobs = async (req: Request, res: Response) => {
   try {
-    const { category, search, featured } = req.query;
+    const { category, search, location, featured } = req.query;
     const filter: any = {};
 
     if (category) {
@@ -135,14 +135,18 @@ export const getJobs = async (req: Request, res: Response) => {
       filter.isFeatured = true;
     }
 
+    if (location) {
+      filter.location = new RegExp(String(location), "i");
+    }
+
     if (search) {
       const searchRegex = new RegExp(String(search), "i");
       filter.$or = [
         { position: searchRegex },
-        { location: searchRegex },
         { companyName: searchRegex },
         { description: searchRegex },
         { jobType: searchRegex },
+        { skills: searchRegex },
       ];
     }
 
