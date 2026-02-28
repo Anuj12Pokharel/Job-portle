@@ -68,17 +68,6 @@ export default function Navbar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const profileRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
-        setIsProfileOpen(false); // close dropdown if clicked outside
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const buildImageUrl = (imagePath?: string | null) => {
     if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
@@ -257,84 +246,120 @@ export default function Navbar() {
                     </div>
                   )}
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-gray-700">{user.fullName}</p>
+                    <p className="text-sm font-medium text-gray-700">{user.fullName || user.companyName}</p>
                   </div>
                   <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
                 </button>
 
                 {isProfileOpen && (
-                  <div
-                    ref={profileRef}
-                    className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-xl shadow-xl z-50 py-2 overflow-hidden">
-                    <div className="px-4 py-3 border-b border-gray-100 bg-gray-50">
-                      <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
-                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                  <>
+                    {/* Backdrop overlay */}
+                    <div
+                      className="fixed inset-0 bg-black/40 z-40"
+                      onClick={() => setIsProfileOpen(false)}
+                    />
+                    {/* Sidebar panel */}
+                    <div className="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-50 flex flex-col animate-[slideIn_0.3s_ease-out]">
+                      {/* Close button */}
+                      <button
+                        onClick={() => setIsProfileOpen(false)}
+                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+
+                      {/* User header */}
+                      <div className="p-6 bg-gradient-to-br from-cyan-600 to-teal-600 text-white">
+                        <div className="flex items-center gap-3">
+                          {user.profilePicture ? (
+                            <img
+                              src={buildImageUrl(user.profilePicture)}
+                              alt="Profile"
+                              className="w-14 h-14 rounded-full object-cover border-2 border-white/30"
+                            />
+                          ) : (
+                            <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
+                              <UserIcon className="w-7 h-7 text-white" />
+                            </div>
+                          )}
+                          <div className="overflow-hidden">
+                            <p className="font-semibold text-sm truncate">{user.fullName || user.companyName}</p>
+                            <p className="text-cyan-100 text-xs truncate">{user.email}</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Navigation links */}
+                      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+                        {(user.role === "admin" || user.role === "superadmin") ? (
+                          <>
+                            <Link
+                              to="/employer-profile-settings"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/employer-profile-settings" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <Settings className="w-5 h-5" />
+                              Company Settings
+                            </Link>
+                            <Link
+                              to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${(location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard") ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <LayoutDashboard className="w-5 h-5" />
+                              Dashboard
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            <Link
+                              to="/profile-settings"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/profile-settings" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <Settings className="w-5 h-5" />
+                              Profile Settings
+                            </Link>
+                            <Link
+                              to="/applied-jobs"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/applied-jobs" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <Briefcase className="w-5 h-5" />
+                              Applied Jobs
+                            </Link>
+                            <Link
+                              to="/saved-jobs"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/saved-jobs" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <Briefcase className="w-5 h-5" />
+                              Saved Jobs
+                            </Link>
+                            <Link
+                              to="/cv-generator"
+                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/cv-generator" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
+                              onClick={() => setIsProfileOpen(false)}
+                            >
+                              <Briefcase className="w-5 h-5" />
+                              CV Generator
+                            </Link>
+                          </>
+                        )}
+                      </nav>
+
+                      {/* Logout button at bottom */}
+                      <div className="p-4 border-t border-gray-200">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+                        >
+                          <LogOut className="w-5 h-5" />
+                          Logout
+                        </button>
+                      </div>
                     </div>
-                    {(user.role === "admin" || user.role === "superadmin") ? (
-                      <Link
-                        to="/employer-profile-settings"
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <Settings className="w-4 h-4" />
-                        Company Settings
-                      </Link>
-                    ) : (
-                      <Link
-                        to="/profile-settings"
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <Settings className="w-4 h-4" />
-                        Profile Settings
-                      </Link>
-                    )}
-                    {(user.role === "admin" || user.role === "superadmin") && (
-                      <Link
-                        to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <LayoutDashboard className="w-4 h-4" />
-                        Dashboard
-                      </Link>
-                    )}
-                    {user.role === "user" && (
-                      <>
-                        <Link
-                          to="/applied-jobs"
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <Briefcase className="w-4 h-4" />
-                          Applied Jobs
-                        </Link>
-                        <Link
-                          to="/saved-jobs"
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <Briefcase className="w-4 h-4" />
-                          Saved Jobs
-                        </Link>
-                        <Link
-                          to="/cv-generator"
-                          className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsProfileOpen(false)}
-                        >
-                          <Briefcase className="w-4 h-4" />
-                          CV Generator
-                        </Link>
-                      </>
-                    )}
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </button>
-                  </div>
+                  </>
                 )}
               </div>
             ) : (
@@ -569,7 +594,7 @@ export default function Navbar() {
                       </div>
                     )}
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
+                      <p className="text-sm font-medium text-gray-900">{user.fullName || user.companyName}</p>
                       <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     </div>
                   </div>

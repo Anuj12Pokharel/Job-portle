@@ -26,12 +26,12 @@ router.get("/myjobs", protect, checkAdmin, getMyJobs);
 router.get("/get", getJobs);
 router.get("/categories", getCategories);
 router.get("/by-level", getJobsByLevel);
+router.get("/user/applied", protect, getAppliedJobs);
+router.get("/user/saved", protect, getSavedJobs);
 router.get("/:id", getJobById);
 
 router.post("/apply/:id", protect, upload.single("resume"), applyJob);
 router.post("/save/:id", protect, saveJob);
-router.get("/user/applied", protect, getAppliedJobs);
-router.get("/user/saved", protect, getSavedJobs);
 
 router.post("/create", protect, checkAdmin, upload.single("logo"), createJob);
 router.put("/update/:id", protect, checkAdmin, upload.single("logo"), updateJob);

@@ -61,6 +61,10 @@ const RegisterForm: React.FC = () => {
       newErrors.permanentAddress = "Permanent address is required";
     }
 
+    if (!formData.temporaryAddress.trim()) {
+      newErrors.temporaryAddress = "Temporary address is required";
+    }
+
     if (!formData.academicDegree.trim()) {
       newErrors.academicDegree = "Academic degree is required";
     }
@@ -144,13 +148,14 @@ const RegisterForm: React.FC = () => {
             {errors.fullName && (
               <p className="text-red-500 text-xs mb-1">{errors.fullName}</p>
             )}
+            <label className="text-sm font-medium text-gray-700">Full Name <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="fullName"
               placeholder="Full Name"
               value={formData.fullName}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
@@ -162,13 +167,14 @@ const RegisterForm: React.FC = () => {
                 {errors.mobileNumber}
               </p>
             )}
+            <label className="text-sm font-medium text-gray-700">Mobile Number <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="mobileNumber"
               placeholder="Mobile Number"
               value={formData.mobileNumber}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
@@ -178,13 +184,14 @@ const RegisterForm: React.FC = () => {
             {errors.email && (
               <p className="text-red-500 text-xs mb-1">{errors.email}</p>
             )}
+            <label className="text-sm font-medium text-gray-700">Email Address <span className="text-red-500">*</span></label>
             <input
               type="email"
               name="email"
               placeholder="Email Address"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
@@ -196,13 +203,14 @@ const RegisterForm: React.FC = () => {
                 {errors.academicDegree}
               </p>
             )}
+            <label className="text-sm font-medium text-gray-700">Academic (Last Degree) <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="academicDegree"
               placeholder="Academic (Last Degree)"
               value={formData.academicDegree}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
@@ -214,26 +222,34 @@ const RegisterForm: React.FC = () => {
                 {errors.permanentAddress}
               </p>
             )}
+            <label className="text-sm font-medium text-gray-700">Permanent Address <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="permanentAddress"
               placeholder="Permanent Address"
               value={formData.permanentAddress}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
 
           {/* Temporary Address */}
           <div>
+            {errors.temporaryAddress && (
+              <p className="text-red-500 text-xs mb-1">
+                {errors.temporaryAddress}
+              </p>
+            )}
+            <label className="text-sm font-medium text-gray-700">Temporary Address <span className="text-red-500">*</span></label>
             <input
               type="text"
               name="temporaryAddress"
               placeholder="Temporary Address"
               value={formData.temporaryAddress}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
+              required
             />
           </div>
 
@@ -242,13 +258,14 @@ const RegisterForm: React.FC = () => {
             {errors.password && (
               <p className="text-red-500 text-xs mb-1">{errors.password}</p>
             )}
+            <label className="text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
             <input
               type="password"
               name="password"
               placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>
@@ -260,13 +277,14 @@ const RegisterForm: React.FC = () => {
                 {errors.confirmPassword}
               </p>
             )}
+            <label className="text-sm font-medium text-gray-700">Confirm Password <span className="text-red-500">*</span></label>
             <input
               type="password"
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border rounded-lg px-4 py-3 mt-1"
               required
             />
           </div>

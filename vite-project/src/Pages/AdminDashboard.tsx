@@ -93,6 +93,7 @@ const AdminDashboard = () => {
                         companyName: user.companyName || "",
                         location: user.companyLocation || "",
                         companyWebsite: user.companyWebsite || "",
+                        aboutCompany: user.aboutCompany || "",
                     }));
                 }
             } catch (e) {
@@ -596,13 +597,18 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         value={jobData.jobType}
                                         onChange={e => setJobData({ ...jobData, jobType: e.target.value })}
                                         className="w-full border rounded-lg px-4 py-2"
-                                        placeholder="e.g. Full-time, Remote"
-                                    />
+                                        required
+                                    >
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Part-time">Part-time</option>
+                                        <option value="Internship">Internship</option>
+                                        <option value="Contract">Contract</option>
+                                        <option value="Remote">Remote</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
@@ -617,13 +623,18 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Level</label>
-                                    <input
-                                        type="text"
+                                    <select
                                         value={jobData.jobLevel}
                                         onChange={e => setJobData({ ...jobData, jobLevel: e.target.value })}
                                         className="w-full border rounded-lg px-4 py-2"
-                                        placeholder="e.g. Mid-level"
-                                    />
+                                    >
+                                        <option value="">Select Job Level</option>
+                                        <option value="Entry-level">Entry-level</option>
+                                        <option value="Junior">Junior</option>
+                                        <option value="Mid-level">Mid-level</option>
+                                        <option value="Senior-level">Senior-level</option>
+                                        <option value="Executive">Executive</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
@@ -650,7 +661,7 @@ const AdminDashboard = () => {
                                     <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License (Optional)</label>
                                     <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
                                 <div>

@@ -21,6 +21,7 @@ interface Props {
             institution: string;
             startYear: string;
             endYear: string;
+            gpa?: string;
         }>;
         skills: Array<{ name: string; level: number } | string>;
         languages?: Array<{ name: string; level: number }>;
@@ -173,7 +174,7 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                 <div className="flex justify-between items-center mb-4 border-b pb-2">
                     <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                     <button
-                        onClick={() => addItem("education", { degree: "", institution: "", startYear: "", endYear: "" })}
+                        onClick={() => addItem("education", { degree: "", institution: "", startYear: "", endYear: "", gpa: "" })}
                         className="text-blue-600 flex items-center gap-1 text-sm font-medium hover:text-blue-700 transition-colors"
                     >
                         <Plus className="w-4 h-4" /> Add Education
@@ -216,6 +217,13 @@ const CVForm: React.FC<Props> = ({ data, onChange }) => {
                                     className="w-full p-2 border rounded-lg"
                                     value={edu.endYear}
                                     onChange={(e) => handleChange("education", "endYear", e.target.value, index)}
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="GPA (Optional)"
+                                    className="w-full p-2 border rounded-lg"
+                                    value={edu.gpa || ""}
+                                    onChange={(e) => handleChange("education", "gpa", e.target.value, index)}
                                 />
                             </div>
                         </div>

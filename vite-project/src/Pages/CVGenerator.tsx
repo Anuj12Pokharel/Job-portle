@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import { cvApi } from "../services/cvApi";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import CVForm from "../components/CV/CVForm";
 import CVPreview from "../components/CV/CVPreview";
 import { Download, Loader2 } from "lucide-react";
@@ -26,29 +27,52 @@ const CVGenerator: React.FC = () => {
     const [generating, setGenerating] = useState(false);
 
     const handleDownload = async () => {
+        const previewEl = document.getElementById("cv-preview");
+        if (!previewEl) {
+            toast.error("CV preview not found. Please fill in your details first.");
+            return;
+        }
+
         setGenerating(true);
         try {
-            // Pass current cvData to generatePDF with advanced template
-            const response = await cvApi.generatePDF({ ...cvData, templateId: "advanced" });
+            const canvas = await html2canvas(previewEl, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: "#ffffff",
+            });
 
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `CV_${cvData.personalInfo.fullName.replace(/\s+/g, '_') || 'Resume'}.pdf`);
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-            toast.success("PDF generated successfully");
+            const imgData = canvas.toDataURL("image/png");
+            const pdf = new jsPDF("p", "mm", "a4");
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
+
+            const ratio = pdfWidth / imgWidth;
+            const scaledHeight = imgHeight * ratio;
+
+            // Multi-page support
+            let yOffset = 0;
+            while (yOffset < scaledHeight) {
+                if (yOffset > 0) pdf.addPage();
+                pdf.addImage(imgData, "PNG", 0, -yOffset, pdfWidth, scaledHeight);
+                yOffset += pdfHeight;
+            }
+
+            const fileName = `CV_${cvData.personalInfo.fullName.replace(/\s+/g, '_') || 'Resume'}.pdf`;
+            pdf.save(fileName);
+            toast.success("PDF generated successfully!");
         } catch (error: any) {
             console.error("Error generating PDF:", error);
-            toast.error("Failed to generate PDF");
+            toast.error("Failed to generate PDF. Please try again.");
         } finally {
             setGenerating(false);
         }
     };
 
     return (
-        <div className="max-w-[1600px] mx-auto px-4 py-8 mt-16">
+        <div className="max-w-[1600px] mx-auto px-4 py-8 mt-24">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-gray-900">CV Generator</h1>

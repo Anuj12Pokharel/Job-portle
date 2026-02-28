@@ -128,7 +128,7 @@ export const getJobs = async (req: Request, res: Response) => {
     const filter: any = {};
 
     if (category) {
-      filter.category = category;
+      filter.category = new RegExp(`^${String(category).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i');
     }
 
     if (featured === "true") {

@@ -240,7 +240,7 @@ const Jobpost = () => {
         <input
           type="text"
           name="vehicleLicense"
-          placeholder="Vehicle License"
+          placeholder="Vehicle License (Optional)"
           value={formData.vehicleLicense}
           onChange={handleChange}
           className="border p-3 rounded-lg w-full"

@@ -1122,7 +1122,7 @@ const SuperAdminDashboard = () => {
                                         <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License (Optional)</label>
                                         <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
                                     <div>
