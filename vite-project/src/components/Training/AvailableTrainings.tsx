@@ -68,6 +68,18 @@ const TrainingCard: React.FC<{ training: Training, handleEnroll: (t: Training) =
                         <Calendar className="h-4 w-4 mr-2 text-cyan-500" />
                         <span className="text-sm">Starts: {training.startDate}</span>
                     </div>
+                    {training.shifts && training.shifts.length > 0 && (
+                        <div className="flex items-center text-gray-600">
+                            <Clock className="h-4 w-4 mr-2 text-cyan-500" />
+                            <div className="flex flex-wrap gap-1">
+                                {training.shifts.map((shift, idx) => (
+                                    <span key={idx} className="bg-cyan-50 text-cyan-700 px-2 py-0.5 text-xs font-medium rounded-full border border-cyan-100">
+                                        {shift}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">

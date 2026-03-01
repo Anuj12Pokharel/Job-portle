@@ -14,6 +14,7 @@ interface Props {
             institution: string;
             startYear: string;
             endYear: string;
+            gpa?: string;
         }>;
         experience: Array<{
             company: string;
@@ -103,7 +104,10 @@ const CVPreview: React.FC<Props> = ({ data }) => {
                                     <span>{edu.degree || "Degree"}</span>
                                     <span className="text-gray-500 font-normal">{edu.startYear} - {edu.endYear}</span>
                                 </div>
-                                <div className="text-sm italic text-gray-600">{edu.institution}</div>
+                                <div className="text-sm italic text-gray-600">
+                                    {edu.institution}
+                                    {edu.gpa && <span className="ml-2 text-gray-500 not-italic">| GPA: {edu.gpa}</span>}
+                                </div>
                             </div>
                         ))
                     ) : (

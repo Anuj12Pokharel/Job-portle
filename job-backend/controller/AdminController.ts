@@ -370,7 +370,7 @@ export const getEmployerProfile = async (req: Request, res: Response) => {
 export const updateEmployerProfile = async (req: Request, res: Response) => {
   try {
     const adminId = req.user?._id || req.user?.id;
-    const { companyName, companyLocation, email, mobileNumber } = req.body;
+    const { companyName, companyLocation, email, mobileNumber, aboutCompany, companyWebsite } = req.body;
 
     const admin = await Admin.findById(adminId);
     if (!admin) {
@@ -380,6 +380,8 @@ export const updateEmployerProfile = async (req: Request, res: Response) => {
     if (companyName) admin.companyName = companyName;
     if (companyLocation) admin.companyLocation = companyLocation;
     if (mobileNumber) admin.mobileNumber = mobileNumber;
+    if (aboutCompany !== undefined) admin.aboutCompany = aboutCompany;
+    if (companyWebsite !== undefined) admin.companyWebsite = companyWebsite;
 
     // Handle profile picture upload
     if (req.file) {

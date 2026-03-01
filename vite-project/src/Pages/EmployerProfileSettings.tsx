@@ -1,6 +1,6 @@
-git import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Building2, Mail, MapPin, Briefcase, Phone, Camera, Loader2, Save } from "lucide-react";
+import { Building2, Mail, MapPin, Briefcase, Phone, Camera, Loader2, Save, Globe, FileText } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -27,6 +27,8 @@ const EmployerProfileSettings = () => {
         companyLocation: "",
         email: "",
         mobileNumber: "",
+        aboutCompany: "",
+        companyWebsite: "",
     });
     const [previewImage, setPreviewImage] = useState<string | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -57,6 +59,8 @@ const EmployerProfileSettings = () => {
                 companyLocation: res.data.companyLocation || "",
                 email: res.data.email || "",
                 mobileNumber: res.data.mobileNumber || "",
+                aboutCompany: res.data.aboutCompany || "",
+                companyWebsite: res.data.companyWebsite || "",
             });
             setPreviewImage(res.data.profilePicture ? buildImageUrl(res.data.profilePicture) : null);
             setLoading(false);
@@ -77,7 +81,7 @@ const EmployerProfileSettings = () => {
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
@@ -128,6 +132,8 @@ const EmployerProfileSettings = () => {
             data.append("companyLocation", formData.companyLocation);
             data.append("email", formData.email);
             data.append("mobileNumber", formData.mobileNumber);
+            data.append("aboutCompany", formData.aboutCompany);
+            data.append("companyWebsite", formData.companyWebsite);
             if (selectedFile) {
                 data.append("profilePicture", selectedFile);
             }
@@ -316,6 +322,46 @@ const EmployerProfileSettings = () => {
                                             onChange={handleChange}
                                             className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             placeholder="New York, USA"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Company Website */}
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <span>Company Website</span>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Globe className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <input
+                                            type="text"
+                                            name="companyWebsite"
+                                            value={formData.companyWebsite}
+                                            onChange={handleChange}
+                                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            placeholder="https://www.yourcompany.com"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* About Company */}
+                                <div className="col-span-2">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        <span>About Company</span>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute top-3 left-0 pl-3 pointer-events-none">
+                                            <FileText className="h-5 w-5 text-gray-400" />
+                                        </div>
+                                        <textarea
+                                            name="aboutCompany"
+                                            value={formData.aboutCompany}
+                                            onChange={handleChange}
+                                            rows={4}
+                                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            placeholder="Tell us about your company, what you do, your mission..."
                                         />
                                     </div>
                                 </div>

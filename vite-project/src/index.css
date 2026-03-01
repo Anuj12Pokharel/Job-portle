@@ -7,6 +7,11 @@
   to   { width: 0%; }
 }
 
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
 
 .slick-slide> div {
     margin: 0 10px;

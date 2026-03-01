@@ -10,7 +10,7 @@ const CreateTraining = () => {
     duration: "",
     price: "",
     startDate: "",
-    shifts: "",
+    shifts: [] as string[],
     students: "",
   });
 
@@ -23,6 +23,16 @@ const CreateTraining = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleShiftToggle = (shift: string) => {
+    setFormData((prev) => {
+      const isSelected = prev.shifts.includes(shift);
+      const updatedShifts = isSelected
+        ? prev.shifts.filter((s) => s !== shift)
+        : [...prev.shifts, shift];
+      return { ...prev, shifts: updatedShifts };
+    });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -67,9 +77,10 @@ const CreateTraining = () => {
       data.append("duration", formData.duration);
       data.append("price", formData.price);
       data.append("startDate", formData.startDate);
-      // Process shifts as an array of trimmed strings
-      const shiftsArray = formData.shifts.split(",").map(s => s.trim()).filter(s => s !== "");
-      shiftsArray.forEach(shift => data.append("shifts[]", shift));
+
+      // Append each shift
+      formData.shifts.forEach((shift) => data.append("shifts[]", shift));
+
       data.append("students", formData.students || "0");
       data.append("image", imageFile);
 
@@ -92,7 +103,7 @@ const CreateTraining = () => {
         duration: "",
         price: "",
         startDate: "",
-        shifts: "",
+        shifts: [],
         students: "",
       });
       setImageFile(null);
@@ -206,14 +217,20 @@ const CreateTraining = () => {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-semibold text-gray-700 mb-1">Preferred Shifts (Comma separated)</label>
-              <input
-                name="shifts"
-                value={formData.shifts}
-                onChange={handleChange}
-                placeholder="Morning, Day, Evening"
-                className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
-              />
+              <label className="text-sm font-semibold text-gray-700 mb-2">Preferred Shifts</label>
+              <div className="flex gap-4 p-3 border rounded-lg bg-white">
+                {["Morning", "Day", "Evening"].map((shiftOption) => (
+                  <label key={shiftOption} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.shifts.includes(shiftOption)}
+                      onChange={() => handleShiftToggle(shiftOption)}
+                      className="w-4 h-4 text-cyan-600 border-gray-300 rounded focus:ring-cyan-500"
+                    />
+                    <span className="text-sm text-gray-700">{shiftOption}</span>
+                  </label>
+                ))}
+              </div>
             </div>
 
             <div className="flex flex-col">

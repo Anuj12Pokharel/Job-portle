@@ -553,8 +553,35 @@ const SuperAdminDashboard = () => {
                                     <input type="date" value={editFormData.startDate ? editFormData.startDate.split('T')[0] : ''} onChange={(e) => setEditFormData({ ...editFormData, startDate: e.target.value })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Shifts (Comma separated)</label>
-                                    <input type="text" placeholder="Morning, Day, Evening" value={Array.isArray(editFormData.shifts) ? editFormData.shifts.join(', ') : (editFormData.shifts || '')} onChange={(e) => setEditFormData({ ...editFormData, shifts: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Shifts</label>
+                                    <div className="flex gap-4 p-2 border rounded bg-white mt-1">
+                                        {["Morning", "Day", "Evening"].map((shiftOption) => {
+                                            const shiftsArray = Array.isArray(editFormData.shifts)
+                                                ? editFormData.shifts
+                                                : (typeof editFormData.shifts === 'string' && editFormData.shifts.length > 0)
+                                                    ? editFormData.shifts.split(',').map((s: string) => s.trim())
+                                                    : [];
+
+                                            const isChecked = shiftsArray.includes(shiftOption);
+
+                                            return (
+                                                <label key={shiftOption} className="flex items-center gap-2 cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={isChecked}
+                                                        onChange={(e) => {
+                                                            const newShifts = e.target.checked
+                                                                ? [...shiftsArray, shiftOption]
+                                                                : shiftsArray.filter((s: string) => s !== shiftOption);
+                                                            setEditFormData({ ...editFormData, shifts: newShifts });
+                                                        }}
+                                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-sm text-gray-700">{shiftOption}</span>
+                                                </label>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Number of Students</label>
@@ -1095,7 +1122,7 @@ const SuperAdminDashboard = () => {
                                         <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License</label>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License (Optional)</label>
                                         <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
                                     <div>

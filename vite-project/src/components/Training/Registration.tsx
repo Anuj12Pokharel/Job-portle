@@ -71,7 +71,7 @@ const Registration = () => {
                 <div className="text-2xl font-bold text-cyan-600">
                   {loading ? "..." : formatNumber(stats.studentsTrained)}
                 </div>
-                <div className="text-sm text-gray-500 mt-1">Students Trained</div>
+                <div className="text-sm text-gray-500 mt-1">Trained</div>
               </div>
 
               <div className="bg-white text-center p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">

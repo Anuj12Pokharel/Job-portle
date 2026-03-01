@@ -9,6 +9,8 @@ export interface IAdmin extends Document {
   password: string;
   role: "admin" | "superadmin";
   profilePicture?: string;
+  aboutCompany?: string;
+  companyWebsite?: string;
   jobs: Types.ObjectId[];
   resetOTP?: string;
   resetOTPExpiry?: Date;
@@ -56,6 +58,8 @@ const adminSchema = new Schema<IAdmin>(
       default: "pending",
     },
     profilePicture: { type: String },
+    aboutCompany: { type: String, trim: true },
+    companyWebsite: { type: String, trim: true },
     jobs: [{ type: Schema.Types.ObjectId, ref: "Job" }],
     resetOTP: {
       type: String,
