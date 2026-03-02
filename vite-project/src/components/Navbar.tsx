@@ -1,5 +1,5 @@
 "use client";
-import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase, LayoutDashboard } from "lucide-react";
+import { Menu, X, ChevronDown, User as UserIcon, LogOut, Settings, Briefcase, LayoutDashboard, Bookmark, FileText } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import logo from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
@@ -56,6 +56,7 @@ export default function Navbar() {
   ];
 
   const categoryRef = useRef<HTMLDivElement>(null);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -66,6 +67,18 @@ export default function Navbar() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
+    function handleClickOutsideProfile(event: MouseEvent) {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutsideProfile);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideProfile);
     };
   }, []);
 
@@ -229,137 +242,193 @@ export default function Navbar() {
           {/* Right: Auth Dropdowns or Profile */}
           <div className="hidden md:flex items-center space-x-6 relative">
             {user ? (
-              <div className="relative">
+              <div className="relative" ref={profileRef}>
                 <button
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2 focus:outline-none hover:bg-gray-50 p-2 rounded-lg transition-colors"
+                  className="flex items-center gap-2.5 focus:outline-none p-1.5 rounded-xl transition-all duration-200 hover:bg-gray-50 group"
                 >
-                  {user.profilePicture ? (
-                    <img
-                      src={buildImageUrl(user.profilePicture)}
-                      alt="Profile"
-                      className="w-8 h-8 rounded-full object-cover border border-gray-200"
-                    />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                      <UserIcon className="w-5 h-5" />
-                    </div>
-                  )}
-                  <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-gray-700">{user.fullName || user.companyName}</p>
+                  <div className="relative">
+                    {user.profilePicture ? (
+                      <img
+                        src={buildImageUrl(user.profilePicture)}
+                        alt="Profile"
+                        className="w-9 h-9 rounded-full object-cover ring-2 ring-teal-400/60 ring-offset-1 group-hover:ring-teal-500 transition-all"
+                      />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <UserIcon className="w-5 h-5" />
+                      </div>
+                    )}
+                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full" />
                   </div>
-                  <ChevronDown className={`w-4 h-4 text-gray-500 transition-transform ${isProfileOpen ? "rotate-180" : ""}`} />
+                  <div className="hidden sm:block text-left">
+                    <p className="text-sm font-semibold text-gray-800 leading-tight">{user.fullName || user.companyName}</p>
+                    <p className="text-[11px] text-gray-400 leading-tight">Online</p>
+                  </div>
+                  <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`} />
                 </button>
 
+                {/* Dropdown menu */}
                 {isProfileOpen && (
-                  <>
-                    {/* Backdrop overlay */}
-                    <div
-                      className="fixed inset-0 bg-black/40 z-40"
-                      onClick={() => setIsProfileOpen(false)}
-                    />
-                    {/* Sidebar panel */}
-                    <div className="fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-50 flex flex-col animate-[slideIn_0.3s_ease-out]">
-                      {/* Close button */}
-                      <button
-                        onClick={() => setIsProfileOpen(false)}
-                        className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-                      >
-                        <X className="w-5 h-5" />
-                      </button>
+                  <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-gray-100 z-50 overflow-hidden dropdown-enter">
 
-                      {/* User header */}
-                      <div className="p-6 bg-gradient-to-br from-cyan-600 to-teal-600 text-white">
-                        <div className="flex items-center gap-3">
-                          {user.profilePicture ? (
-                            <img
-                              src={buildImageUrl(user.profilePicture)}
-                              alt="Profile"
-                              className="w-14 h-14 rounded-full object-cover border-2 border-white/30"
-                            />
-                          ) : (
-                            <div className="w-14 h-14 rounded-full bg-white/20 flex items-center justify-center">
-                              <UserIcon className="w-7 h-7 text-white" />
-                            </div>
-                          )}
-                          <div className="overflow-hidden">
-                            <p className="font-semibold text-sm truncate">{user.fullName || user.companyName}</p>
-                            <p className="text-cyan-100 text-xs truncate">{user.email}</p>
+                    {/* User info header */}
+                    <div className="relative px-4 py-4 bg-gradient-to-r from-teal-600 to-cyan-500 text-white">
+                      <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/5 -translate-y-1/2 translate-x-1/3" />
+                      <div className="flex items-center gap-3">
+                        {user.profilePicture ? (
+                          <img
+                            src={buildImageUrl(user.profilePicture)}
+                            alt="Profile"
+                            className="w-11 h-11 rounded-full object-cover ring-2 ring-white/50"
+                          />
+                        ) : (
+                          <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center">
+                            <UserIcon className="w-6 h-6 text-white" />
                           </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-sm leading-tight truncate">{user.fullName || user.companyName}</p>
+                          <p className="text-cyan-100 text-xs truncate mt-0.5">{user.email}</p>
+                          <span className="inline-block mt-1.5 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-full bg-white/20 text-white/90">
+                            {user.role === "superadmin" ? "Super Admin" : user.role === "admin" ? "Employer" : "Job Seeker"}
+                          </span>
                         </div>
                       </div>
-
-                      {/* Navigation links */}
-                      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
-                        {(user.role === "admin" || user.role === "superadmin") ? (
-                          <>
-                            <Link
-                              to="/employer-profile-settings"
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/employer-profile-settings" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <Settings className="w-5 h-5" />
-                              Company Settings
-                            </Link>
-                            <Link
-                              to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${(location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard") ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <LayoutDashboard className="w-5 h-5" />
-                              Dashboard
-                            </Link>
-                          </>
-                        ) : (
-                          <>
-                            <Link
-                              to="/profile-settings"
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/profile-settings" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <Settings className="w-5 h-5" />
-                              Profile Settings
-                            </Link>
-                            <Link
-                              to="/applied-jobs"
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/applied-jobs" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <Briefcase className="w-5 h-5" />
-                              Applied Jobs
-                            </Link>
-                            <Link
-                              to="/saved-jobs"
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/saved-jobs" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <Briefcase className="w-5 h-5" />
-                              Saved Jobs
-                            </Link>
-                            <Link
-                              to="/cv-generator"
-                              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${location.pathname === "/cv-generator" ? "bg-cyan-50 text-cyan-700" : "text-gray-700 hover:bg-gray-100"}`}
-                              onClick={() => setIsProfileOpen(false)}
-                            >
-                              <Briefcase className="w-5 h-5" />
-                              CV Generator
-                            </Link>
-                          </>
-                        )}
-                      </nav>
-
-                      {/* Logout button at bottom */}
-                      <div className="p-4 border-t border-gray-200">
-                        <button
-                          onClick={handleLogout}
-                          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <LogOut className="w-5 h-5" />
-                          Logout
-                        </button>
-                      </div>
                     </div>
-                  </>
+
+                    {/* Navigation items */}
+                    <div className="py-2">
+                      {(user.role === "admin" || user.role === "superadmin") ? (
+                        <>
+                          <Link
+                            to="/employer-profile-settings"
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              location.pathname === "/employer-profile-settings"
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              location.pathname === "/employer-profile-settings"
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <Settings className="w-4 h-4" />
+                            </span>
+                            Company Settings
+                          </Link>
+                          <Link
+                            to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              (location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard")
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              (location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard")
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <LayoutDashboard className="w-4 h-4" />
+                            </span>
+                            Dashboard
+                          </Link>
+                        </>
+                      ) : (
+                        <>
+                          <Link
+                            to="/profile-settings"
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              location.pathname === "/profile-settings"
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              location.pathname === "/profile-settings"
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <Settings className="w-4 h-4" />
+                            </span>
+                            Profile Settings
+                          </Link>
+                          <Link
+                            to="/applied-jobs"
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              location.pathname === "/applied-jobs"
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              location.pathname === "/applied-jobs"
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <Briefcase className="w-4 h-4" />
+                            </span>
+                            Applied Jobs
+                          </Link>
+                          <Link
+                            to="/saved-jobs"
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              location.pathname === "/saved-jobs"
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              location.pathname === "/saved-jobs"
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <Bookmark className="w-4 h-4" />
+                            </span>
+                            Saved Jobs
+                          </Link>
+                          <Link
+                            to="/cv-generator"
+                            onClick={() => setIsProfileOpen(false)}
+                            className={`flex items-center gap-3 w-full px-4 py-3 text-sm font-medium transition-colors ${
+                              location.pathname === "/cv-generator"
+                                ? "bg-teal-50 text-teal-700"
+                                : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
+                          >
+                            <span className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                              location.pathname === "/cv-generator"
+                                ? "bg-teal-100 text-teal-600"
+                                : "bg-gray-100 text-gray-500"
+                            }`}>
+                              <FileText className="w-4 h-4" />
+                            </span>
+                            CV Generator
+                          </Link>
+                        </>
+                      )}
+                    </div>
+
+                    {/* Divider + Sign Out */}
+                    <div className="border-t border-gray-100 px-3 py-2">
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-semibold text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors group"
+                      >
+                        <span className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0 group-hover:bg-red-100 transition-colors">
+                          <LogOut className="w-4 h-4" />
+                        </span>
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
                 )}
               </div>
             ) : (
@@ -580,51 +649,66 @@ export default function Navbar() {
 
               {/* User Profile Section for Mobile */}
               {user && (
-                <div className="mt-4 pt-4 border-t border-gray-200">
-                  <div className="flex items-center gap-3 mb-3 px-2">
-                    {user.profilePicture ? (
-                      <img
-                        src={buildImageUrl(user.profilePicture)}
-                        alt="Profile"
-                        className="w-10 h-10 rounded-full object-cover border border-gray-200"
-                      />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                        <UserIcon className="w-6 h-6" />
+                <div className="mt-5 pt-4 border-t border-gray-200">
+                  {/* Mobile gradient card header */}
+                  <div className="relative mx-1 px-4 py-4 rounded-xl bg-gradient-to-br from-teal-600 via-cyan-600 to-emerald-500 text-white mb-4 overflow-hidden">
+                    <div className="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/5 -translate-y-1/3 translate-x-1/4" />
+                    <div className="absolute bottom-0 left-0 w-16 h-16 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4" />
+                    <div className="relative flex items-center gap-3">
+                      {user.profilePicture ? (
+                        <img
+                          src={buildImageUrl(user.profilePicture)}
+                          alt="Profile"
+                          className="w-12 h-12 rounded-full object-cover ring-2 ring-white/40 ring-offset-1 ring-offset-teal-600 shadow-lg"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-full bg-white/15 backdrop-blur-sm flex items-center justify-center ring-2 ring-white/30 shadow-lg">
+                          <UserIcon className="w-6 h-6 text-white" />
+                        </div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-sm truncate">{user.fullName || user.companyName}</p>
+                        <p className="text-cyan-100/80 text-xs truncate">{user.email}</p>
+                        <span className="inline-block mt-1.5 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider rounded-full bg-white/20 text-white/90">
+                          {user.role === "superadmin" ? "Super Admin" : user.role === "admin" ? "Employer" : "Job Seeker"}
+                        </span>
                       </div>
-                    )}
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{user.fullName || user.companyName}</p>
-                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
                     </div>
                   </div>
-                  <div className="space-y-2">
+
+                  <div className="space-y-1 px-1">
                     {(user.role === "admin" || user.role === "superadmin") ? (
                       <Link
                         to="/employer-profile-settings"
-                        className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${location.pathname === "/employer-profile-settings" ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                         onClick={closeMobileMenu}
                       >
-                        <Settings className="w-4 h-4" />
+                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${location.pathname === "/employer-profile-settings" ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                          <Settings className="w-4 h-4" />
+                        </span>
                         Company Settings
                       </Link>
                     ) : (
                       <Link
                         to="/profile-settings"
-                        className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${location.pathname === "/profile-settings" ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                         onClick={closeMobileMenu}
                       >
-                        <Settings className="w-4 h-4" />
+                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${location.pathname === "/profile-settings" ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                          <Settings className="w-4 h-4" />
+                        </span>
                         Profile Settings
                       </Link>
                     )}
                     {(user.role === "admin" || user.role === "superadmin") && (
                       <Link
                         to={user.role === "superadmin" ? "/super-admin-dashboard" : "/admin-dashboard"}
-                        className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                        className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${(location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard") ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                         onClick={closeMobileMenu}
                       >
-                        <LayoutDashboard className="w-4 h-4" />
+                        <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${(location.pathname === "/admin-dashboard" || location.pathname === "/super-admin-dashboard") ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                          <LayoutDashboard className="w-4 h-4" />
+                        </span>
                         Dashboard
                       </Link>
                     )}
@@ -632,37 +716,45 @@ export default function Navbar() {
                       <>
                         <Link
                           to="/applied-jobs"
-                          className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${location.pathname === "/applied-jobs" ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                           onClick={closeMobileMenu}
                         >
-                          <Briefcase className="w-4 h-4" />
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${location.pathname === "/applied-jobs" ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                            <Briefcase className="w-4 h-4" />
+                          </span>
                           Applied Jobs
                         </Link>
                         <Link
                           to="/saved-jobs"
-                          className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${location.pathname === "/saved-jobs" ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                           onClick={closeMobileMenu}
                         >
-                          <Briefcase className="w-4 h-4" />
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${location.pathname === "/saved-jobs" ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                            <Bookmark className="w-4 h-4" />
+                          </span>
                           Saved Jobs
                         </Link>
                         <Link
                           to="/cv-generator"
-                          className="flex items-center gap-2 px-2 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded"
+                          className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all ${location.pathname === "/cv-generator" ? "bg-teal-50 text-teal-700" : "text-gray-600 hover:bg-gray-50"}`}
                           onClick={closeMobileMenu}
                         >
-                          <Briefcase className="w-4 h-4" />
+                          <span className={`w-8 h-8 rounded-lg flex items-center justify-center ${location.pathname === "/cv-generator" ? "bg-teal-100 text-teal-600" : "bg-gray-100 text-gray-500"}`}>
+                            <FileText className="w-4 h-4" />
+                          </span>
                           CV Generator
                         </Link>
                       </>
                     )}
-                    <button
-                      onClick={handleLogout}
-                      className="w-full flex items-center gap-2 px-2 py-2 text-sm text-red-600 hover:bg-red-50 rounded text-left"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Logout
-                    </button>
+                    <div className="pt-2">
+                      <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 px-3 py-2.5 text-sm font-semibold text-red-500 bg-red-50/60 hover:bg-red-100 rounded-lg transition-all"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Sign Out
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
