@@ -20,26 +20,55 @@ const LogoSlider = () => {
 
   if (logos.length === 0) return null;
 
-  // Duplicate logos to ensure infinite scroll effect works smoothly even with few items
-  // If we have very few logos, we might need more repetitions.
-  // Original had 5 logos repeated 3 times = 15 items.
-  // Let's ensure we have at least 15 items if possible, or just repeat the list 4 times.
-  const displayLogos = [...logos, ...logos, ...logos, ...logos];
+  // Build a track that is guaranteed to cover the screen
+  let baseList = [...logos];
+  while (baseList.length < 8 && baseList.length > 0) {
+    baseList = [...baseList, ...logos];
+  }
+
+  // Multiply by 2 for seamless -50% translation
+  const track1 = [...baseList, ...baseList];
+  
+  // Create a reversed track for the second row, also duplicated
+  const reversedBase = [...baseList].reverse();
+  const track2 = [...reversedBase, ...reversedBase];
 
   return (
-    <div className="px-20">
-      <h1 className=" text-center mt-9 font-bold text-3xl text-cyan-600">
-        Top Employer
+    <div className="w-full py-16 overflow-hidden">
+      <h1 className="text-center font-bold text-3xl md:text-4xl text-cyan-600 mb-12">
+        Top Employers
       </h1>
-      <div className="flex overflow-hidden py-12 px-14">
-        <div className="flex space-x-16 animate-marquee ">
-          {displayLogos.map((logo, index) => (
-            <img
-              key={`${logo._id}-${index}`}
-              src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}
-              alt="client logo"
-              className="h-16 w-auto object-contain"
-            />
+
+      <div className="relative flex flex-col gap-6 w-full [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+        {/* Row 1 - Moves Left */}
+        <div className="flex w-max animate-marquee gap-6 pr-6">
+          {track1.map((logo, index) => (
+            <div
+              key={`row1-${index}`}
+              className="flex-shrink-0 w-64 h-28 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+            >
+              <img
+                src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}
+                alt="employer logo"
+                className="max-w-full max-h-full object-contain opacity-90 hover:opacity-100 transition-opacity"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* Row 2 - Moves Right */}
+        <div className="flex w-max animate-marquee-reverse gap-6 pr-6">
+          {track2.map((logo, index) => (
+            <div
+              key={`row2-${index}`}
+              className="flex-shrink-0 w-64 h-28 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+            >
+              <img
+                src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}
+                alt="employer logo"
+                className="max-w-full max-h-full object-contain opacity-90 hover:opacity-100 transition-opacity"
+              />
+            </div>
           ))}
         </div>
       </div>

@@ -1,8 +1,16 @@
 import React from "react";
 import ServiceInquiry from "../../components/ServiceInquiry";
 import LogoSlider from "../../components/LogoSlider";
-import Benefitservice from "../../components/Benefitservice";
+import Benefitservice, { BenefitItem } from "../../components/Benefitservice";
 import FQ from "../../components/FQ";
+
+const outsourcingBenefits: BenefitItem[] = [
+  { id: "01", title: "Cost Reduction", description: "Significantly lower your operational and overhead costs by outsourcing non-core tasks." },
+  { id: "02", title: "Focus on Core Business", description: "Free up your internal resources to focus on strategic growth and primary objectives." },
+  { id: "03", title: "Access to Expertise", description: "Tap into a pool of specialized professionals without the need for extensive internal training." },
+  { id: "04", title: "Scalability", description: "Easily scale your outsourced team up or down based on your current business demands." },
+  { id: "05", title: "Risk Mitigation", description: "Share operational risks with our experienced management teams ensuring smoother continuous delivery." }
+];
 
 const Outsourcing = () => {
   return (
@@ -23,7 +31,11 @@ const Outsourcing = () => {
         <ServiceInquiry />
       </div>
       <LogoSlider />
-      <Benefitservice />
+      <Benefitservice 
+        title="Why Choose Our Outsourcing?" 
+        subtitle="Benefits of our Outsourcing Services" 
+        benefits={outsourcingBenefits} 
+      />
       <div className="text-center py-14 bg-teal-600 mt-5 w-full text-white rounded-s-sm shadow-xl border border-teal-800  ">
         <h1 className="text-2xl font-bold">
           {" "}

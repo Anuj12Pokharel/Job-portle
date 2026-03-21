@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { Clock, Calendar, User, X, ArrowRight } from "lucide-react";
 
 interface Training {
-    id: number;
+    _id: string;
     title: string;
     description: string;
     instructor: string;
@@ -13,6 +13,8 @@ interface Training {
     startDate: string;
     image: string;
     shifts?: string[];
+    shiftTiming?: string;
+    students?: number;
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -36,59 +38,88 @@ const TrainingCard: React.FC<{ training: Training, handleEnroll: (t: Training) =
                 />
             </div>
 
-            <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+            <div className="p-6 flex flex-col flex-grow" onClick={(e) => e.stopPropagation()}>
+                <h3 className="text-xl font-bold text-gray-900 mb-3">
                     {training.title}
                 </h3>
 
-                <div className="mb-4">
-                    <p className={`text-gray-600 ${isExpanded ? '' : 'line-clamp-2'}`}>
-                        {training.description}
-                    </p>
-                    {training.description && training.description.length > 80 && (
-                        <button
-                            onClick={() => setIsExpanded(!isExpanded)}
-                            className="text-cyan-600 text-sm font-semibold hover:underline mt-1 focus:outline-none"
-                        >
-                            {isExpanded ? "Show Less" : "Show More"}
-                        </button>
-                    )}
-                </div>
-
-                <div className="space-y-2 mb-4 mt-auto">
-                    <div className="flex items-center text-gray-600">
-                        <User className="h-4 w-4 mr-2 text-cyan-500" />
-                        <span className="text-sm">{training.instructor}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                        <Clock className="h-4 w-4 mr-2 text-cyan-500" />
-                        <span className="text-sm">{training.duration}</span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                        <Calendar className="h-4 w-4 mr-2 text-cyan-500" />
-                        <span className="text-sm">Starts: {training.startDate}</span>
-                    </div>
-                    {training.shifts && training.shifts.length > 0 && (
-                        <div className="flex items-center text-gray-600">
-                            <Clock className="h-4 w-4 mr-2 text-cyan-500" />
-                            <div className="flex flex-wrap gap-1">
-                                {training.shifts.map((shift, idx) => (
-                                    <span key={idx} className="bg-cyan-50 text-cyan-700 px-2 py-0.5 text-xs font-medium rounded-full border border-cyan-100">
-                                        {shift}
-                                    </span>
-                                ))}
+                {/* Expandable: ALL details + description + price */}
+                {isExpanded && (
+                    <div className="space-y-3 mb-4 bg-gray-50 p-4 rounded-lg border border-gray-100 animate-in">
+                        {training.description && (
+                            <div className="pb-3 border-b border-gray-200">
+                                <h4 className="text-sm font-bold text-gray-700 mb-1">Description:</h4>
+                                <p className="text-gray-600 text-sm whitespace-pre-wrap">
+                                    {training.description}
+                                </p>
+                            </div>
+                        )}
+                        <div className="grid grid-cols-1 gap-2">
+                            <div className="flex items-center text-gray-600">
+                                <User className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                <span className="text-sm"><span className="font-semibold">Instructor:</span> {training.instructor}</span>
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                                <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                <span className="text-sm"><span className="font-semibold">Duration:</span> {training.duration}</span>
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                                <Calendar className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                <span className="text-sm"><span className="font-semibold">Starts:</span> {training.startDate && new Date(training.startDate).toLocaleDateString()}</span>
+                            </div>
+                            {training.shifts && training.shifts.length > 0 && (
+                                <div className="flex items-center text-gray-600">
+                                    <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                    <div className="flex flex-wrap gap-1">
+                                        <span className="text-sm font-semibold mr-1">Shifts:</span>
+                                        {training.shifts.map((shift, idx) => (
+                                            <span key={idx} className="bg-cyan-50 text-cyan-700 px-2 py-0.5 text-xs font-medium rounded-full border border-cyan-100">
+                                                {shift}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                            {training.shiftTiming && (
+                                <div className="flex items-center text-gray-600">
+                                    <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                    <span className="text-sm"><span className="font-semibold">Timing:</span> {training.shiftTiming}</span>
+                                </div>
+                            )}
+                            {training.students !== undefined && training.students >= 0 && (
+                                <div className="flex items-center text-gray-600">
+                                    <User className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
+                                    <span className="text-sm"><span className="font-semibold">Candidates:</span> {training.students}</span>
+                                </div>
+                            )}
+                            <div className="flex items-center text-gray-900 pt-2 border-t border-gray-200">
+                                <span className="text-sm font-bold text-cyan-600">Price: Rs {training.price}</span>
                             </div>
                         </div>
-                    )}
-                </div>
-
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center font-bold text-cyan-600 text-lg">
-                        <span className="font-semibold"> Rs {training.price} </span>
                     </div>
+                )}
+
+                {/* Two independent buttons at the bottom - Stacked vertically */}
+                <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-gray-100">
                     <button
-                        onClick={() => handleEnroll(training)}
-                        className="bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-cyan-700 transition-colors"
+                        type="button"
+                        onClick={(e) => { 
+                            e.preventDefault();
+                            e.stopPropagation(); 
+                            setIsExpanded(!isExpanded); 
+                        }}
+                        className="w-full py-2.5 rounded-lg text-sm font-semibold border border-cyan-200 text-cyan-600 hover:bg-cyan-50 transition-colors focus:outline-none"
+                    >
+                        {isExpanded ? "View Less" : "View Details"}
+                    </button>
+                    <button
+                        type="button"
+                        onClick={(e) => { 
+                            e.preventDefault();
+                            e.stopPropagation(); 
+                            handleEnroll(training); 
+                        }}
+                        className="w-full py-2.5 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-sm"
                     >
                         Enroll Now
                     </button>
@@ -223,9 +254,9 @@ const AvailableTrainings = () => {
                     your career growth.
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
                     {trainings.map((training) => (
-                        <TrainingCard key={training.id} training={training} handleEnroll={handleEnroll} />
+                        <TrainingCard key={training._id} training={training} handleEnroll={handleEnroll} />
                     ))}
                 </div>
             </div>
