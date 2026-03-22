@@ -58,13 +58,13 @@ const Footer = () => {
         <div>
           <h3 className="font-semibold text-lg mb-4">Services</h3>
           <ul className="space-y-2 text-sm">
-            <li>Hiring and Management Tools</li>
-            <li>Recruitment</li>
-            <li>Outsourcing</li>
-            <li>Payroll Management</li>
-            <li>Training and Development</li>
-            <li>Corporate Event Management</li>
-            <li>Human Resource Consulting</li>
+            <li><a href="/services/job-posting" className="hover:underline block">Hiring and Management Tools</a></li>
+            <li><a href="/services/recruitment" className="hover:underline block">Recruitment</a></li>
+            <li><a href="/services/outsourcing" className="hover:underline block">Outsourcing</a></li>
+            <li><a href="/services/payroll-management" className="hover:underline block">Payroll Management</a></li>
+            <li><a href="/services/training_and_development" className="hover:underline block">Training and Development</a></li>
+            <li><a href="/services/corporate&eventmanagement" className="hover:underline block">Corporate Event Management</a></li>
+            <li><a href="/services/hr-consulting" className="hover:underline block">Human Resource Consulting</a></li>
           </ul>
         </div>
 

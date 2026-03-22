@@ -95,6 +95,10 @@ const SuperAdminDashboard = () => {
         platformYears: 0,
         dailyVisits: 0,
         totalJobs: 0,
+        studentsTrained: 0,
+        coursesAvailable: 0,
+        successRate: 95,
+        supportAvailable: "24/7",
         isManual: false
     });
 
@@ -335,6 +339,7 @@ const SuperAdminDashboard = () => {
                 formData.append('duration', editFormData.duration || '');
                 formData.append('startDate', editFormData.startDate || '');
                 formData.append('students', String(editFormData.students || 0));
+                formData.append('shiftTiming', editFormData.shiftTiming || '');
 
                 // Handle shifts: convert to array/string format backend expects
                 let shiftsVal = editFormData.shifts;
@@ -584,7 +589,11 @@ const SuperAdminDashboard = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Students</label>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Shift Timing</label>
+                                    <input type="text" placeholder="e.g. 7:00 AM - 9:00 AM" value={editFormData.shiftTiming || ''} onChange={(e) => setEditFormData({ ...editFormData, shiftTiming: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Number of Candidates</label>
                                     <input type="number" placeholder="e.g. 200" min="0" value={editFormData.students || 0} onChange={(e) => setEditFormData({ ...editFormData, students: Number(e.target.value) })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
@@ -2070,7 +2079,50 @@ const SuperAdminDashboard = () => {
                                         placeholder="e.g. 5000"
                                     />
                                 </div>
-                                <div className="col-span-1 md:col-span-2 flex justify-end">
+                                <div className="col-span-1 md:col-span-2 pt-6 pb-2">
+                                    <h4 className="text-lg font-bold text-gray-800 border-b pb-2">Training Statistics</h4>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Students Trained</label>
+                                    <input
+                                        type="number"
+                                        value={platformStats.studentsTrained}
+                                        onChange={e => setPlatformStats({ ...platformStats, studentsTrained: parseInt(e.target.value) || 0 })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. 5000"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Courses Available</label>
+                                    <input
+                                        type="number"
+                                        value={platformStats.coursesAvailable}
+                                        onChange={e => setPlatformStats({ ...platformStats, coursesAvailable: parseInt(e.target.value) || 0 })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. 20"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Success Rate (%)</label>
+                                    <input
+                                        type="number"
+                                        value={platformStats.successRate}
+                                        onChange={e => setPlatformStats({ ...platformStats, successRate: parseInt(e.target.value) || 0 })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. 95"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Support Available</label>
+                                    <input
+                                        type="text"
+                                        value={platformStats.supportAvailable}
+                                        onChange={e => setPlatformStats({ ...platformStats, supportAvailable: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="e.g. 24/7"
+                                    />
+                                </div>
+                                <div className="col-span-1 md:col-span-2 flex justify-end mt-4">
                                     <button
                                         type="submit"
                                         className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center shadow-md transition-colors"

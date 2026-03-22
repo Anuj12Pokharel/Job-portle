@@ -1,8 +1,16 @@
 import React from "react";
 import ServiceInquiry from "../../components/ServiceInquiry";
 import LogoSlider from "../../components/LogoSlider";
-import Benefitservice from "../../components/Benefitservice";
+import Benefitservice, { BenefitItem } from "../../components/Benefitservice";
 import FQ from "../../components/FQ";
+
+const recruitmentBenefits: BenefitItem[] = [
+  { id: "01", title: "Targeted Screening", description: "In-depth candidate screening ensuring only the highest quality fits are presented." },
+  { id: "02", title: "Time Efficiency", description: "We handle the sourcing and initial interviews, saving you countless hours." },
+  { id: "03", title: "Expert Vetting", description: "Our team utilizes proven methodologies to assess skills, culture fit, and experience." },
+  { id: "04", title: "Reduced Turnover", description: "By finding the right match from the start, we help improve your long-term retention rates." },
+  { id: "05", title: "End-to-End Support", description: "From initial job posting to final interview scheduling, we manage the entire recruitment lifecycle." }
+];
 
 const Recruitment = () => {
   return (
@@ -24,7 +32,11 @@ the candidates).
         <ServiceInquiry />
       </div>
       <LogoSlider />
-      <Benefitservice />
+      <Benefitservice 
+        title="Why Choose Our Recruitment?" 
+        subtitle="Benefits of our Recruitment Services" 
+        benefits={recruitmentBenefits} 
+      />
       <div className="text-center py-14 bg-teal-600 mt-5 w-full text-white rounded-s-sm shadow-xl border border-teal-800  ">
         <h1 className="text-2xl font-bold">
           {" "}

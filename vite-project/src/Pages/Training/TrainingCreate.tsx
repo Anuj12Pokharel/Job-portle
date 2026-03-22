@@ -11,6 +11,7 @@ const CreateTraining = () => {
     price: "",
     startDate: "",
     shifts: [] as string[],
+    shiftTiming: "",
     students: "",
   });
 
@@ -80,7 +81,8 @@ const CreateTraining = () => {
 
       // Append each shift
       formData.shifts.forEach((shift) => data.append("shifts[]", shift));
-
+      
+      data.append("shiftTiming", formData.shiftTiming);
       data.append("students", formData.students || "0");
       data.append("image", imageFile);
 
@@ -104,6 +106,7 @@ const CreateTraining = () => {
         price: "",
         startDate: "",
         shifts: [],
+        shiftTiming: "",
         students: "",
       });
       setImageFile(null);
@@ -234,7 +237,18 @@ const CreateTraining = () => {
             </div>
 
             <div className="flex flex-col">
-              <label className="text-sm font-semibold text-gray-700 mb-1">Number of Students</label>
+              <label className="text-sm font-semibold text-gray-700 mb-1">Shift Timing</label>
+              <input
+                name="shiftTiming"
+                value={formData.shiftTiming}
+                onChange={handleChange}
+                placeholder="e.g. 7:00 AM - 9:00 AM"
+                className="border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-semibold text-gray-700 mb-1">Number of Candidates</label>
               <input
                 type="number"
                 name="students"

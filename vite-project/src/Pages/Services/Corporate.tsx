@@ -1,8 +1,16 @@
 import React from "react";
 import ServiceInquiry from "../../components/ServiceInquiry";
 import LogoSlider from "../../components/LogoSlider";
-import Benefitservice from "../../components/Benefitservice";
+import Benefitservice, { BenefitItem } from "../../components/Benefitservice";
 import FQ from "../../components/FQ";
+
+const corporateBenefits: BenefitItem[] = [
+  { id: "01", title: "Flawless Execution", description: "We manage all logistics and coordination, ensuring your event runs seamlessly from start to finish." },
+  { id: "02", title: "Customized Planning", description: "Tailored event strategies that align with your specific company culture and goals." },
+  { id: "03", title: "Stress-Free Experience", description: "Our expert team handles the complexities so you can focus on enjoying and hosting the event." },
+  { id: "04", title: "Vendor Management", description: "We coordinate with top-tier vendors to provide premium catering, venues, and equipment." },
+  { id: "05", title: "Memorable Impact", description: "We create engaging and memorable experiences that leave a lasting positive impression on attendees." }
+];
 
 const Corporate = () => {
   return (
@@ -22,7 +30,11 @@ const Corporate = () => {
         <ServiceInquiry />
       </div>
       <LogoSlider />
-      <Benefitservice />
+      <Benefitservice 
+        title="Why Choose Our Event Management?" 
+        subtitle="Benefits of our Event Services" 
+        benefits={corporateBenefits} 
+      />
       <div className="text-center py-14 bg-teal-600 mt-5 w-full text-white rounded-s-sm shadow-xl border border-teal-800  ">
         <h1 className="text-2xl font-bold">
           {" "}
