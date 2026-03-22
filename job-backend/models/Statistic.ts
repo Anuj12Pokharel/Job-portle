@@ -8,6 +8,10 @@ const StatisticSchema = new mongoose.Schema(
         platformYears: { type: Number, default: 0 },
         dailyVisits: { type: Number, default: 0 },
         totalJobs: { type: Number, default: 0 },
+        studentsTrained: { type: Number, default: 0 },
+        coursesAvailable: { type: Number, default: 0 },
+        successRate: { type: Number, default: 95 },
+        supportAvailable: { type: String, default: '24/7' },
         // Use manual values if true
         isManual: { type: Boolean, default: false },
     },

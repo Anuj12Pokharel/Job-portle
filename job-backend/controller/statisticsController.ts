@@ -42,7 +42,11 @@ export const getStatistics = async (_req: Request, res: Response) => {
                     totalCompanies: manualStats.totalCompanies || totalCompaniesCount,
                     platformYears: manualStats.platformYears || platformYearsCount || 1,
                     dailyVisits: manualStats.dailyVisits || dailyVisitsCount,
-                    totalJobs: manualStats.totalJobs || totalJobsCount
+                    totalJobs: manualStats.totalJobs || totalJobsCount,
+                    studentsTrained: manualStats.studentsTrained || 0,
+                    coursesAvailable: manualStats.coursesAvailable || 0,
+                    successRate: manualStats.successRate || 95,
+                    supportAvailable: manualStats.supportAvailable || '24/7'
                 }
             });
         }
@@ -55,7 +59,11 @@ export const getStatistics = async (_req: Request, res: Response) => {
                 totalCompanies: totalCompaniesCount,
                 platformYears: platformYearsCount || 1,
                 dailyVisits: dailyVisitsCount,
-                totalJobs: totalJobsCount
+                totalJobs: totalJobsCount,
+                studentsTrained: manualStats?.studentsTrained || 0,
+                coursesAvailable: manualStats?.coursesAvailable || 0,
+                successRate: manualStats?.successRate || 95,
+                supportAvailable: manualStats?.supportAvailable || '24/7'
             }
         });
     } catch (error) {
@@ -77,6 +85,10 @@ export const updateStatistics = async (req: Request, res: Response) => {
             platformYears,
             dailyVisits,
             totalJobs,
+            studentsTrained,
+            coursesAvailable,
+            successRate,
+            supportAvailable,
             isManual
         } = req.body;
 
@@ -89,6 +101,10 @@ export const updateStatistics = async (req: Request, res: Response) => {
             stats.platformYears = platformYears;
             stats.dailyVisits = dailyVisits;
             stats.totalJobs = totalJobs;
+            stats.studentsTrained = studentsTrained;
+            stats.coursesAvailable = coursesAvailable;
+            stats.successRate = successRate;
+            stats.supportAvailable = supportAvailable;
             stats.isManual = isManual;
             await stats.save();
         } else {
@@ -99,6 +115,10 @@ export const updateStatistics = async (req: Request, res: Response) => {
                 platformYears,
                 dailyVisits,
                 totalJobs,
+                studentsTrained,
+                coursesAvailable,
+                successRate,
+                supportAvailable,
                 isManual
             });
         }
@@ -120,6 +140,8 @@ export const updateStatistics = async (req: Request, res: Response) => {
 
 export const getTrainingStatistics = async (_req: Request, res: Response) => {
     try {
+        const manualStats = await Statistic.findOne();
+
         // Count total trainings (courses available)
         const totalCourses = await Training.countDocuments();
 
@@ -142,16 +164,28 @@ export const getTrainingStatistics = async (_req: Request, res: Response) => {
             status: { $in: ["enrolled", "completed"] }
         });
 
-        const successRate = activeEnrollments > 0
+        const successRateCount = activeEnrollments > 0
             ? Math.round((completedEnrollments / activeEnrollments) * 100)
             : 95; // Default to 95% if no data yet
+
+        if (manualStats && manualStats.isManual) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    studentsTrained: manualStats.studentsTrained || totalStudents,
+                    coursesAvailable: manualStats.coursesAvailable || totalCourses,
+                    successRate: manualStats.successRate || successRateCount,
+                    supportAvailable: manualStats.supportAvailable || "24/7"
+                }
+            });
+        }
 
         res.status(200).json({
             success: true,
             data: {
                 studentsTrained: totalStudents,
                 coursesAvailable: totalCourses,
-                successRate: successRate,
+                successRate: successRateCount,
                 supportAvailable: "24/7"
             }
         });
