@@ -4,3 +4,8 @@ node_modules/
 .env.*
 .DS_Store
 env_backup/
+job-backend/uploads/
+job-backend/dist/
+uploads/
+vite-project/dist/
+vite-project/node_modules/
