@@ -53,6 +53,9 @@ const AdminDashboard = () => {
         noOfOpenings: "",
         industry: "",
         vehicleLicense: "",
+        twoFourWheeler: "",
+        skills: "",
+        desiredCandidate: "",
         expiryDate: "",
     });
     const [logo, setLogo] = useState<File | null>(null);
@@ -257,6 +260,7 @@ const AdminDashboard = () => {
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", vehicleLicense: "",
+                twoFourWheeler: "", skills: "", desiredCandidate: "",
                 expiryDate: "",
             });
             // Re-fill company fields from localStorage after reset

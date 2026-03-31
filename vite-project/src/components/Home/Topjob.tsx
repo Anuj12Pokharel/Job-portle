@@ -30,8 +30,6 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
         const params = new URLSearchParams();
         if (category) params.append("category", category);
         if (search) params.append("search", search);
-
-        if (search) params.append("search", search);
         // Add cache buster
         params.append("_t", String(Date.now()));
 

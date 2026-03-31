@@ -13,7 +13,7 @@ const trainings = [
     details:
       "This comprehensive training covers communication skills, conflict resolution, customer relationship management, and professional etiquette. You will learn how to handle difficult customers, manage complaints effectively, and deliver exceptional service across phone, email, and in-person channels.",
     duration: "4 Weeks",
-    students: "200+",
+    candidates: "200+",
     level: "Beginner",
     topics: [
       "Professional Communication Skills",
@@ -31,7 +31,7 @@ const trainings = [
     details:
       "Gain in-depth knowledge of HR functions including recruitment, onboarding, performance management, payroll, and labor law compliance. This course equips you with practical tools and frameworks used by HR professionals in modern organizations.",
     duration: "6 Weeks",
-    students: "150+",
+    candidates: "150+",
     level: "Intermediate",
     topics: [
       "Recruitment & Talent Acquisition",
@@ -49,7 +49,7 @@ const trainings = [
     details:
       "Learn to create, format, and manage documents in Microsoft Word and build spreadsheets, formulas, and charts in Microsoft Excel. This beginner-friendly course is perfect for anyone entering the professional world or looking to boost their productivity.",
     duration: "3 Weeks",
-    students: "300+",
+    candidates: "300+",
     level: "Beginner",
     topics: [
       "Microsoft Word: Formatting & Document Design",
@@ -67,7 +67,7 @@ const trainings = [
     details:
       "This course dives deep into Management Information Systems, teaching you how to collect, process, and present data for business decision-making. You will work with Excel advanced functions, database concepts, and reporting dashboards used in real organizations.",
     duration: "5 Weeks",
-    students: "120+",
+    candidates: "120+",
     level: "Intermediate",
     topics: [
       "Advanced Excel & Pivot Tables",
@@ -86,7 +86,7 @@ interface Training {
   description: string;
   details: string;
   duration: string;
-  students: string;
+  candidates: string;
   level: string;
   topics: string[];
 }
@@ -199,8 +199,8 @@ export default function TrainingsHome() {
                 </div>
                 <div className="bg-teal-50 rounded-xl p-3 text-center">
                   <Users className="h-5 w-5 text-teal-600 mx-auto mb-1" />
-                  <p className="text-xs text-gray-500">Students</p>
-                  <p className="text-sm font-bold text-teal-700">{selectedTraining.students}</p>
+                  <p className="text-xs text-gray-500">Candidates</p>
+                  <p className="text-sm font-bold text-teal-700">{selectedTraining.candidates}</p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-3 text-center">
                   <Award className="h-5 w-5 text-blue-600 mx-auto mb-1" />
@@ -316,14 +316,19 @@ export default function TrainingsHome() {
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Preferred Shift
                 </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Morning (6-12), Evening, etc."
+                <select
                   value={formData.shift}
                   onChange={(e) => handleInputChange("shift", e.target.value)}
                   required
-                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                />
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none bg-white"
+                >
+                  <option value="">Select Shift Timing</option>
+                  <option value="Morning (6:00 AM - 10:00 AM)">Morning (6:00 AM - 10:00 AM)</option>
+                  <option value="Day (10:00 AM - 2:00 PM)">Day (10:00 AM - 2:00 PM)</option>
+                  <option value="Afternoon (2:00 PM - 6:00 PM)">Afternoon (2:00 PM - 6:00 PM)</option>
+                  <option value="Evening (6:00 PM - 9:00 PM)">Evening (6:00 PM - 9:00 PM)</option>
+                  <option value="Weekend (Saturday/Sunday)">Weekend (Saturday/Sunday)</option>
+                </select>
               </div>
 
               {/* Course (pre-filled, read-only) */}

@@ -232,8 +232,8 @@ export const forgotPassword = async (req: Request, res: Response) => {
     try {
       await sendEmail(
         user.email,
-        "Password Reset OTP - Job Portal",
-        `Hello ${user.fullName},\n\nYou requested to reset your password. Your OTP code is: ${otp}\n\nThis code will expire in 10 minutes.\n\nIf you didn't request this, please ignore this email.\n\nBest regards,\nJob Portal Team`,
+        "Password Reset OTP - JobLink360",
+        `Dear ${user.fullName},\n\nWe received a request to reset the password for your JobLink360 account.\n\nYour verification code is: ${otp}\n\nThis code is valid for 10 minutes. Please do not share it with anyone.\n\nIf you did not request this password reset, you can safely ignore this email. Your account remains secure.\n\nBest regards,\nJobLink360 Team\nHamro Job Pvt. Ltd.\nGopikrishnapul, Chabahil, Kathmandu\nPhone: 01-4502062 | 9761666636`,
       );
     } catch (mailErr) {
       console.error("Failed to send password reset email:", mailErr);
