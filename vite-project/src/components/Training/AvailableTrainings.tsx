@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { useSearchParams } from "react-router-dom";
 import { Clock, Calendar, User, X, ArrowRight } from "lucide-react";
 
@@ -214,14 +215,14 @@ const AvailableTrainings = () => {
         try {
             const response = await axios.post(`${API_BASE_URL}/api/enrollments`, formData);
             if (response.data.success) {
-                alert(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
+                toast.success(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
                 setShowModal(false);
                 setFormData({ name: "", email: "", phone: "", shift: "", course: "", availableShifts: [] });
             }
         } catch (error: any) {
             console.error("Error submitting enrollment:", error);
             const errorMessage = error.response?.data?.message || "Failed to submit enrollment. Please try again.";
-            alert(errorMessage);
+            toast.error(errorMessage);
         } finally {
             setSubmitting(false);
         }

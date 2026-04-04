@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, FileText, Mail, Phone, MapPin, ExternalLink, Calendar, CheckCircle, Clock, Eye, XCircle, Briefcase } from "lucide-react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -52,9 +53,9 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
 
             // Check if it's an approval status error
             if (msg.includes("pending approval") || msg.includes("rejected")) {
-                alert(msg + "\n\nPlease contact the Super Admin for approval.");
+                toast.warning(msg + "\n\nPlease contact the Super Admin for approval.");
             } else {
-                alert(msg);
+                toast.error(msg);
             }
         } finally {
             setLoading(false);

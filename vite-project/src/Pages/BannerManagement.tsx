@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { Camera, Loader2, Save, Trash2 } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -79,30 +80,30 @@ const BannerManagement = () => {
         },
       });
 
-      alert("Banner saved successfully!");
+      toast.success("Banner saved successfully!");
       fetchBanners();
       resetForm();
     } catch (error: any) {
       console.error("Error saving banner:", error);
-      alert(error.response?.data?.message || "Failed to save banner");
+      toast.error(error.response?.data?.message || "Failed to save banner");
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to delete this banner?")) return;
+    if (!window.confirm("Are you sure you want to delete this banner?")) return;
 
     try {
       const token = localStorage.getItem("token");
       await axios.delete(`${API_BASE_URL}/api/banners/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Banner deleted successfully!");
+      toast.success("Banner deleted successfully!");
       fetchBanners();
     } catch (error) {
       console.error("Error deleting banner:", error);
-      alert("Failed to delete banner");
+      toast.error("Failed to delete banner");
     }
   };
 

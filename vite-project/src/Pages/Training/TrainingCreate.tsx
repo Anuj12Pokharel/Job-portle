@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { API_BASE_URL } from "../../config/api";
 
 const CreateTraining = () => {
@@ -96,7 +97,7 @@ const CreateTraining = () => {
 
       await axios.post(`${API_BASE_URL}/api/training`, data, config);
 
-      alert("Training created successfully");
+      toast.success("Training created successfully");
 
       setFormData({
         title: "",

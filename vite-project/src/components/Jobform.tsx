@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Form from "./Form";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { API_BASE_URL } from "../config/api";
 
 export default function Jobform() {
@@ -57,7 +58,7 @@ export default function Jobform() {
         formDataToSend
       );
 
-      alert(res.data.message);
+      toast.success(res.data.message);
       console.log(res.data.message);
 
       // Reset form
@@ -73,7 +74,7 @@ export default function Jobform() {
       setShowForm(false);
     } catch (err) {
       console.error("Error response:", err.response?.data);
-      alert(err.response?.data?.message || "Something went wrong ❌");
+      toast.error(err.response?.data?.message || "Something went wrong ❌");
     } finally {
       setIsSubmitting(false);
     }

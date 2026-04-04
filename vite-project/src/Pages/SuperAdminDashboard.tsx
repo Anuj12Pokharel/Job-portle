@@ -3,6 +3,7 @@ import axios from "axios";
 import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle, History as HistoryIcon, BookOpen, UserPlus, Mail, FileText, HelpCircle, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
+import { toast } from "react-toastify";
 import CreateTraining from "./Training/TrainingCreate";
 import Createblog from "./Createblog";
 import CreateTeam from "./CreateTeam";
@@ -240,10 +241,10 @@ const SuperAdminDashboard = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchData();
-            alert("Deleted successfully");
+            toast.success("Deleted successfully");
         } catch (err) {
             console.error("Delete failed", err);
-            alert("Delete failed");
+            toast.error("Delete failed");
         }
     };
 
@@ -255,10 +256,10 @@ const SuperAdminDashboard = () => {
                 { headers: { Authorization: `Bearer ${token}` } }
             );
             fetchData();
-            alert(`Employer ${status} successfully`);
+            toast.success(`Employer ${status} successfully`);
         } catch (err) {
             console.error("Verification failed", err);
-            alert("Verification failed");
+            toast.error("Verification failed");
         }
     };
 
@@ -387,11 +388,11 @@ const SuperAdminDashboard = () => {
             fetchData();
         } catch (err) {
             console.error("Update failed", err);
-            alert("Update failed");
+            toast.error("Update failed");
         }
     };
     const handleUploadLogo = async () => {
-        if (!logoFile) return alert("Please select a file");
+        if (!logoFile) return toast.warning("Please select a file");
         const token = localStorage.getItem("token");
         const formData = new FormData();
         formData.append("logo", logoFile);
@@ -403,12 +404,12 @@ const SuperAdminDashboard = () => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            alert("Logo uploaded successfully");
+            toast.success("Logo uploaded successfully");
             setLogoFile(null);
             fetchData();
         } catch (err) {
             console.error("Upload failed", err);
-            alert("Upload failed");
+            toast.error("Upload failed");
         }
     };
 
@@ -422,7 +423,7 @@ const SuperAdminDashboard = () => {
             fetchData();
         } catch (err) {
             console.error("Delete failed", err);
-            alert("Delete failed");
+            toast.error("Delete failed");
         }
     };
 
@@ -458,7 +459,7 @@ const SuperAdminDashboard = () => {
         } catch (err) {
             console.error(err);
             const msg = err.response?.data?.message || "Failed to post job";
-            alert(msg);
+            toast.error(msg);
         }
     };
 
@@ -479,12 +480,12 @@ const SuperAdminDashboard = () => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            alert("Banner updated successfully");
+            toast.success("Banner updated successfully");
             setBannerFile(null);
             fetchData(); // Refresh to see changes if needed
         } catch (err) {
             console.error("Banner update failed", err);
-            alert("Banner update failed");
+            toast.error("Banner update failed");
         }
     };
 

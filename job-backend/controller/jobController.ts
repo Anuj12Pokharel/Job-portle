@@ -150,6 +150,16 @@ export const getJobs = async (req: Request, res: Response) => {
       ];
     }
 
+    // Hide expired jobs from jobseekers
+    filter.$or = filter.$or || [];
+    filter.$and = filter.$and || [];
+    filter.$and.push({
+      $or: [
+        { expiryDate: { $exists: false } },
+        { expiryDate: { $gt: new Date() } }
+      ]
+    });
+
     const jobs = await Job.find(filter).populate(
       "postedBy",
       "companyName profilePicture companyWebsite"
@@ -309,7 +319,12 @@ export const getCategories = async (_req: Request, res: Response) => {
             $ne: "",
             // Exclude known job levels that were mistakenly saved as categories
             $nin: ["Junior", "Senior", "Middle Level", "Internship", "Entry Level"]
-          }
+          },
+          // Hide expired jobs from category counts
+          $or: [
+            { expiryDate: { $exists: false } },
+            { expiryDate: { $gt: new Date() } }
+          ]
         }
       },
       { $group: { _id: "$category", count: { $sum: 1 } } },
@@ -393,7 +408,13 @@ export const getJobsByLevel = async (req: Request, res: Response) => {
     // Trim and remove extra spaces/newlines
     level = String(level).trim();
 
-    const jobs = await Job.find({ jobLevel: level })
+    const jobs = await Job.find({ 
+      jobLevel: level,
+      $or: [
+        { expiryDate: { $exists: false } },
+        { expiryDate: { $gt: new Date() } }
+      ]
+    })
       .sort({ createdAt: -1 })
       .select("companyName logo position jobLevel")
       .limit(10);

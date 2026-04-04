@@ -17,6 +17,7 @@ import {
     X
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -77,7 +78,7 @@ const AdminDashboard = () => {
                 // Check if it's an approval status error
                 const errorMessage = err.response?.data?.message;
                 if (errorMessage && (errorMessage.includes("pending approval") || errorMessage.includes("rejected"))) {
-                    alert(errorMessage + "\n\nPlease contact the Super Admin for approval.");
+                    toast.warning(errorMessage + "\n\nPlease contact the Super Admin for approval.");
                 }
             }
             setLoading(false);
@@ -186,7 +187,7 @@ const AdminDashboard = () => {
             setLoading(false);
         } catch (err) {
             console.error("Failed to fetch applicants", err);
-            alert("Failed to fetch applicants");
+            toast.error("Failed to fetch applicants");
             setLoading(false);
         }
     };
@@ -199,10 +200,10 @@ const AdminDashboard = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             fetchMyJobs();
-            alert("Job deleted successfully");
+            toast.success("Job deleted successfully");
         } catch (err) {
             console.error(err);
-            alert("Failed to delete job");
+            toast.error("Failed to delete job");
         }
     };
 
@@ -250,7 +251,7 @@ const AdminDashboard = () => {
                         "Content-Type": "multipart/form-data"
                     },
                 });
-                alert("Job Updated Successfully!");
+                toast.success("Job Updated Successfully!");
                 setEditingJobId(null);
             } else {
                 // Create new job
@@ -260,7 +261,7 @@ const AdminDashboard = () => {
                         "Content-Type": "multipart/form-data"
                     },
                 });
-                alert("Job Posted Successfully!");
+                toast.success("Job Posted Successfully!");
             }
             if (activeTab === 'history') {
                 try {
@@ -302,9 +303,9 @@ const AdminDashboard = () => {
 
             // Check if it's an approval status error
             if (msg.includes("pending approval") || msg.includes("rejected")) {
-                alert(msg + "\n\nPlease contact the Super Admin for approval.");
+                toast.warning(msg + "\n\nPlease contact the Super Admin for approval.");
             } else {
-                alert(msg);
+                toast.error(msg);
             }
         }
     };
@@ -330,7 +331,7 @@ const AdminDashboard = () => {
 
     const handleDownloadCV = async (resumePath: string) => {
         if (!resumePath) {
-            alert("No CV available");
+            toast.info("No CV available");
             return;
         }
         // Normalize path

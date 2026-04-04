@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
@@ -16,7 +17,7 @@ const Createblog = () => {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Unauthorized");
+      toast.error("Unauthorized");
       return;
     }
 
@@ -36,15 +37,15 @@ const Createblog = () => {
         },
       });
 
-      alert("Blog posted successfully");
+      toast.success("Blog posted successfully");
 
       setTitle("");
       setBody("");
       setAuthor("");
       setImage(null);
       setImagePreview("");
-    } catch (err) {
-      alert(err.response?.data?.message || "Failed to post blog");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to post blog");
     } finally {
       setLoading(false);
     }

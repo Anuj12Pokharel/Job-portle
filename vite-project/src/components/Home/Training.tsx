@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { ArrowRight, X, Clock, Users, Award, BookOpen } from "lucide-react";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -126,14 +127,14 @@ export default function TrainingsHome() {
     try {
       const response = await axios.post(`${API_BASE_URL}/api/enrollments`, formData);
       if (response.data.success) {
-        alert(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
+        toast.success(response.data.message || "Enrollment submitted successfully! We'll contact you soon.");
         setShowEnrollModal(false);
         setFormData({ name: "", email: "", phone: "", shift: "", course: "" });
       }
     } catch (error: any) {
       console.error("Error submitting enrollment:", error);
       const errorMessage = error.response?.data?.message || "Failed to submit enrollment. Please try again.";
-      alert(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setSubmitting(false);
     }

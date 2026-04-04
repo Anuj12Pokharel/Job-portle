@@ -7,6 +7,7 @@ import {
   Bookmark,
   BookmarkCheck,
 } from "lucide-react";
+import { toast } from "react-toastify";
 import {
   FaFacebookF,
   FaWhatsapp,
@@ -124,7 +125,7 @@ const JobDetails = () => {
       setIsSaved(res.data.isSaved);
     } catch (err) {
       console.error(err);
-      alert("Failed to update save status");
+      toast.error("Failed to update save status");
     }
   };
 
@@ -261,9 +262,14 @@ const JobDetails = () => {
             <div className="flex items-center gap-3 w-full sm:w-auto">
               <button
                 onClick={handleApply}
-                className="bg-blue-700 text-white px-6 py-2 rounded hover:bg-blue-800 transition font-medium text-sm flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm"
+                disabled={daysLeft !== null && daysLeft <= 0}
+                className={`px-6 py-2 rounded transition font-medium text-sm flex items-center justify-center gap-2 w-full sm:w-auto shadow-sm ${
+                  daysLeft !== null && daysLeft <= 0
+                    ? "bg-gray-400 cursor-not-allowed text-white"
+                    : "bg-blue-700 text-white hover:bg-blue-800"
+                }`}
               >
-                Apply Now
+                {daysLeft !== null && daysLeft <= 0 ? "Job Expired" : "Apply Now"}
               </button>
               <button
                 className={`px-6 py-2 rounded transition font-medium text-sm flex items-center justify-center gap-2 w-full sm:w-auto border ${

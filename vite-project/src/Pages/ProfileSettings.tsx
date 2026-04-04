@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { User, Mail, MapPin, Briefcase, Phone, Camera, Loader2, Save } from "lucide-react";
+import { toast } from "react-toastify";
 
 // Assuming you have a config file or env for API URL
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -128,8 +129,7 @@ const ProfileSettings = () => {
             // Dispatch event to update Navbar
             window.dispatchEvent(new Event("storage"));
 
-            alert("Updated Successfully!");
-            setMessage({ type: "success", text: "Updated Successfully!" });
+            toast.success("Updated Successfully!");
             setSaving(false);
         } catch (err: any) {
             console.error("Update failed", err);

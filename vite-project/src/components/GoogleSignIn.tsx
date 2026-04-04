@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 import { API_BASE_URL } from "../config/api";
 
 interface GoogleSignInProps {
@@ -23,7 +24,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ role }) => {
             try {
               const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken, role });
               if (res.data?.token) {
-                alert("Logged in successfully!");
+                toast.success("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
 
                 const userData = res.data.user || res.data.admin;
@@ -68,7 +69,7 @@ const GoogleSignIn: React.FC<GoogleSignInProps> = ({ role }) => {
             try {
               const res = await axios.post(`${API_BASE_URL}/api/auth/google`, { idToken, role });
               if (res.data?.token) {
-                alert("Logged in successfully!");
+                toast.success("Logged in successfully!");
                 localStorage.setItem('token', res.data.token);
 
                 const userData = res.data.user || res.data.admin;
