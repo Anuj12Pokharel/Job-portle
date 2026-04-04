@@ -19,8 +19,6 @@ interface JobFormData {
   expiryDate: string;
   noOfOpenings: string;
   industry: string;
-  vehicleLicense: string;
-  twoFourWheeler: string;
   skills: string;
   description: string;
   additionalRequirements: string;
@@ -43,8 +41,6 @@ const INITIAL_FORM: JobFormData = {
   expiryDate: "",
   noOfOpenings: "",
   industry: "",
-  vehicleLicense: "",
-  twoFourWheeler: "",
   skills: "",
   description: "",
   additionalRequirements: "",
@@ -63,8 +59,6 @@ const JOB_LEVEL_OPTIONS = [
 
 const Jobpost: React.FC = () => {
   const [formData, setFormData] = useState<JobFormData>(INITIAL_FORM);
-  const [logo, setLogo] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -97,18 +91,6 @@ const Jobpost: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] ?? null;
-    setLogo(file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => setLogoPreview(reader.result as string);
-      reader.readAsDataURL(file);
-    } else {
-      setLogoPreview(null);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,7 +101,6 @@ const Jobpost: React.FC = () => {
     try {
       const data = new FormData();
       Object.entries(formData).forEach(([key, value]) => data.append(key, value));
-      if (logo) data.append("logo", logo);
 
       // Map companyAddress back to location for backend compatibility
       data.set("location", formData.companyAddress);
@@ -134,8 +115,6 @@ const Jobpost: React.FC = () => {
 
       setSuccess("Job posted successfully! Your listing is now live.");
       setFormData(INITIAL_FORM);
-      setLogo(null);
-      setLogoPreview(null);
 
       // Re-populate company fields
       const storedUser = localStorage.getItem("user");
@@ -403,28 +382,6 @@ const Jobpost: React.FC = () => {
               />
             </div>
 
-            {/* Company Logo */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Company Logo
-              </label>
-              <div className="flex items-center gap-3">
-                <input
-                  type="file"
-                  name="logo"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="w-full border border-gray-200 p-2.5 rounded-lg text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-cyan-50 file:text-cyan-700 hover:file:bg-cyan-100 transition"
-                />
-                {logoPreview && (
-                  <img
-                    src={logoPreview}
-                    alt="Logo preview"
-                    className="w-12 h-12 rounded-lg object-cover border border-gray-200"
-                  />
-                )}
-              </div>
-            </div>
           </div>
 
           {/* Skills - full width */}
@@ -482,37 +439,6 @@ const Jobpost: React.FC = () => {
             Specify any additional qualifications or requirements for the role.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Vehicle License */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Vehicle License (Optional)
-              </label>
-              <input
-                type="text"
-                name="vehicleLicense"
-                placeholder="e.g. Two-wheeler license"
-                value={formData.vehicleLicense}
-                onChange={handleChange}
-                className="w-full border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition"
-              />
-            </div>
-
-            {/* Two/Four Wheeler */}
-            <div>
-              <label className="block text-sm font-medium text-gray-600 mb-1">
-                Vehicle Type (Optional)
-              </label>
-              <input
-                type="text"
-                name="twoFourWheeler"
-                placeholder="e.g. Two-wheeler / Four-wheeler"
-                value={formData.twoFourWheeler}
-                onChange={handleChange}
-                className="w-full border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition"
-              />
-            </div>
-          </div>
 
           {/* Additional Requirements - full width */}
           <div className="mt-5">
