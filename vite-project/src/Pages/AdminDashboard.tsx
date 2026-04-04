@@ -82,7 +82,33 @@ const AdminDashboard = () => {
             }
             setLoading(false);
         };
+        const fetchLatestProfile = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+            try {
+                const res = await axios.get(`${API_BASE_URL}/api/admin/employer/profile`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+                if (res.data) {
+                    const latestUser = res.data;
+                    setJobData(prev => ({
+                        ...prev,
+                        companyName: latestUser.companyName || prev.companyName,
+                        location: latestUser.companyLocation || prev.location,
+                        companyWebsite: latestUser.companyWebsite || prev.companyWebsite,
+                        aboutCompany: latestUser.aboutCompany || prev.aboutCompany,
+                    }));
+                    // Keep localStorage in sync
+                    localStorage.setItem("user", JSON.stringify(latestUser));
+                }
+            } catch (err) {
+                console.error("Failed to fetch latest profile for auto-fill", err);
+            }
+        };
+
         loadMyJobs();
+        fetchLatestProfile();
+
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
             try {

@@ -65,22 +65,48 @@ const Jobpost: React.FC = () => {
 
   // Auto-fill company details from logged-in employer profile
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) return;
-
-    try {
-      const user = JSON.parse(storedUser);
-      if (user) {
-        setFormData((prev) => ({
-          ...prev,
-          companyName: user.companyName || "",
-          companyAddress: user.companyLocation || "",
-          companyWebsite: user.companyWebsite || "",
-          aboutCompany: user.aboutCompany || "",
-        }));
+    const fetchLatestProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const res = await axios.get(`${API_BASE_URL}/api/admin/employer/profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.data) {
+          const user = res.data;
+          setFormData((prev) => ({
+            ...prev,
+            companyName: user.companyName || prev.companyName,
+            companyAddress: user.companyLocation || prev.companyAddress,
+            companyWebsite: user.companyWebsite || prev.companyWebsite,
+            aboutCompany: user.aboutCompany || prev.aboutCompany,
+          }));
+          // Keep localStorage in sync
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      } catch (err) {
+        console.error("Failed to fetch latest profile for auto-fill", err);
       }
-    } catch {
-      console.error("Failed to parse user data from localStorage");
+    };
+
+    fetchLatestProfile();
+
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        if (user) {
+          setFormData((prev) => ({
+            ...prev,
+            companyName: user.companyName || "",
+            companyAddress: user.companyLocation || "",
+            companyWebsite: user.companyWebsite || "",
+            aboutCompany: user.aboutCompany || "",
+          }));
+        }
+      } catch {
+        console.error("Failed to parse user data from localStorage");
+      }
     }
   }, []);
 

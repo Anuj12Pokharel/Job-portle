@@ -99,6 +99,8 @@ export const loginAdmin = async (req: Request, res: Response) => {
         email: admin.email,
         mobileNumber: admin.mobileNumber,
         role: admin.role,
+        aboutCompany: admin.aboutCompany,
+        companyWebsite: admin.companyWebsite,
       },
     });
   } catch (err) {
