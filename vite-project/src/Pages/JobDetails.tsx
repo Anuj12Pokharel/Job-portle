@@ -33,8 +33,6 @@ interface Job {
   jobType: string;
   noOfOpenings?: string;
   industry?: string;
-  vehicleLicense?: string;
-  twoFourWheeler?: string;
   skills?: string;
   additionalRequirements?: string;
 }
@@ -371,7 +369,7 @@ const JobDetails = () => {
           </div>
 
           {/* Additional Information Card */}
-          {(job.skills || job.vehicleLicense || job.twoFourWheeler || job.additionalRequirements) && (
+          {(job.skills || job.additionalRequirements) && (
             <div className="bg-yellow-50 rounded-lg p-6 shadow-sm border border-yellow-200 text-gray-800">
               <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <Layers className="w-5 h-5 text-yellow-600" />
@@ -382,18 +380,6 @@ const JobDetails = () => {
                   <div>
                     <span className="font-medium text-gray-700 block mb-1">Skills Required:</span>
                     <p className="text-gray-600">{job.skills}</p>
-                  </div>
-                )}
-                {job.vehicleLicense && (
-                  <div>
-                    <span className="font-medium text-gray-700 block mb-1">Vehicle License:</span>
-                    <p className="text-gray-600">{job.vehicleLicense}</p>
-                  </div>
-                )}
-                {job.twoFourWheeler && (
-                  <div>
-                    <span className="font-medium text-gray-700 block mb-1">Vehicle Type:</span>
-                    <p className="text-gray-600">{job.twoFourWheeler}</p>
                   </div>
                 )}
                 {job.additionalRequirements && (

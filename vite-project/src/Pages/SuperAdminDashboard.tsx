@@ -54,14 +54,11 @@ const SuperAdminDashboard = () => {
         companyWebsite: "",
         noOfOpenings: "",
         industry: "",
-        vehicleLicense: "",
-        twoFourWheeler: "",
         skills: "",
         expiryDate: "",
         desiredCandidate: "",
         isFeatured: false
     });
-    const [jobLogo, setJobLogo] = useState<File | null>(null);
     const [companies, setCompanies] = useState<any[]>([]);
     const [showCompanySuggestions, setShowCompanySuggestions] = useState(false);
     const [filteredCompanies, setFilteredCompanies] = useState<any[]>([]);
@@ -440,7 +437,6 @@ const SuperAdminDashboard = () => {
                 formData.append(key, value as string);
             }
         });
-        if (jobLogo) formData.append("logo", jobLogo);
 
         try {
             await axios.post(`${API_BASE_URL}/api/jobs/create`, formData, {
@@ -456,10 +452,9 @@ const SuperAdminDashboard = () => {
                 companyName: "", position: "", category: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
-                noOfOpenings: "", industry: "", vehicleLicense: "", twoFourWheeler: "",
-                skills: "", expiryDate: "", desiredCandidate: "", isFeatured: false,
+                noOfOpenings: "", industry: "", skills: "",
+                expiryDate: "", desiredCandidate: "", isFeatured: false,
             });
-            setJobLogo(null);
         } catch (err) {
             console.error(err);
             const msg = err.response?.data?.message || "Failed to post job";
@@ -745,21 +740,6 @@ const SuperAdminDashboard = () => {
                         )}
                         {editType === "job" && (
                             <>
-                                <div className="flex justify-center mb-4">
-                                    <div className="w-24 h-24 rounded-lg bg-gray-200 overflow-hidden relative border">
-                                        {selectedFile ? (
-                                            <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
-                                        ) : editFormData.logo ? (
-                                            <img src={buildImageUrl(editFormData.logo)} alt="Current" className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="flex items-center justify-center h-full text-gray-400"><ImageIcon /></div>
-                                        )}
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Job/Company Logo</label>
-                                    <input type="file" onChange={(e) => setSelectedFile(e.target.files ? e.target.files[0] : null)} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
-                                </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Position</label>
                                     <input type="text" value={editFormData.position || ''} onChange={(e) => setEditFormData({ ...editFormData, position: e.target.value })} className="w-full border rounded px-3 py-2" />
@@ -1131,14 +1111,6 @@ const SuperAdminDashboard = () => {
                                         <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License (Optional)</label>
-                                        <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-1">Two/Four Wheeler</label>
-                                        <input type="text" value={jobData.twoFourWheeler} onChange={e => setJobData({ ...jobData, twoFourWheeler: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                    </div>
-                                    <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
                                         <input type="text" value={jobData.skills} onChange={e => setJobData({ ...jobData, skills: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                     </div>
@@ -1154,11 +1126,6 @@ const SuperAdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Desired Candidate</label>
                                     <textarea rows={3} value={jobData.desiredCandidate} onChange={e => setJobData({ ...jobData, desiredCandidate: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
-                                </div>
-
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Logo (Optional)</label>
-                                    <input type="file" onChange={e => setJobLogo(e.target.files ? e.target.files[0] : null)} className="w-full" accept="image/*" />
                                 </div>
 
                                 <div>

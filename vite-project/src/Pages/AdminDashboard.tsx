@@ -52,8 +52,6 @@ const AdminDashboard = () => {
         companyWebsite: "",
         noOfOpenings: "",
         industry: "",
-        vehicleLicense: "",
-        twoFourWheeler: "",
         skills: "",
         desiredCandidate: "",
         expiryDate: "",
@@ -199,8 +197,6 @@ const AdminDashboard = () => {
             companyWebsite: job.companyWebsite || "",
             noOfOpenings: job.noOfOpenings || "",
             industry: job.industry || "",
-            vehicleLicense: job.vehicleLicense || "",
-            twoFourWheeler: job.twoFourWheeler || "",
             skills: job.skills || "",
             expiryDate: job.expiryDate ? new Date(job.expiryDate).toISOString().split('T')[0] : "",
             desiredCandidate: job.desiredCandidate || ""
@@ -257,9 +253,8 @@ const AdminDashboard = () => {
                 companyName: "", position: "", category: "", jobLevel: "", jobType: "Full-time",
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
-                noOfOpenings: "", industry: "", vehicleLicense: "",
-                twoFourWheeler: "", skills: "", desiredCandidate: "",
-                expiryDate: "",
+                noOfOpenings: "", industry: "", skills: "",
+                desiredCandidate: "", expiryDate: "",
             });
             // Re-fill company fields from localStorage after reset
             const storedUser = localStorage.getItem("user");
@@ -660,10 +655,6 @@ const AdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
                                     <input type="date" value={jobData.expiryDate} onChange={e => setJobData({ ...jobData, expiryDate: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle License (Optional)</label>
-                                    <input type="text" value={jobData.vehicleLicense} onChange={e => setJobData({ ...jobData, vehicleLicense: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
