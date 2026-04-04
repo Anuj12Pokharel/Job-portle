@@ -1043,7 +1043,9 @@ const SuperAdminDashboard = () => {
                                                             setJobData({
                                                                 ...jobData,
                                                                 companyName: company.companyName,
-                                                                location: company.companyLocation || jobData.location
+                                                                location: company.companyLocation || jobData.location,
+                                                                aboutCompany: company.aboutCompany || jobData.aboutCompany,
+                                                                companyWebsite: company.companyWebsite || jobData.companyWebsite
                                                             });
                                                             setShowCompanySuggestions(false);
                                                         }}

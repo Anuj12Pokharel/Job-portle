@@ -261,7 +261,13 @@ const AdminDashboard = () => {
             if (storedUser) {
                 try {
                     const user = JSON.parse(storedUser);
-                    if (user) setJobData(prev => ({ ...prev, companyName: user.companyName || "", location: user.companyLocation || "", companyWebsite: user.companyWebsite || "" }));
+                    if (user) setJobData(prev => ({ 
+                        ...prev, 
+                        companyName: user.companyName || "", 
+                        location: user.companyLocation || "", 
+                        companyWebsite: user.companyWebsite || "",
+                        aboutCompany: user.aboutCompany || ""
+                    }));
                 } catch (e) { }
             }
         } catch (err) {
