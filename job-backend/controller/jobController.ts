@@ -152,9 +152,19 @@ export const getJobs = async (req: Request, res: Response) => {
 
     const jobs = await Job.find(filter).populate(
       "postedBy",
-      "companyName logo companyWebsite"
+      "companyName profilePicture companyWebsite"
     );
-    res.json(jobs);
+
+    // Exclusively use employer's profile picture for the job logo
+    const formattedJobs = jobs.map((job: any) => {
+      const jobObj = job.toObject() as any;
+      if (jobObj.postedBy?.profilePicture) {
+        jobObj.logo = jobObj.postedBy.profilePicture;
+      }
+      return jobObj;
+    });
+
+    res.json(formattedJobs);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch jobs" });
@@ -167,9 +177,15 @@ export const getJobById = async (req: Request, res: Response) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid job ID" });
     }
-    const job = await Job.findById(id).populate("postedBy", "companyName logo companyWebsite");
+    const job = await Job.findById(id).populate("postedBy", "companyName profilePicture companyWebsite");
     if (!job) return res.status(404).json({ message: "Job not found" });
-    res.json(job);
+
+    const jobObj = job.toObject() as any;
+    if (jobObj.postedBy?.profilePicture) {
+      jobObj.logo = jobObj.postedBy.profilePicture;
+    }
+
+    res.json(jobObj);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch job" });
@@ -250,12 +266,20 @@ export const getSavedJobs = async (req: Request, res: Response) => {
 
     const user = await User.findById(userId).populate({
       path: "savedJobs",
-      populate: { path: "postedBy", select: "companyName logo" },
+      populate: { path: "postedBy", select: "companyName profilePicture" },
     });
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json(user.savedJobs);
+    const formattedSavedJobs = user.savedJobs.map((job: any) => {
+      const jobObj = job.toObject() as any;
+      if (jobObj.postedBy?.profilePicture) {
+        jobObj.logo = jobObj.postedBy.profilePicture;
+      }
+      return jobObj;
+    });
+
+    res.json(formattedSavedJobs);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch saved jobs" });

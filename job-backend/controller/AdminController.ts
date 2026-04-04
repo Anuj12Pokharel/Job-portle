@@ -350,17 +350,7 @@ export const getEmployerProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Employer not found. Please check if your account exists and is approved." });
     }
 
-    // Construct full URL for profile picture if it exists and is a relative path
-    let profilePictureUrl = admin.profilePicture;
-    if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
-      const baseUrl = `${req.protocol}://${req.get("host")}`;
-      profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
-    }
-
-    res.status(200).json({
-      ...admin.toObject(),
-      profilePicture: profilePictureUrl,
-    });
+    res.status(200).json(admin.toObject());
   } catch (error) {
     console.error("Get employer profile error:", error);
     res.status(500).json({ message: "Server error" });
@@ -406,19 +396,9 @@ export const updateEmployerProfile = async (req: Request, res: Response) => {
 
     await admin.save();
 
-    // Return updated admin
-    let profilePictureUrl = admin.profilePicture;
-    if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
-      const baseUrl = `${req.protocol}://${req.get("host")}`;
-      profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
-    }
-
     res.status(200).json({
       message: "Profile updated successfully",
-      admin: {
-        ...admin.toObject(),
-        profilePicture: profilePictureUrl,
-      },
+      admin: admin.toObject(),
     });
   } catch (error) {
     console.error("Update employer profile error:", error);

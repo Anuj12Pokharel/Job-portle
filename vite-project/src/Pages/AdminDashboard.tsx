@@ -58,7 +58,6 @@ const AdminDashboard = () => {
         desiredCandidate: "",
         expiryDate: "",
     });
-    const [logo, setLogo] = useState<File | null>(null);
     const [editingJobId, setEditingJobId] = useState<string | null>(null);
     const [history, setHistory] = useState<any[]>([]);
     const [historyTotal, setHistoryTotal] = useState(0);
@@ -219,7 +218,6 @@ const AdminDashboard = () => {
                 formData.append(key, String(value));
             }
         });
-        if (logo) formData.append("logo", logo);
 
         try {
             if (editingJobId) {
@@ -271,7 +269,6 @@ const AdminDashboard = () => {
                     if (user) setJobData(prev => ({ ...prev, companyName: user.companyName || "", location: user.companyLocation || "", companyWebsite: user.companyWebsite || "" }));
                 } catch (e) { }
             }
-            setLogo(null);
         } catch (err) {
             console.error(err);
             const msg = err.response?.data?.message || "Failed to post job";
@@ -674,10 +671,6 @@ const AdminDashboard = () => {
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Logo (Optional)</label>
-                                <input type="file" onChange={e => setLogo(e.target.files ? e.target.files[0] : null)} className="w-full" accept="image/*" />
-                            </div>
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>

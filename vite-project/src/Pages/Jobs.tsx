@@ -46,8 +46,13 @@ export default function Jobs() {
 
     const buildLogoUrl = (logo?: string) => {
         if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
-        const cleaned = String(logo).replace(/\\/g, "/").replace(/^\/+/, "");
-        return cleaned.startsWith("http") ? cleaned : `${backendBase}/${cleaned}`;
+        const cleaned = String(logo).replace(/\\/g, "/");
+        // If it's already a full http URL, use it directly
+        if (cleaned.startsWith("http")) return cleaned;
+        // Extract the relative part starting from 'uploads/'
+        const uploadsIndex = cleaned.indexOf("uploads/");
+        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
+        return `${backendBase}/${relativePath}`;
     };
 
     // Fetch categories
