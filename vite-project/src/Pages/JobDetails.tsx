@@ -189,17 +189,6 @@ const JobDetails = () => {
         <div className="lg:col-span-2">
           {/* Company Header Banner */}
           <div className="bg-sky-50 rounded-md p-6 mb-6 flex items-center gap-4">
-            <div className="w-14 h-14 bg-white rounded-lg shadow-sm flex items-center justify-center overflow-hidden shrink-0">
-              {buildLogoUrl(job.logo) ? (
-                <img
-                  src={buildLogoUrl(job.logo)}
-                  alt={job.companyName}
-                  className="w-full h-full object-contain p-1"
-                />
-              ) : (
-                <div className="font-bold text-gray-400 text-xs">Logo</div>
-              )}
-            </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-800">{job.companyName}</h2>
               {job.industry && (
@@ -213,16 +202,6 @@ const JobDetails = () => {
             {job.position}
           </h1>
 
-          {/* ── Company Information ── */}
-          <div className="mb-8 border-b border-gray-200 pb-8">
-            <h3 className="text-lg font-bold text-gray-700 mb-4">Company Information</h3>
-            <div className="grid grid-cols-1 gap-y-3 text-sm">
-              <DetailRow label="Company Name" value={job.companyName} />
-              <DetailRow label="Company Address" value={job.location} />
-              <DetailRow label="Company Website" value={websiteLink} />
-              <DetailRow label="Industry" value={job.industry} />
-            </div>
-          </div>
 
           {/* ── Job Information ── */}
           <div className="mb-8 border-b border-gray-200 pb-8">
