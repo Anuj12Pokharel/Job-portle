@@ -47,9 +47,14 @@ function App() {
   const location = useLocation();
 
   // Dynamic page title based on route
+  const prevPathname = React.useRef(location.pathname);
+
   useEffect(() => {
-    // Scroll to top on every route change
-    window.scrollTo({ top: 0, behavior: "instant" });
+    // Scroll to top ONLY on pathname change, not on query param changes (category select)
+    if (prevPathname.current !== location.pathname) {
+      window.scrollTo({ top: 0, behavior: "instant" });
+      prevPathname.current = location.pathname;
+    }
 
     const pageTitles: { [key: string]: string } = {
       '/': 'JobLink360 - Find Your Dream Job',
