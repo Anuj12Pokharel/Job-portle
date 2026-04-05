@@ -54,9 +54,9 @@ interface Props {
 const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
   const { personalInfo, education, experience, skills, projects, languages, references } = data;
   return (
-    <div className="bg-white shadow-2xl rounded-sm w-full min-h-[841px] p-[40px] text-gray-800 border overflow-y-auto print:shadow-none" id="cv-preview">
+    <div className="bg-white shadow-2xl rounded-sm w-full min-h-[1122px] p-[30px] text-gray-800 border overflow-y-auto print:shadow-none" id="cv-preview">
       {/* Header */}
-      <div className="text-center border-b-2 border-gray-800 pb-4 mb-6">
+      <div className="text-center border-b-2 border-gray-800 pb-3 mb-5">
         <h1 className="text-3xl font-bold text-gray-900 uppercase tracking-wider">{personalInfo.fullName || "Your Name"}</h1>
         <div className="text-sm text-gray-600 mt-2 flex justify-center gap-3">
           <span>{personalInfo.email || "email@example.com"}</span>
@@ -66,13 +66,13 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
       </div>
 
       {personalInfo.summary && (
-        <div className="mb-6">
+        <div className="mb-4">
           <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-2">Professional Summary</h2>
           <p className="text-sm leading-relaxed text-gray-700">{personalInfo.summary}</p>
         </div>
       )}
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-3">Work Experience</h2>
         <div className="space-y-4">
           {experience && experience.length > 0 ? (
@@ -98,7 +98,7 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-3">Education</h2>
         <div className="space-y-3">
           {education && education.length > 0 ? (
@@ -120,7 +120,7 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
         </div>
       </div>
 
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-2">Skills</h2>
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {skills && skills.length > 0 ? (
@@ -136,7 +136,7 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
       </div>
 
       {languages && languages.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-4">
           <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-2">Languages</h2>
           <div className="flex flex-wrap gap-x-4 gap-y-2">
             {languages.map((lang: any, index: number) => (
@@ -147,7 +147,7 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
       )}
 
       {projects && projects.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-4">
           <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-2">Projects</h2>
           <div className="space-y-3">
             {projects.map((proj: any, index: number) => (
@@ -162,7 +162,7 @@ const ProfessionalTemplate: React.FC<{ data: CVData }> = ({ data }) => {
       )}
 
       {references && references.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-4">
           <h2 className="text-lg font-bold text-gray-700 uppercase border-b border-gray-200 mb-2">References</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {references.map((ref: any, index: number) => (

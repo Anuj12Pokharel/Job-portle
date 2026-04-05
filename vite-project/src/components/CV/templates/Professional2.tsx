@@ -6,7 +6,7 @@ const Professional2: React.FC<{ data: CVData }> = ({ data }) => {
   return (
     <div className="bg-white w-full min-h-[1056px] font-sans text-gray-800 text-[13px]" style={{ fontFamily: "'Georgia', serif" }}>
       {/* Header */}
-      <div className="text-center py-8 border-b-2 border-gray-700">
+      <div className="text-center py-6 border-b-2 border-gray-700">
         <h1 className="text-3xl font-bold uppercase tracking-widest text-gray-900">{personalInfo.fullName || "Your Name"}</h1>
         <div className="flex justify-center flex-wrap gap-3 mt-2 text-xs text-gray-600">
           {personalInfo.email && <span>{personalInfo.email}</span>}
@@ -15,7 +15,7 @@ const Professional2: React.FC<{ data: CVData }> = ({ data }) => {
         </div>
       </div>
 
-      <div className="px-10 py-6 space-y-5">
+      <div className="px-8 py-4 space-y-4">
         {/* Summary */}
         {personalInfo.summary && (
           <div>
