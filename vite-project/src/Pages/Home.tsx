@@ -1,6 +1,5 @@
 import Jobsearchbanner from "../components/Jobsearchbanner";
 import GlobalSearch from "../components/GlobalSearch";
-import Jobportal from "../components/Jobform";
 import LogoSlider from "../components/LogoSlider";
 import HeroSection from "../components/Home/HeroSection";
 import Workingmethod from "../components/Home/Workingmethod";
@@ -12,9 +11,9 @@ import FA from "../components/Home/FA";
 import Training from "../components/Home/Training";
 import JobList from "../components/Job/JobList";
 import Jobcard from "../components/Jobcard";
+import Jobform from "../components/Jobform";
 
 import { useSearchParams } from "react-router-dom";
-import Jobform from "../components/Jobform";
 
 function Home() {
   const [searchParams] = useSearchParams();
@@ -29,17 +28,15 @@ function Home() {
          <LogoSlider />
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
           
-          {/* Left Sidebar */}
+          {/* Right Sidebar */}
           <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4">
+            <Jobform />
             <Jobcard />
           </div>
-
-          {/* Main Content */}
           <div className="w-full lg:w-[74%] xl:w-[78%] flex flex-col gap-6">
             <JobList category={category} search={search} />
           </div>
         </div>
-         <Jobform />
         <Topjob category={category} search={search} />
         <HeroSection />
         <div className="py-7">

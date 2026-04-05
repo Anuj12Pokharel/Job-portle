@@ -360,8 +360,13 @@ const EmployerProfileSettings = () => {
                                             value={formData.aboutCompany}
                                             onChange={handleChange}
                                             rows={4}
-                                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm overflow-hidden"
                                             placeholder="Tell us about your company, what you do, your mission..."
+                                            onInput={(e) => {
+                                                const target = e.target as HTMLTextAreaElement;
+                                                target.style.height = "auto";
+                                                target.style.height = `${target.scrollHeight}px`;
+                                            }}
                                         />
                                     </div>
                                 </div>

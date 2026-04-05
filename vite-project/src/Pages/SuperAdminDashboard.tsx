@@ -325,6 +325,8 @@ const SuperAdminDashboard = () => {
                 formData.append('category', editFormData.category || '');
                 formData.append('location', editFormData.location || '');
                 formData.append('salary', editFormData.salary || '');
+                formData.append('aboutCompany', editFormData.aboutCompany || '');
+                formData.append('companyWebsite', editFormData.companyWebsite || '');
                 formData.append('additionalInformation', editFormData.additionalInformation || '');
                 formData.append('isFeatured', String(editFormData.isFeatured || false));
                 if (selectedFile) formData.append('logo', selectedFile);
@@ -774,6 +776,31 @@ const SuperAdminDashboard = () => {
                                     <label htmlFor="editIsFeatured" className="text-sm font-medium text-gray-700">Mark as Featured Job</label>
                                 </div>
                                 <div className="mt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
+                                    <input
+                                        type="text"
+                                        value={editFormData.companyWebsite || ''}
+                                        onChange={(e) => setEditFormData({ ...editFormData, companyWebsite: e.target.value })}
+                                        className="w-full border rounded px-3 py-2"
+                                        placeholder="https://example.com"
+                                    />
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
+                                    <textarea
+                                        rows={2}
+                                        value={editFormData.aboutCompany || ''}
+                                        onChange={(e) => setEditFormData({ ...editFormData, aboutCompany: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                                        placeholder="Write something about your company..."
+                                        onInput={(e) => {
+                                            const target = e.target as HTMLTextAreaElement;
+                                            target.style.height = "auto";
+                                            target.style.height = `${target.scrollHeight}px`;
+                                        }}
+                                    ></textarea>
+                                </div>
+                                <div className="mt-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Additional Information</label>
                                     <textarea
                                         rows={4}
@@ -1135,7 +1162,18 @@ const SuperAdminDashboard = () => {
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
-                                        <input type="text" value={jobData.aboutCompany} onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                        <textarea
+                                            rows={2}
+                                            value={jobData.aboutCompany}
+                                            onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })}
+                                            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                                            placeholder="Write something about your company..."
+                                            onInput={(e) => {
+                                                const target = e.target as HTMLTextAreaElement;
+                                                target.style.height = "auto";
+                                                target.style.height = `${target.scrollHeight}px`;
+                                            }}
+                                        ></textarea>
                                     </div>
                                 </div>
                                 <div>

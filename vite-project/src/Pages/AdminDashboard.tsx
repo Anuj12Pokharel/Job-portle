@@ -693,7 +693,18 @@ const AdminDashboard = () => {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
-                                    <input type="text" value={jobData.aboutCompany} onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })} className="w-full border rounded-lg px-4 py-2" />
+                                    <textarea
+                                        rows={2}
+                                        value={jobData.aboutCompany}
+                                        onChange={e => setJobData({ ...jobData, aboutCompany: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 transition-all duration-200"
+                                        placeholder="Write something about your company..."
+                                        onInput={(e) => {
+                                            const target = e.target as HTMLTextAreaElement;
+                                            target.style.height = "auto";
+                                            target.style.height = `${target.scrollHeight}px`;
+                                        }}
+                                    ></textarea>
                                 </div>
                             </div>
 
