@@ -130,7 +130,7 @@ export default function Navbar() {
               </button>
 
               {categoryOpen && (
-                <div className="absolute top-full left-0 mt-0 w-64 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+                <div className="absolute top-full left-0 mt-2 w-64 bg-white border border-gray-200 rounded-2xl shadow-xl z-50 overflow-hidden dropdown-enter-left">
                   <Link
                     to="/jobs"
                     className="block px-4 py-3 text-sm font-semibold text-cyan-600 hover:bg-cyan-50 border-b-2 border-cyan-100 transition"

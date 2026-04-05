@@ -29,7 +29,20 @@ export default function JobList({
 }) {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Handle clicking outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest("#category-dropdown")) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const backendBase =
     import.meta.env.VITE_API_BASE_URL ||
@@ -84,51 +97,79 @@ export default function JobList({
     fetchJobs();
   }, [category, search, backendBase]);
 
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newCategory = e.target.value;
+  const handleCategorySelection = (newCategory: string) => {
     const params = new URLSearchParams();
     if (newCategory) params.append("category", newCategory);
     if (search) params.append("search", search);
 
-    navigate(`/?${params.toString()}`);
+    // Navigate smoothly
+    navigate(`/?${params.toString()}`, { replace: true });
   };
 
   const clearFilter = () => {
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-0 py-6">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-        <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold mb-4 sm:mb-0 text-center sm:text-left">
-          {search ? `Search Results for "${search}"` : "Featured Jobs"}
-        </h2>
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-10 gap-4">
+        <div className="flex flex-col">
+          <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold text-center sm:text-left">
+            {search ? `Search Results for "${search}"` : "Featured Jobs"}
+          </h2>
+          <div className="h-1 w-20 bg-cyan-500 rounded-full mt-2 hidden sm:block"></div>
+        </div>
 
-        <div className="relative inline-block w-full sm:w-64">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-500">
+        <div className="relative w-full sm:w-72" id="category-dropdown">
+          <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-cyan-500">
             <Filter size={18} />
           </div>
-          <select
-            value={category || ""}
-            onChange={handleCategoryChange}
-            className="block w-full pl-10 pr-4 py-2 bg-white border border-gray-300 hover:border-gray-400 px-4 rounded shadow leading-tight focus:outline-none focus:shadow-outline transition"
+          <button
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center justify-between w-full pl-11 pr-4 py-3 bg-white border-2 border-gray-100 hover:border-cyan-200 rounded-2xl shadow-sm text-gray-700 font-medium transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-cyan-50"
           >
-            <option value="">All Categories</option>
-            {categories.map((cat) => (
-              <option key={cat.name} value={cat.name}>
-                {cat.name} ({cat.count})
-              </option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <span className="truncate">
+              {category ? `${category}` : "All Categories"}
+            </span>
             <svg
-              className="fill-current h-4 w-4"
+              className={`fill-current h-4 w-4 text-gray-400 transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`}
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 20 20"
             >
               <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
             </svg>
-          </div>
+          </button>
+
+          {dropdownOpen && (
+            <div className="absolute top-full right-0 mt-3 w-full bg-white border border-gray-100 rounded-2xl shadow-2xl z-[60] overflow-hidden dropdown-enter origin-top animate-in fade-in zoom-in-95 duration-200">
+              <div className="max-h-72 overflow-y-auto custom-scrollbar px-2 py-2">
+                <button
+                  onClick={() => {
+                    handleCategorySelection("");
+                    setDropdownOpen(false);
+                  }}
+                  className={`flex w-full items-center px-4 py-3 text-sm rounded-xl transition-colors ${!category ? "bg-cyan-50 text-cyan-700 font-bold" : "text-gray-600 hover:bg-gray-50"
+                    }`}
+                >
+                  All Categories
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.name}
+                    onClick={() => {
+                      handleCategorySelection(cat.name);
+                      setDropdownOpen(false);
+                    }}
+                    className={`flex w-full items-center justify-between px-4 py-3 text-sm rounded-xl transition-colors ${category === cat.name ? "bg-cyan-50 text-cyan-700 font-bold" : "text-gray-600 hover:bg-gray-50"
+                      }`}
+                  >
+                    <span>{cat.name}</span>
+                    <span className="text-[10px] bg-gray-100 px-2 py-0.5 rounded-full text-gray-500">{cat.count}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

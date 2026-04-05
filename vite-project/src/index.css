@@ -17,6 +17,11 @@
   transform-origin: top right;
 }
 
+.dropdown-enter-left {
+  animation: dropdownEnter 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top left;
+}
+
 @keyframes slideInRight {
   0%   { transform: translateX(100%); opacity: 0; }
   60%  { transform: translateX(-3%); opacity: 1; }
