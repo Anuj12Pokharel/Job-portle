@@ -57,6 +57,7 @@ const AdminDashboard = () => {
         desiredCandidate: "",
         additionalInformation: "",
         expiryDate: "",
+        isFeatured: false,
     });
     const [editingJobId, setEditingJobId] = useState<string | null>(null);
     const [history, setHistory] = useState<any[]>([]);
@@ -229,6 +230,7 @@ const AdminDashboard = () => {
             expiryDate: job.expiryDate ? new Date(job.expiryDate).toISOString().split('T')[0] : "",
             desiredCandidate: job.desiredCandidate || "",
             additionalInformation: job.additionalInformation || "",
+            isFeatured: job.isFeatured || false,
         });
         setEditingJobId(job._id);
         setActiveTab("post-job");
@@ -284,6 +286,7 @@ const AdminDashboard = () => {
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", skills: "",
                 desiredCandidate: "", additionalInformation: "", expiryDate: "",
+                isFeatured: false,
             });
             // Re-fill company fields from localStorage after reset
             const storedUser = localStorage.getItem("user");
@@ -591,6 +594,24 @@ const AdminDashboard = () => {
                     <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
                         <h3 className="text-2xl font-bold text-gray-800 mb-6">{editingJobId ? "Edit Job" : "Post New Job"}</h3>
                         <form onSubmit={handlePostJob} className="space-y-6">
+                            <div className="flex items-center gap-3 bg-yellow-50 p-5 rounded-xl border border-yellow-100 mb-8 transition-all hover:shadow-md">
+                                <div className="p-2 bg-yellow-400 rounded-lg shadow-sm">
+                                    <PlusCircle className="w-6 h-6 text-yellow-900" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <input
+                                            type="checkbox"
+                                            id="isFeatured"
+                                            checked={jobData.isFeatured || false}
+                                            onChange={(e) => setJobData({ ...jobData, isFeatured: e.target.checked })}
+                                            className="w-6 h-6 text-yellow-600 rounded-lg border-yellow-300 focus:ring-yellow-500 cursor-pointer"
+                                        />
+                                        <label htmlFor="isFeatured" className="text-lg font-bold text-yellow-800 cursor-pointer select-none">🔥 Mark as Featured Job</label>
+                                    </div>
+                                    <p className="text-sm text-yellow-700 ml-8 font-medium mt-1">Featured jobs appear at the top of the job list and get more visibility.</p>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
@@ -711,7 +732,17 @@ const AdminDashboard = () => {
 
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
-                                <textarea rows={5} value={jobData.description} onChange={e => setJobData({ ...jobData, description: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
+                                <textarea
+                                    rows={5}
+                                    value={jobData.description}
+                                    onChange={e => setJobData({ ...jobData, description: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-teal-500 transition-all duration-200"
+                                    onInput={(e) => {
+                                        const target = e.target as HTMLTextAreaElement;
+                                        target.style.height = "auto";
+                                        target.style.height = `${target.scrollHeight}px`;
+                                    }}
+                                ></textarea>
                             </div>
 
                             <div>

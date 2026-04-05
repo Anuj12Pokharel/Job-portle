@@ -34,8 +34,8 @@ const LogoSlider = () => {
   const track2 = [...reversedBase, ...reversedBase];
 
   return (
-    <div className="w-full py-16 overflow-hidden">
-      <h1 className="text-center font-bold text-3xl md:text-4xl text-cyan-600 mb-12">
+    <div className="w-full pt-0 pb-16 overflow-hidden">
+      <h1 className="text-center font-bold text-3xl md:text-4xl text-cyan-600 mb-8">
         Top Employers
       </h1>
 

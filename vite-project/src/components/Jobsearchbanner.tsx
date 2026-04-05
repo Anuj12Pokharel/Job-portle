@@ -32,11 +32,6 @@ const Jobsearchbanner = () => {
         className="relative bg-cover bg-center h-[400px] flex flex-col items-center justify-center text-center px-4"
         style={{ backgroundImage: `url(${bannerImageUrl})` }}
       >
-        <div className=" bg-transparent max-w-3xl w-full">
-          <h1 className="text-xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg">
-            {banner?.title || "Linking Talent and Opportunities"}
-          </h1>
-        </div>
       </div>
     </div>
   );

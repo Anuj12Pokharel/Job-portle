@@ -322,9 +322,17 @@ const SuperAdminDashboard = () => {
                 const formData = new FormData();
                 formData.append('position', editFormData.position || '');
                 formData.append('companyName', editFormData.companyName || '');
-                formData.append('category', editFormData.category || '');
                 formData.append('location', editFormData.location || '');
                 formData.append('salary', editFormData.salary || '');
+                formData.append('description', editFormData.description || '');
+                formData.append('jobType', editFormData.jobType || '');
+                formData.append('noOfOpenings', editFormData.noOfOpenings || '');
+                formData.append('industry', editFormData.industry || '');
+                formData.append('educationLevel', editFormData.educationLevel || '');
+                formData.append('experience', editFormData.experience || '');
+                formData.append('expiryDate', editFormData.expiryDate || '');
+                formData.append('skills', editFormData.skills || '');
+                formData.append('desiredCandidate', editFormData.desiredCandidate || '');
                 formData.append('aboutCompany', editFormData.aboutCompany || '');
                 formData.append('companyWebsite', editFormData.companyWebsite || '');
                 formData.append('additionalInformation', editFormData.additionalInformation || '');
@@ -745,45 +753,84 @@ const SuperAdminDashboard = () => {
                         )}
                         {editType === "job" && (
                             <>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Position</label>
-                                    <input type="text" value={editFormData.position || ''} onChange={(e) => setEditFormData({ ...editFormData, position: e.target.value })} className="w-full border rounded px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Company Name (Display)</label>
-                                    <input type="text" value={editFormData.companyName || ''} onChange={(e) => setEditFormData({ ...editFormData, companyName: e.target.value })} className="w-full border rounded px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Category</label>
-                                    <input type="text" value={editFormData.category || ''} onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })} className="w-full border rounded px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Location</label>
-                                    <input type="text" value={editFormData.location || ''} onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })} className="w-full border rounded px-3 py-2" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700">Salary</label>
-                                    <input type="text" value={editFormData.salary || ''} onChange={(e) => setEditFormData({ ...editFormData, salary: e.target.value })} className="w-full border rounded px-3 py-2" />
-                                </div>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 bg-yellow-50 p-4 rounded-xl border border-yellow-100 mb-6 transition-all hover:shadow-sm">
                                     <input
                                         type="checkbox"
                                         id="editIsFeatured"
                                         checked={editFormData.isFeatured || false}
                                         onChange={(e) => setEditFormData({ ...editFormData, isFeatured: e.target.checked })}
-                                        className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                                        className="w-6 h-6 text-yellow-600 rounded-lg border-yellow-300 focus:ring-yellow-500 cursor-pointer"
                                     />
-                                    <label htmlFor="editIsFeatured" className="text-sm font-medium text-gray-700">Mark as Featured Job</label>
+                                    <label htmlFor="editIsFeatured" className="text-sm font-bold text-yellow-800 cursor-pointer select-none">🔥 Mark as Featured Job</label>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700">Position</label>
+                                    <input type="text" value={editFormData.position || ''} onChange={(e) => setEditFormData({ ...editFormData, position: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div className="grid grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Company Name (Display)</label>
+                                        <input type="text" value={editFormData.companyName || ''} onChange={(e) => setEditFormData({ ...editFormData, companyName: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
+                                        <input type="text" value={editFormData.companyWebsite || ''} onChange={(e) => setEditFormData({ ...editFormData, companyWebsite: e.target.value })} className="w-full border rounded px-3 py-2" placeholder="https://example.com" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                        <input type="text" value={editFormData.category || ''} onChange={(e) => setEditFormData({ ...editFormData, category: e.target.value })} className="w-full border rounded px-3 py-2" placeholder="e.g. Software Development" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                                        <input type="text" value={editFormData.location || ''} onChange={(e) => setEditFormData({ ...editFormData, location: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
+                                        <input type="text" value={editFormData.salary || ''} onChange={(e) => setEditFormData({ ...editFormData, salary: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                                        <input type="text" value={editFormData.jobType || ''} onChange={(e) => setEditFormData({ ...editFormData, jobType: e.target.value })} className="w-full border rounded px-3 py-2" placeholder="e.g. Full-time, Remote" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">No. of Openings</label>
+                                        <input type="number" value={editFormData.noOfOpenings || ''} onChange={(e) => setEditFormData({ ...editFormData, noOfOpenings: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Experience (Required)</label>
+                                        <input type="text" value={editFormData.experience || ''} onChange={(e) => setEditFormData({ ...editFormData, experience: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Industry</label>
+                                        <input type="text" value={editFormData.industry || ''} onChange={(e) => setEditFormData({ ...editFormData, industry: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Expiry Date</label>
+                                        <input type="date" value={editFormData.expiryDate ? new Date(editFormData.expiryDate).toISOString().split('T')[0] : ""} onChange={(e) => setEditFormData({ ...editFormData, expiryDate: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                    </div>
                                 </div>
                                 <div className="mt-4">
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Company Website</label>
-                                    <input
-                                        type="text"
-                                        value={editFormData.companyWebsite || ''}
-                                        onChange={(e) => setEditFormData({ ...editFormData, companyWebsite: e.target.value })}
-                                        className="w-full border rounded px-3 py-2"
-                                        placeholder="https://example.com"
-                                    />
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
+                                    <textarea
+                                        rows={4}
+                                        value={editFormData.description || ''}
+                                        onChange={(e) => setEditFormData({ ...editFormData, description: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+                                        placeholder="Enter the job responsibilities and requirements..."
+                                        onInput={(e) => {
+                                            const target = e.target as HTMLTextAreaElement;
+                                            target.style.height = "auto";
+                                            target.style.height = `${target.scrollHeight}px`;
+                                        }}
+                                    ></textarea>
                                 </div>
                                 <div className="mt-4">
                                     <label className="block text-sm font-medium text-gray-700 mb-1">About Company</label>
@@ -798,6 +845,20 @@ const SuperAdminDashboard = () => {
                                             target.style.height = "auto";
                                             target.style.height = `${target.scrollHeight}px`;
                                         }}
+                                    ></textarea>
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Skills</label>
+                                    <input type="text" value={editFormData.skills || ''} onChange={(e) => setEditFormData({ ...editFormData, skills: e.target.value })} className="w-full border rounded px-3 py-2" placeholder="e.g. React, Node.js" />
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Desired Candidate</label>
+                                    <textarea
+                                        rows={3}
+                                        value={editFormData.desiredCandidate || ''}
+                                        onChange={(e) => setEditFormData({ ...editFormData, desiredCandidate: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="Describe the ideal candidate profile..."
                                     ></textarea>
                                 </div>
                                 <div className="mt-4">
@@ -1042,6 +1103,16 @@ const SuperAdminDashboard = () => {
                         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
                             <h3 className="text-2xl font-bold text-gray-800 mb-6">Post New Job</h3>
                             <form onSubmit={handlePostJob} className="space-y-6">
+                                <div className="flex items-center gap-2 bg-yellow-50 p-4 rounded-xl border border-yellow-100 mb-6 transition-all hover:shadow-sm">
+                                    <input
+                                        type="checkbox"
+                                        id="postIsFeatured"
+                                        checked={jobData.isFeatured || false}
+                                        onChange={(e) => setJobData({ ...jobData, isFeatured: e.target.checked })}
+                                        className="w-6 h-6 text-yellow-600 rounded-lg border-yellow-300 focus:ring-yellow-500 cursor-pointer"
+                                    />
+                                    <label htmlFor="postIsFeatured" className="text-sm font-bold text-yellow-800 cursor-pointer select-none">🔥 Mark as Featured Job</label>
+                                </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="relative">
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
