@@ -206,11 +206,11 @@ export default function JobList({
                     <img
                       src={buildLogoUrl(job.logo)}
                       alt={job.companyName}
-                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded"
+                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shadow-sm border border-white"
                     />
                   ) : (
-                    <div className="w-12 h-12 bg-gray-200 flex items-center justify-center rounded">
-                      <span className="text-sm text-gray-500">No Logo</span>
+                    <div className="w-12 h-12 bg-sky-50 flex items-center justify-center rounded-xl border border-dashed border-sky-200">
+                      <span className="text-[10px] text-sky-400 font-medium">No Logo</span>
                     </div>
                   )}
                   <div className="overflow-hidden">

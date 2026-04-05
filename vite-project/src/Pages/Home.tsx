@@ -31,10 +31,10 @@ function Home() {
         </div>
         <GlobalSearch />
         <LogoSlider />
-        <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
+        <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6 items-start">
           
           {/* Right Sidebar - Sticky on Desktop */}
-          <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-32">
+          <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-32 self-start">
             <Jobform />
             <Jobcard />
           </div>

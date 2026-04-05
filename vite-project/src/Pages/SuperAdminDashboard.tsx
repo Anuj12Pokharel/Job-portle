@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Users, Briefcase, Trash2, Building2, LogOut, Edit, X, Save, Image as ImageIcon, CheckCircle, XCircle, Clock, Eye, LayoutDashboard, PlusCircle, History as HistoryIcon, BookOpen, UserPlus, Mail, FileText, HelpCircle, GraduationCap } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ import { toast } from "react-toastify";
 import CreateTraining from "./Training/TrainingCreate";
 import Createblog from "./Createblog";
 import CreateTeam from "./CreateTeam";
+import ReactCrop, { Crop, PixelCrop } from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
@@ -80,12 +82,18 @@ const SuperAdminDashboard = () => {
 
     // Banner State
     const [bannerData, setBannerData] = useState({
+        _id: "",
         type: "job-search",
         title: "",
         subtitle: "",
         isActive: true
     });
     const [bannerFile, setBannerFile] = useState<File | null>(null);
+    const [bannerImgSrc, setBannerImgSrc] = useState("");
+    const [bannerCrop, setBannerCrop] = useState<Crop>();
+    const [bannerCompletedCrop, setBannerCompletedCrop] = useState<PixelCrop | null>(null);
+    const bannerImgRef = useRef<HTMLImageElement>(null);
+    const [showCropModal, setShowCropModal] = useState(false);
     // Platform Stats State
     const [platformStats, setPlatformStats] = useState({
         totalCandidates: 0,
@@ -200,10 +208,19 @@ const SuperAdminDashboard = () => {
                     const res = await axios.get(`${API_BASE_URL}/api/banners/job-search`);
                     if (res.data.success && res.data.data) {
                         setBannerData({
+                            _id: res.data.data._id || "",
                             type: res.data.data.type || "job-search",
                             title: res.data.data.title || "",
                             subtitle: res.data.data.subtitle || "",
                             isActive: res.data.data.isActive !== false
+                        });
+                    } else {
+                        setBannerData({
+                            _id: "",
+                            type: "job-search",
+                            title: "",
+                            subtitle: "",
+                            isActive: true
                         });
                     }
                 } catch (err) {
@@ -499,6 +516,81 @@ const SuperAdminDashboard = () => {
             console.error("Banner update failed", err);
             toast.error("Banner update failed");
         }
+    };
+
+    const handleRemoveBanner = async () => {
+        if (!bannerData._id) return;
+        if (!window.confirm("Are you sure you want to remove the banner and return to default?")) return;
+        
+        const token = localStorage.getItem("token");
+        try {
+            await axios.delete(`${API_BASE_URL}/api/banners/${bannerData._id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            toast.success("Banner removed successfully");
+            setBannerData({
+                _id: "",
+                type: "job-search",
+                title: "",
+                subtitle: "",
+                isActive: true
+            });
+            setBannerFile(null);
+            fetchData();
+        } catch (err) {
+            console.error("Failed to remove banner", err);
+            toast.error("Failed to remove banner");
+        }
+    };
+
+    const onSelectBannerFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setBannerCrop(undefined);
+            const reader = new FileReader();
+            reader.addEventListener('load', () => {
+                setBannerImgSrc(reader.result?.toString() || '');
+                setShowCropModal(true);
+            });
+            reader.readAsDataURL(e.target.files[0]);
+            // Clear input so selecting same file again triggers change event
+            e.target.value = '';
+        }
+    };
+
+    const getCroppedBannerImg = async () => {
+        if (!bannerCompletedCrop || !bannerImgRef.current) return;
+        
+        const image = bannerImgRef.current;
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        
+        // Setup canvas
+        canvas.width = bannerCompletedCrop.width;
+        canvas.height = bannerCompletedCrop.height;
+        const ctx = canvas.getContext('2d');
+        
+        if (!ctx) return;
+        
+        ctx.drawImage(
+            image,
+            bannerCompletedCrop.x * scaleX,
+            bannerCompletedCrop.y * scaleY,
+            bannerCompletedCrop.width * scaleX,
+            bannerCompletedCrop.height * scaleY,
+            0,
+            0,
+            bannerCompletedCrop.width,
+            bannerCompletedCrop.height
+        );
+        
+        canvas.toBlob((blob) => {
+            if (!blob) return;
+            const newFile = new File([blob], 'cropped_banner.jpg', { type: 'image/jpeg' });
+            setBannerFile(newFile);
+            setShowCropModal(false);
+            setBannerImgSrc('');
+        }, 'image/jpeg', 0.95);
     };
 
     const handleLogout = () => {
@@ -2063,7 +2155,7 @@ const SuperAdminDashboard = () => {
                                                         type="file"
                                                         className="sr-only"
                                                         accept="image/*"
-                                                        onChange={(e) => setBannerFile(e.target.files ? e.target.files[0] : null)}
+                                                        onChange={onSelectBannerFile}
                                                     />
                                                 </label>
                                                 <p className="pl-1">or drag and drop</p>
@@ -2072,11 +2164,70 @@ const SuperAdminDashboard = () => {
                                         </div>
                                     </div>
                                     {bannerFile && (
-                                        <p className="mt-2 text-sm text-green-600">Selected: {bannerFile.name}</p>
+                                        <div className="mt-2 text-sm text-green-600 flex items-center justify-between bg-green-50 p-2 rounded border border-green-200">
+                                            <span>Selected: {bannerFile.name} (Cropped)</span>
+                                            <button type="button" onClick={() => setBannerFile(null)} className="text-red-500 hover:text-red-700">
+                                                <X className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    )}
+
+                                    {/* Crop Modal / Section */}
+                                    {showCropModal && bannerImgSrc && (
+                                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+                                            <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col">
+                                                <div className="p-4 border-b flex justify-between items-center bg-gray-50 rounded-t-xl">
+                                                    <h3 className="text-lg font-bold text-gray-800">Crop Banner Image</h3>
+                                                    <button type="button" onClick={() => { setShowCropModal(false); setBannerImgSrc(''); }} className="p-1 hover:bg-gray-200 rounded-full transition-colors">
+                                                        <X className="w-6 h-6 text-gray-600" />
+                                                    </button>
+                                                </div>
+                                                <div className="p-4 flex-1 overflow-auto flex justify-center bg-gray-100">
+                                                    <ReactCrop
+                                                        crop={bannerCrop}
+                                                        onChange={(c) => setBannerCrop(c)}
+                                                        onComplete={(c) => setBannerCompletedCrop(c)}
+                                                        aspect={21 / 9} // optional: force a banner aspect ratio
+                                                    >
+                                                        <img
+                                                            ref={bannerImgRef}
+                                                            src={bannerImgSrc}
+                                                            alt="Crop me"
+                                                            style={{ maxHeight: '60vh', width: 'auto' }}
+                                                        />
+                                                    </ReactCrop>
+                                                </div>
+                                                <div className="p-4 border-t flex justify-end gap-3 bg-gray-50 rounded-b-xl">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => { setShowCropModal(false); setBannerImgSrc(''); }}
+                                                        className="px-5 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                                                    >
+                                                        Cancel
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        onClick={getCroppedBannerImg}
+                                                        className="px-5 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                                                    >
+                                                        Confirm Crop
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
 
-                                <div className="flex justify-end">
+                                <div className="flex justify-end gap-4">
+                                    {bannerData._id && (
+                                        <button
+                                            type="button"
+                                            onClick={handleRemoveBanner}
+                                            className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center shadow-md transition-colors"
+                                        >
+                                            <Trash2 className="w-4 h-4 mr-2" /> Remove Banner
+                                        </button>
+                                    )}
                                     <button
                                         type="submit"
                                         className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center shadow-md transition-colors"

@@ -3,80 +3,29 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 const faqs = [
   {
-    question: "How can I register on Joblink360?",
-    answer:
-      "Creating an account on Joblink360 is simple. Whether you're looking to switch careers or land your dream job, click here to get started. Employers looking to post job openings can click here to register and begin hiring.",
+    question: "How do I get started with Joblink360?",
+    answer: "Joblink360 is completely free for job seekers. You can register on the platform, set up your professional profile (including a photo and updated CV), and instantly start applying for jobs or tracking your applications all from your dashboard."
   },
   {
-    question: "Is there any cost involved for job seekers?",
-    answer:
-      "No, using Joblink360 as a job seeker is completely free. There are no hidden charges or subscription fees.",
+    question: "What types of jobs are available on the platform?",
+    answer: "We feature a highly diversified range of opportunities across Nepal, not just the Kathmandu Valley. Our listings include Full-time, Part-time, Internships, Government jobs, and specialized roles in IT, HR, Marketing, Engineering, and more."
   },
   {
-    question: "How do I apply for jobs through Joblink360?",
-    answer:
-      "After signing up and logging into your dashboard, you can browse job listings and apply directly. Keeping your profile updated increases your chances of selection.",
+    question: "How does the job application process work?",
+    answer: "Once registered, you can browse listings and apply multiple times to relevant jobs. You'll receive a confirmation message after applying, and you can easily track your application status within the 'Applied Jobs' tab in your dashboard."
   },
   {
-    question: "Can I apply for more than one job at once?",
-    answer:
-      "Absolutely! You can apply to multiple job postings. Just make sure your CV is relevant to the position for better chances.",
+    question: "Can I update my profile or resume after applying?",
+    answer: "We highly encourage updating your profile at least once a month for better visibility to employers. However, once you submit an application to a specific job, that snapshot of your resume is sent and cannot be edited for that application."
   },
   {
-    question: "How frequently should I update my profile?",
-    answer:
-      "We recommend updating your profile at least once a month. Fresh profiles are more likely to attract employer attention.",
+    question: "Does Joblink360 provide training or support?",
+    answer: "Yes! Beyond job listings, we offer professional training programs in critical areas such as Customer Service, HR, Microsoft Office, and MIS. For technical support with the platform, you can reach out via our contact form or call 01-4502062."
   },
   {
-    question: "Do I need to upload a photo on my profile?",
-    answer:
-      "Yes, adding a professional photo can make your profile more appealing and trustworthy to potential employers.",
-  },
-  {
-    question: "Can I apply for jobs without creating an account?",
-    answer:
-      "No, you must register first. Having an account helps you track applications, set job alerts, and receive personalized job suggestions.",
-  },
-  {
-    question: "What types of jobs are available on Joblink360?",
-    answer:
-      "Joblink360 features a wide variety of roles including IT, HR, marketing, admin, engineering, government jobs, part-time roles, internships, and more.",
-  },
-  {
-    question: "Are jobs only limited to Kathmandu Valley?",
-    answer:
-      "No. We connect candidates and employers across Nepal, not just within Kathmandu Valley.",
-  },
-  {
-    question: "Are part-time or internship positions offered?",
-    answer:
-      "Yes, we regularly list part-time jobs and internships that are perfect for students or those new to the job market.",
-  },
-  {
-    question: "What happens after I apply for a job?",
-    answer:
-      "You’ll receive a confirmation message, and you can track your application status under the “Applied Jobs” section in your dashboard.",
-  },
-  {
-    question: "Can I edit my resume after submitting a job application?",
-    answer:
-      "Unfortunately, you can’t change your resume after submission. Always double-check before hitting apply.",
-  },
-  {
-    question: "What should I do if I forget my password?",
-    answer:
-      "Click on the 'Forgot Password' option on the login page. You’ll get a reset link sent to your email.",
-  },
-  {
-    question: "Who do I contact for technical support or site issues?",
-    answer:
-      "If you run into any issues, feel free to reach out via our contact form or call us at 01-4502062. Our support team is here to help.",
-  },
-  {
-    question: "Does Joblink360 offer professional training programs?",
-    answer:
-      "Yes, we provide training in key areas like Customer Service, HR, Microsoft Office (Excel & Word), and MIS to boost your career growth.",
-  },
+    question: "I forgot my password, how can I recover my account?",
+    answer: "Simply click on the 'Forgot Password' link on the login page. A secure reset link will be automatically dispatched to your registered email address."
+  }
 ];
 
 export default function FAQ() {

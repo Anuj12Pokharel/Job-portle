@@ -98,7 +98,7 @@ export default function Jobcard() {
               <img
                 src={buildLogoUrl(job.logo)}
                 alt={job.companyName}
-                className="w-10 h-10 object-contain flex-shrink-0"
+                className="w-10 h-10 object-contain flex-shrink-0 rounded-md shadow-sm border border-gray-50"
               />
               <div>
                 <p className="font-medium text-sm sm:text-base">

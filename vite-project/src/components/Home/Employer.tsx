@@ -1,7 +1,6 @@
-import React, { useRef } from "react";
+import React from "react";
 import { CheckCircle, ArrowRight, Users, Building } from "lucide-react";
-import { motion, useInView } from "framer-motion";
-import jobseekerImg from "../../assets/Employeer.jpg";
+import jobseekerImg from "../../assets/professional_employer.png";
 
 const features = [
   "Joblink360 uses smart technology to quickly suggest the best candidates for job openings.  ",
@@ -12,28 +11,10 @@ const features = [
   "Employers gain access to a pool of verified jobseekers with reliable and background-checked profiles.",
 ];
 
-// Container variants control staggered children animation
-const containerVariants = {
-  hidden: {}, // no animation needed on container itself
-  visible: {
-    transition: {
-      staggerChildren: 0.3, // children appear one by one, each delayed by 0.3s
-    },
-  },
-};
-
-// Child variants define how each feature animates
-const childVariants = {
-  hidden: { x: -200, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.8 } },
-};
-
 const Employer = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true }); // animate only once when visible
 
   return (
-    <section className="py-10 px-10 " ref={ref}>
+    <section className="py-10 px-10 ">
       <div className="container px-4 mx-auto">
         <div className="flex flex-col lg:flex-row-reverse gap-12 items-center">
           <div className="lg:w-1/2">
@@ -41,29 +22,20 @@ const Employer = () => {
               For Employer:
             </h2>
 
-            <motion.div
-              className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              variants={containerVariants}
-              initial="hidden"
-              animate={isInView ? "visible" : "hidden"}
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {features.map((feature, index) => (
-                <motion.div
-                  key={index}
-                  className="flex items-start gap-3"
-                  variants={childVariants}
-                >
+                <div key={index} className="flex items-start gap-3">
                   <CheckCircle className="h-5 w-5 text-lime-600 mt-0.5 flex-shrink-0" />
                   <span className="text-lg leading-relaxed text-gray-600 text-justify max-w-xl">{feature}</span>
-                </motion.div>
+                </div>
               ))}
-            </motion.div>
+            </div>
           </div>
          <div className="lg:w-1/2 flex justify-center items-center">
   <img
     src={jobseekerImg}
     alt="Job Seeker Illustration"
-    className="w-full max-w-md mx-auto object-contain"
+    className="w-full max-w-md mx-auto object-contain rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] transition-transform duration-500 hover:scale-[1.02]"
   />
 </div>
 

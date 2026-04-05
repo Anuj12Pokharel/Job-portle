@@ -5,9 +5,6 @@ import Advancejob from "../../assets/Advancejob.png";
 import careeropor from "../../assets/Careeropor.png";
 import Realtime from "../../assets/Realtime.png";
 import Premium from "../../assets/Premium.png";
-
-import { motion, useInView } from "framer-motion";
-
 const steps = [
   {
     title: "Advanced Job Search Functionality",
@@ -34,53 +31,29 @@ const steps = [
     image: Premium,
   },
 ];
-const containerVariants = {
-  hidden: {}, // no animation needed on container itself
-  visible: {
-    transition: {
-      staggerChildren: 0.9, // children appear one by one, each delayed by 0.3s
-    },
-  },
-};
-
-// Child variants define how each feature animates
-const childVariants = {
-  hidden: { x: -200, opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { duration: 0.8 } },
-};
-
 const Workingmethod = () => {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
   return (
     <section className="w-screen bg-gradient-to-br from-white via-sky-50 to-white text-black p-6 ">
       <div className="px-6 max-w-[1400px] mx-auto">
         <h2 className="text-2xl text-cyan-600 font-bold text-center mb-12">
           Your Path to Employment in Nepal Starts with JOBLINK360
         </h2>
-        <motion.div
-          ref={ref}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
-            <motion.div
+            <div
               key={index}
-              className="text-center p-4 bg-white rounded-xl shadow"
-              variants={childVariants}
+              className="text-center p-4 bg-white rounded-xl shadow border border-gray-100 hover:shadow-md transition-shadow"
             >
               <img
                 src={step.image}
                 alt={step.title}
-                className="w-20 h-20 mx-auto mb-3 object-contain"
+                className="w-20 h-20 mx-auto mb-3 object-contain rounded-2xl transition-transform hover:scale-110 duration-300"
               />
               <h3 className="text-lg font-semibold mb-2">{step.title}</h3>
               <p className="text-sm">{step.description}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

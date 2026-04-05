@@ -1,4 +1,3 @@
-import { motion } from "framer-motion"
 
 interface LeadershipProfileProps {
   role: string
@@ -28,11 +27,7 @@ export function LeadershipProfile({
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center max-w-7xl mx-auto">
 
           {/* IMAGE + QUOTE */}
-          <motion.div
-            initial={{ opacity: 0, x: isLeft ? -50 : 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+          <div
             className={`flex flex-col gap-6 group ${isLeft ? "lg:order-1" : "lg:order-2"}`}
           >
             {/* Image container */}
@@ -65,14 +60,10 @@ export function LeadershipProfile({
                 </div>
               </div>
             )}
-          </motion.div>
+          </div>
 
           {/* TEXT CONTENT */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+          <div
             className={`space-y-3 max-w-2xl ${isLeft ? "lg:order-2" : "lg:order-1"}`}
           >
             {/* Role badge */}
@@ -105,7 +96,7 @@ export function LeadershipProfile({
               <div className="w-12 h-1 bg-gradient-to-r from-primary to-accent rounded-full"></div>
               <div className="w-4 h-1 bg-primary/40 rounded-full"></div>
             </div>
-          </motion.div>
+          </div>
 
         </div>
       </div>
