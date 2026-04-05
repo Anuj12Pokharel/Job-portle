@@ -36,6 +36,7 @@ interface Job {
   industry?: string;
   skills?: string;
   additionalRequirements?: string;
+  additionalInformation?: string;
 }
 
 /** Single row for the detail grid */
@@ -224,6 +225,16 @@ const JobDetails = () => {
               <h3 className="text-xl font-bold text-gray-800 mb-4">Desired Candidate Profile</h3>
               <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm text-justify">
                 {job.desiredCandidate}
+              </p>
+            </div>
+          )}
+
+          {/* ── Additional Information ── */}
+          {job.additionalInformation && (
+            <div className="mb-8 border-b border-gray-200 pb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Additional Information</h3>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm text-justify">
+                {job.additionalInformation}
               </p>
             </div>
           )}
