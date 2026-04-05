@@ -18,4 +18,7 @@ const blogStorage = multer.diskStorage({
   },
 });
 
-export const uploadBlogImage = multer({ storage: blogStorage });
+export const uploadBlogImage = multer({ 
+  storage: blogStorage,
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB limit
+});

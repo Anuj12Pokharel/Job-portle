@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 const uploadCV = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // max 5MB
+  limits: { fileSize: 10 * 1024 * 1024 }, // max 10MB
   fileFilter: (_req, file, cb) => {
     const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
     if (allowedTypes.includes(file.mimetype)) cb(null, true);
