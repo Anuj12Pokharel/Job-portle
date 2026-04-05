@@ -328,6 +328,14 @@ const JobDetails = () => {
                   <span className="font-medium text-gray-700">Location:</span> {job.location}
                 </p>
               )}
+              {job.aboutCompany && (
+                <div className="mb-4">
+                  <span className="font-medium text-gray-700 block mb-1">About Company:</span>
+                  <p className="text-gray-700 leading-relaxed text-justify whitespace-pre-line">
+                    {job.aboutCompany}
+                  </p>
+                </div>
+              )}
               {job.companyWebsite && (
                 <p>
                   <span className="font-medium text-gray-700 block mb-1">Website:</span>
@@ -344,14 +352,6 @@ const JobDetails = () => {
                     {job.companyWebsite}
                   </a>
                 </p>
-              )}
-              {job.aboutCompany && (
-                <div className="mt-4 pt-4 border-t border-yellow-200">
-                  <h4 className="font-semibold mb-2">About Us</h4>
-                  <p className="text-gray-700 leading-relaxed text-justify whitespace-pre-line">
-                    {job.aboutCompany}
-                  </p>
-                </div>
               )}
             </div>
           </div>
