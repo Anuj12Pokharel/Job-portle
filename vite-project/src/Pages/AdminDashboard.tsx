@@ -55,6 +55,7 @@ const AdminDashboard = () => {
         industry: "",
         skills: "",
         desiredCandidate: "",
+        additionalInformation: "",
         expiryDate: "",
     });
     const [editingJobId, setEditingJobId] = useState<string | null>(null);
@@ -226,7 +227,8 @@ const AdminDashboard = () => {
             industry: job.industry || "",
             skills: job.skills || "",
             expiryDate: job.expiryDate ? new Date(job.expiryDate).toISOString().split('T')[0] : "",
-            desiredCandidate: job.desiredCandidate || ""
+            desiredCandidate: job.desiredCandidate || "",
+            additionalInformation: job.additionalInformation || "",
         });
         setEditingJobId(job._id);
         setActiveTab("post-job");
@@ -281,7 +283,7 @@ const AdminDashboard = () => {
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", skills: "",
-                desiredCandidate: "", expiryDate: "",
+                desiredCandidate: "", additionalInformation: "", expiryDate: "",
             });
             // Re-fill company fields from localStorage after reset
             const storedUser = localStorage.getItem("user");
@@ -699,6 +701,17 @@ const AdminDashboard = () => {
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
                                 <textarea rows={5} value={jobData.description} onChange={e => setJobData({ ...jobData, description: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Additional Information <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                <textarea
+                                    rows={4}
+                                    value={jobData.additionalInformation}
+                                    onChange={e => setJobData({ ...jobData, additionalInformation: e.target.value })}
+                                    className="w-full border rounded-lg px-4 py-2"
+                                    placeholder="Any extra notes, instructions, or details about this job..."
+                                ></textarea>
                             </div>
 
                             <button type="submit" className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition">

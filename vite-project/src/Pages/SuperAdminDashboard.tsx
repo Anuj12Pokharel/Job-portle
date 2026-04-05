@@ -58,6 +58,7 @@ const SuperAdminDashboard = () => {
         skills: "",
         expiryDate: "",
         desiredCandidate: "",
+        additionalInformation: "",
         isFeatured: false
     });
     const [companies, setCompanies] = useState<any[]>([]);
@@ -454,7 +455,7 @@ const SuperAdminDashboard = () => {
                 location: "", description: "", salary: "", experience: "",
                 educationLevel: "", aboutCompany: "", companyWebsite: "",
                 noOfOpenings: "", industry: "", skills: "",
-                expiryDate: "", desiredCandidate: "", isFeatured: false,
+                expiryDate: "", desiredCandidate: "", additionalInformation: "", isFeatured: false,
             });
         } catch (err) {
             console.error(err);
@@ -1134,6 +1135,17 @@ const SuperAdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Job Description</label>
                                     <textarea rows={5} value={jobData.description} onChange={e => setJobData({ ...jobData, description: e.target.value })} className="w-full border rounded-lg px-4 py-2"></textarea>
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Additional Information <span className="text-gray-400 font-normal">(Optional)</span></label>
+                                    <textarea
+                                        rows={4}
+                                        value={jobData.additionalInformation}
+                                        onChange={e => setJobData({ ...jobData, additionalInformation: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="Any extra notes, instructions, or details about this job..."
+                                    ></textarea>
                                 </div>
 
                                 <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">

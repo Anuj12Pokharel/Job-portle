@@ -36,6 +36,7 @@ interface Job {
   industry?: string;
   skills?: string;
   additionalRequirements?: string;
+  additionalInformation?: string;
 }
 
 /** Single row for the detail grid */
@@ -187,15 +188,7 @@ const JobDetails = () => {
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* ─── Main Column ─── */}
         <div className="lg:col-span-2">
-          {/* Company Header Banner */}
-          <div className="bg-sky-50 rounded-md p-6 mb-6 flex items-center gap-4">
-            <div>
-              <h2 className="text-lg font-semibold text-gray-800">{job.companyName}</h2>
-              {job.industry && (
-                <p className="text-sm text-gray-500">{job.industry}</p>
-              )}
-            </div>
-          </div>
+
 
           {/* Position Title */}
           <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-4 border-gray-200">
@@ -232,6 +225,16 @@ const JobDetails = () => {
               <h3 className="text-xl font-bold text-gray-800 mb-4">Desired Candidate Profile</h3>
               <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm text-justify">
                 {job.desiredCandidate}
+              </p>
+            </div>
+          )}
+
+          {/* ── Additional Information ── */}
+          {job.additionalInformation && (
+            <div className="mb-8 border-b border-gray-200 pb-8">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Additional Information</h3>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm text-justify">
+                {job.additionalInformation}
               </p>
             </div>
           )}
