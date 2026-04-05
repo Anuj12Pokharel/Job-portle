@@ -1,4 +1,5 @@
 import Jobsearchbanner from "../components/Jobsearchbanner";
+import GlobalSearch from "../components/GlobalSearch";
 import Jobportal from "../components/Jobform";
 import LogoSlider from "../components/LogoSlider";
 import HeroSection from "../components/Home/HeroSection";
@@ -24,6 +25,7 @@ function Home() {
     <>
       <div className="front  overflow-x-hidden">
         <Jobsearchbanner />
+        <GlobalSearch />
          <LogoSlider />
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
           
