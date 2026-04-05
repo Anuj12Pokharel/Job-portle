@@ -27,7 +27,7 @@ export const createJob = async (req: Request, res: Response) => {
     // Remove empty string values for optional enum fields to prevent validation errors
     const optionalFields = ["jobLevel", "jobType", "salary", "educationLevel", "desiredCandidate",
       "experience", "description", "noOfOpenings", "industry", "vehicleLicense", "twoFourWheeler",
-      "skills", "aboutCompany", "companyWebsite", "expiryDate"];
+      "skills", "aboutCompany", "companyWebsite", "expiryDate", "additionalRequirements", "additionalInformation"];
     for (const field of optionalFields) {
       if (jobData[field] === "" || jobData[field] === undefined) {
         delete jobData[field];

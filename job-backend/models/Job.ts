@@ -21,6 +21,8 @@ export interface IJob extends Document {
   skills?: string;
   aboutCompany?: string;
   companyWebsite?: string;
+  additionalRequirements?: string;
+  additionalInformation?: string;
   postedBy: Types.ObjectId;
   isFeatured?: boolean;
 }
@@ -55,6 +57,8 @@ const jobSchema = new Schema<IJob>(
     skills: { type: String },
     aboutCompany: { type: String },
     companyWebsite: { type: String },
+    additionalRequirements: { type: String },
+    additionalInformation: { type: String },
     postedBy: { type: Schema.Types.ObjectId, ref: "Admin", required: true },
     isFeatured: { type: Boolean, default: false },
   },

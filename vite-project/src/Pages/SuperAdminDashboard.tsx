@@ -325,6 +325,7 @@ const SuperAdminDashboard = () => {
                 formData.append('category', editFormData.category || '');
                 formData.append('location', editFormData.location || '');
                 formData.append('salary', editFormData.salary || '');
+                formData.append('additionalInformation', editFormData.additionalInformation || '');
                 formData.append('isFeatured', String(editFormData.isFeatured || false));
                 if (selectedFile) formData.append('logo', selectedFile);
                 endpoint = `/api/jobs/update/${editingItem._id}`;
@@ -771,6 +772,16 @@ const SuperAdminDashboard = () => {
                                         className="w-5 h-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
                                     />
                                     <label htmlFor="editIsFeatured" className="text-sm font-medium text-gray-700">Mark as Featured Job</label>
+                                </div>
+                                <div className="mt-4">
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Additional Information</label>
+                                    <textarea
+                                        rows={4}
+                                        value={editFormData.additionalInformation || ''}
+                                        onChange={(e) => setEditFormData({ ...editFormData, additionalInformation: e.target.value })}
+                                        className="w-full border rounded-lg px-4 py-2"
+                                        placeholder="Any extra notes or details..."
+                                    ></textarea>
                                 </div>
                             </>
                         )}

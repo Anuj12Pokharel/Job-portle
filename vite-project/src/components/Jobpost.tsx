@@ -22,6 +22,7 @@ interface JobFormData {
   skills: string;
   description: string;
   additionalRequirements: string;
+  additionalInformation: string;
 }
 
 const INITIAL_FORM: JobFormData = {
@@ -44,6 +45,7 @@ const INITIAL_FORM: JobFormData = {
   skills: "",
   description: "",
   additionalRequirements: "",
+  additionalInformation: "",
 };
 
 const JOB_TYPE_OPTIONS = ["Full-time", "Part-time", "Internship", "Contract", "Remote"] as const;
@@ -475,6 +477,20 @@ const Jobpost: React.FC = () => {
               name="additionalRequirements"
               placeholder="Any specific requirements, certifications, tools, or soft skills the employee must have..."
               value={formData.additionalRequirements}
+              onChange={handleChange}
+              rows={3}
+              className="w-full border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition resize-none"
+            />
+          </div>
+
+          <div className="mt-5">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              Additional Information
+            </label>
+            <textarea
+              name="additionalInformation"
+              placeholder="Any further details about the job role or organization..."
+              value={formData.additionalInformation}
               onChange={handleChange}
               rows={3}
               className="w-full border border-gray-200 p-3 rounded-lg focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition resize-none"
