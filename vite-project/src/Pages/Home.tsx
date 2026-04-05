@@ -22,7 +22,7 @@ function Home() {
 
   return (
     <>
-      <div className="front  overflow-x-hidden">
+      <div className="front overflow-visible">
         <Jobsearchbanner />
         <div className="py-6 text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-800 tracking-tight">
@@ -33,8 +33,8 @@ function Home() {
         <LogoSlider />
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
           
-          {/* Right Sidebar */}
-          <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4">
+          {/* Right Sidebar - Sticky on Desktop */}
+          <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-32">
             <Jobform />
             <Jobcard />
           </div>
