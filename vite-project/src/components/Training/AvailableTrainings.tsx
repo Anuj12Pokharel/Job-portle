@@ -235,7 +235,7 @@ const AvailableTrainings = () => {
                         {/* Close button */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 backdrop-blur-md transition-all"
+                            className="absolute top-4 right-4 z-10 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all shadow-lg hover:rotate-90"
                         >
                             <X className="h-5 w-5" />
                         </button>
@@ -329,7 +329,7 @@ const AvailableTrainings = () => {
                         {/* Close button */}
                         <button
                             onClick={handleClose}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+                            className="absolute top-4 right-4 z-10 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 transition-all shadow-lg hover:rotate-90"
                         >
                             <X className="h-6 w-6" />
                         </button>
