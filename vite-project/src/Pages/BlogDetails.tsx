@@ -7,6 +7,7 @@ interface Blog {
   body: string;
   image: string;
   author: string;
+  date?: string;
   createdAt: string;
 }
 
@@ -51,7 +52,7 @@ const BlogDetails = () => {
       />
 
       <div className="text-sm text-gray-500 mb-2">
-        {new Date(blog.createdAt).toDateString()} {blog.author}
+        {new Date(blog.date || blog.createdAt).toDateString()} {blog.author}
       </div>
 
       <h1 className="text-3xl font-bold mb-4">{blog.title}</h1>

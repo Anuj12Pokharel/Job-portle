@@ -35,9 +35,9 @@ const LogoSlider = () => {
 
   return (
     <div className="w-full pt-0 pb-16 overflow-hidden">
-      <h1 className="text-center font-bold text-3xl md:text-4xl text-cyan-600 mb-8">
+      <h2 className="text-center font-bold text-xl md:text-2xl text-cyan-600 mb-6 uppercase tracking-wider">
         Top Employers
-      </h1>
+      </h2>
 
       <div className="relative flex flex-col gap-6 w-full [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
         {/* Row 1 - Moves Left */}
@@ -45,7 +45,7 @@ const LogoSlider = () => {
           {track1.map((logo, index) => (
             <div
               key={`row1-${index}`}
-              className="flex-shrink-0 w-64 h-28 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              className="flex-shrink-0 w-52 h-24 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               <img
                 src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}
@@ -61,7 +61,7 @@ const LogoSlider = () => {
           {track2.map((logo, index) => (
             <div
               key={`row2-${index}`}
-              className="flex-shrink-0 w-64 h-28 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              className="flex-shrink-0 w-52 h-24 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               <img
                 src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}

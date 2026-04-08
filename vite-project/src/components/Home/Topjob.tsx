@@ -67,7 +67,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
     });
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8 py-8">
+    <div className="px-4 sm:px-6 lg:px-0 py-8">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
 
         <h2 className="text-2xl sm:text-3xl text-cyan-600 font-bold text-center sm:text-left">
@@ -92,7 +92,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
       </div>
 
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
         {sortedJobs.map((job) => (
           <div
             key={job._id}

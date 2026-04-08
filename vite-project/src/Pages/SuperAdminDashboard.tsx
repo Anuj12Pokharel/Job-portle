@@ -42,6 +42,13 @@ const SuperAdminDashboard = () => {
         return `${API_BASE_URL}/${relativePath}`;
     };
 
+    const formatDate = (dateValue: any, fallbackValue: any = null) => {
+        if (!dateValue && !fallbackValue) return "—";
+        const date = new Date(dateValue || fallbackValue);
+        if (isNaN(date.getTime())) return "—";
+        return date.toLocaleDateString();
+    };
+
     // Job Posting State
     const [jobData, setJobData] = useState({
         companyName: "",
@@ -386,6 +393,7 @@ const SuperAdminDashboard = () => {
                 formData.append('title', editFormData.title || '');
                 formData.append('author', editFormData.author || '');
                 formData.append('body', editFormData.body || '');
+                formData.append('date', editFormData.date || '');
                 if (selectedFile) formData.append('image', selectedFile);
                 endpoint = `/api/blogs/update/${editingItem._id}`;
                 payload = formData;
@@ -726,6 +734,10 @@ const SuperAdminDashboard = () => {
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Author</label>
                                     <input type="text" placeholder="Author" value={editFormData.author || ''} onChange={(e) => setEditFormData({ ...editFormData, author: e.target.value })} className="w-full border rounded px-3 py-2" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Publication Date</label>
+                                    <input type="date" value={editFormData.date ? editFormData.date.split('T')[0] : ''} onChange={(e) => setEditFormData({ ...editFormData, date: e.target.value })} className="w-full border rounded px-3 py-2" />
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
@@ -1460,7 +1472,7 @@ const SuperAdminDashboard = () => {
                                                          <td className="px-6 py-4 font-medium">{b.title}</td>
                                                         <td className="px-6 py-4">{b.author}</td>
                                                         <td className="px-6 py-4">
-                                                            {(b.date || b.createdAt) ? new Date(b.date || b.createdAt).toLocaleDateString() : '—'}
+                                                            {formatDate(b.date, b.createdAt)}
                                                         </td>
                                                         <td className="px-6 py-4 flex gap-2">
                                                             <button onClick={() => handleEdit(b, "blog")} className="text-blue-500 hover:text-blue-700" title="Edit">

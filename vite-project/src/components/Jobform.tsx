@@ -107,9 +107,9 @@ export default function Jobform() {
             >
               <button 
                 onClick={() => setShowForm(false)}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+                className="absolute top-6 right-6 p-2 bg-red-500 hover:bg-red-600 text-white rounded-full transition-all shadow-lg hover:rotate-90 z-10"
               >
-                <X className="w-6 h-6 text-gray-400" />
+                <X className="w-6 h-6" />
               </button>
               
               <div className="p-4 sm:p-10">

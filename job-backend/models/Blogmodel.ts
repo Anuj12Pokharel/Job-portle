@@ -14,7 +14,7 @@ const blogSchema = new Schema<IBlog>({
   author: { type: String, required: true },
   date: { type: Date, default: Date.now },
   image: { type: String },
-});
+}, { timestamps: true });
 
 const Blog = mongoose.model<IBlog>("Blog", blogSchema);
 

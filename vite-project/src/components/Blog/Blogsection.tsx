@@ -10,6 +10,7 @@ interface Blog {
   body: string;
   author: string;
   image: string;
+  date?: string;
   createdAt: string;
 }
 
@@ -102,7 +103,7 @@ const Blogsection: React.FC<BlogsectionProps> = ({
               <div className="p-4">
                 {/* Meta info */}
                 <div className="flex justify-between text-xs text-gray-500 mb-2">
-                  <span>{blog.createdAt && !isNaN(Date.parse(blog.createdAt)) ? new Date(blog.createdAt).toLocaleDateString() : ""}</span>
+                  <span>{new Date(blog.date || blog.createdAt).toLocaleDateString()}</span>
                   <span>• {blog.author}</span>
                 </div>
 

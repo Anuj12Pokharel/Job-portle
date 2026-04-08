@@ -8,6 +8,7 @@ const Createblog = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +26,7 @@ const Createblog = () => {
     formData.append("title", title);
     formData.append("body", body);
     formData.append("author", author);
+    formData.append("date", date);
     if (image) formData.append("image", image);
 
     try {
@@ -42,6 +44,7 @@ const Createblog = () => {
       setTitle("");
       setBody("");
       setAuthor("");
+      setDate(new Date().toISOString().split('T')[0]);
       setImage(null);
       setImagePreview("");
     } catch (err: any) {
@@ -81,6 +84,17 @@ const Createblog = () => {
           className="w-full border p-2 rounded"
           required
         />
+
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Publication Date</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full border p-2 rounded"
+            required
+          />
+        </div>
 
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">Blog Image</label>

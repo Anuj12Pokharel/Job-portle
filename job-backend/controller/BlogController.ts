@@ -11,14 +11,13 @@ export const getBlogs = async (req: Request, res: Response) => {
     const totalBlogs = await Blog.countDocuments(); // Get total count
     const blogs = await Blog.find().skip(skip).limit(limit);
 
-    // Convert image filenames to full URLs
+    // Ensure image paths are correctly formatted and all fields (including timestamps) are preserved
     const blogsWithNormalizedImages = blogs.map(blog => {
-      if (blog.image) {
-        // Return relative path starting with uploads/blogs/
-        const normalizedPath = `uploads/blogs/${blog.image}`;
-        return { ...blog.toObject(), image: normalizedPath };
+      const b = blog.toObject();
+      if (b.image && !b.image.startsWith('uploads/')) {
+        b.image = `uploads/blogs/${b.image}`;
       }
-      return blog.toObject();
+      return b;
     });
 
     res.json({
@@ -40,14 +39,13 @@ export const getBlogById = async (req: Request, res: Response) => {
     const blog = await Blog.findById(id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
-    // Convert image filename to full URL
-    if (blog.image) {
-      const normalizedPath = `uploads/blogs/${blog.image}`;
-      const blogWithNormalizedImage = { ...blog.toObject(), image: normalizedPath };
-      return res.json(blogWithNormalizedImage);
+    // Convert image filename to relative path if needed
+    const b = blog.toObject();
+    if (b.image && !b.image.startsWith('uploads/')) {
+      b.image = `uploads/blogs/${b.image}`;
     }
 
-    res.json(blog);
+    res.json(b);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -57,10 +55,10 @@ export const getBlogById = async (req: Request, res: Response) => {
 // Create blog (only superadmin)
 export const createBlog = async (req: Request, res: Response) => {
   try {
-    const { title, body, author } = req.body;
+    const { title, body, author, date } = req.body;
     const image = req.file ? req.file.filename : null;
 
-    const newBlog = new Blog({ title, body, author, image });
+    const newBlog = new Blog({ title, body, author, image, date: date || Date.now() });
     await newBlog.save();
 
     res.status(201).json(newBlog);
@@ -76,7 +74,7 @@ import path from "path";
 export const updateBlog = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { title, body, author } = req.body;
+    const { title, body, author, date } = req.body;
 
     const blog = await Blog.findById(id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
@@ -97,6 +95,7 @@ export const updateBlog = async (req: Request, res: Response) => {
     if (title) blog.title = title;
     if (body) blog.body = body;
     if (author) blog.author = author;
+    if (date) blog.date = date;
 
     await blog.save();
     res.status(200).json(blog);
