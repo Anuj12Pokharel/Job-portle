@@ -26,101 +26,53 @@ const shifts = [
     { value: "evening", label: "Evening (6:00 PM - 10:00 PM)" },
 ];
 
-const TrainingCard: React.FC<{ training: Training, handleEnroll: (t: Training) => void }> = ({ training, handleEnroll }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-
+const TrainingCard: React.FC<{ 
+    training: Training, 
+    handleEnroll: (t: Training) => void,
+    handleViewDetails: (t: Training) => void 
+}> = ({ training, handleEnroll, handleViewDetails }) => {
     return (
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 flex flex-col">
-            <div className="h-48 overflow-hidden shrink-0">
+        <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col h-full group">
+            <div className="h-48 overflow-hidden shrink-0 relative">
                 <img
                     src={training.image}
                     alt={training.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
+                <div className="absolute top-3 right-3 bg-cyan-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+                    Rs {training.price}
+                </div>
             </div>
 
-            <div className="p-6 flex flex-col flex-grow" onClick={(e) => e.stopPropagation()}>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+            <div className="p-6 flex flex-col flex-grow text-left">
+                <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-cyan-600 transition-colors">
                     {training.title}
                 </h3>
-
-                {/* Expandable: ALL details + description + price */}
-                {isExpanded && (
-                    <div className="space-y-3 mb-4 bg-gray-50 p-4 rounded-lg border border-gray-100 animate-in">
-                        {training.description && (
-                            <div className="pb-3 border-b border-gray-200">
-                                <h4 className="text-sm font-bold text-gray-700 mb-1">Description:</h4>
-                                <p className="text-gray-600 text-sm whitespace-pre-wrap">
-                                    {training.description}
-                                </p>
-                            </div>
-                        )}
-                        <div className="grid grid-cols-1 gap-2">
-                            <div className="flex items-center text-gray-600">
-                                <User className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                <span className="text-sm"><span className="font-semibold">Instructor:</span> {training.instructor}</span>
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                                <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                <span className="text-sm"><span className="font-semibold">Duration:</span> {training.duration}</span>
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                                <Calendar className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                <span className="text-sm"><span className="font-semibold">Starts:</span> {training.startDate && new Date(training.startDate).toLocaleDateString()}</span>
-                            </div>
-                            {training.shifts && training.shifts.length > 0 && (
-                                <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                    <div className="flex flex-wrap gap-1">
-                                        <span className="text-sm font-semibold mr-1">Shifts:</span>
-                                        {training.shifts.map((shift, idx) => (
-                                            <span key={idx} className="bg-cyan-50 text-cyan-700 px-2 py-0.5 text-xs font-medium rounded-full border border-cyan-100">
-                                                {shift}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            {training.shiftTiming && (
-                                <div className="flex items-center text-gray-600">
-                                    <Clock className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                    <span className="text-sm"><span className="font-semibold">Timing:</span> {training.shiftTiming}</span>
-                                </div>
-                            )}
-                            {training.students !== undefined && training.students >= 0 && (
-                                <div className="flex items-center text-gray-600">
-                                    <User className="h-4 w-4 mr-2 text-cyan-500 shrink-0" />
-                                    <span className="text-sm"><span className="font-semibold">Candidates:</span> {training.students}</span>
-                                </div>
-                            )}
-                            <div className="flex items-center text-gray-900 pt-2 border-t border-gray-200">
-                                <span className="text-sm font-bold text-cyan-600">Price: Rs {training.price}</span>
-                            </div>
-                        </div>
+                
+                <div className="space-y-2 mb-6">
+                    <div className="flex items-center text-gray-500 text-sm">
+                        <User className="h-4 w-4 mr-2 text-cyan-500" />
+                        <span>{training.instructor}</span>
                     </div>
-                )}
+                    <div className="flex items-center text-gray-500 text-sm">
+                        <Clock className="h-4 w-4 mr-2 text-cyan-500" />
+                        <span>{training.duration}</span>
+                    </div>
+                </div>
 
-                {/* Two independent buttons at the bottom - Stacked vertically */}
-                <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-gray-100">
+                {/* Buttons at the bottom - Stacked vertically */}
+                <div className="mt-auto flex flex-col gap-2 pt-4 border-t border-gray-50">
                     <button
                         type="button"
-                        onClick={(e) => { 
-                            e.preventDefault();
-                            e.stopPropagation(); 
-                            setIsExpanded(!isExpanded); 
-                        }}
-                        className="w-full py-2.5 rounded-lg text-sm font-semibold border border-cyan-200 text-cyan-600 hover:bg-cyan-50 transition-colors focus:outline-none"
+                        onClick={() => handleViewDetails(training)}
+                        className="w-full py-2.5 rounded-lg text-sm font-bold border border-cyan-100 text-cyan-600 hover:bg-cyan-50 transition-all flex items-center justify-center gap-2"
                     >
-                        {isExpanded ? "View Less" : "View Details"}
+                        View Details
                     </button>
                     <button
                         type="button"
-                        onClick={(e) => { 
-                            e.preventDefault();
-                            e.stopPropagation(); 
-                            handleEnroll(training); 
-                        }}
-                        className="w-full py-2.5 rounded-lg text-sm font-semibold bg-cyan-600 text-white hover:bg-cyan-700 transition-colors shadow-sm"
+                        onClick={() => handleEnroll(training)}
+                        className="w-full py-2.5 rounded-lg text-sm font-bold bg-cyan-600 text-white hover:bg-cyan-700 hover:shadow-md transition-all flex items-center justify-center"
                     >
                         Enroll Now
                     </button>
@@ -138,6 +90,8 @@ const AvailableTrainings = () => {
 
     // Enrollment modal state
     const [showModal, setShowModal] = useState(false);
+    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [selectedTrainingDetails, setSelectedTrainingDetails] = useState<Training | null>(null);
     const [submitting, setSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
@@ -198,6 +152,13 @@ const AvailableTrainings = () => {
 
     const handleClose = () => {
         setShowModal(false);
+        setShowDetailsModal(false);
+        setSelectedTrainingDetails(null);
+    };
+
+    const handleViewDetails = (training: Training) => {
+        setSelectedTrainingDetails(training);
+        setShowDetailsModal(true);
     };
 
     const handleInputChange = (field: string, value: string) => {
@@ -255,12 +216,111 @@ const AvailableTrainings = () => {
                     your career growth.
                 </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
                     {trainings.map((training) => (
-                        <TrainingCard key={training._id} training={training} handleEnroll={handleEnroll} />
+                        <TrainingCard 
+                            key={training._id} 
+                            training={training} 
+                            handleEnroll={handleEnroll} 
+                            handleViewDetails={handleViewDetails}
+                        />
                     ))}
                 </div>
             </div>
+
+            {/* Details Modal */}
+            {showDetailsModal && selectedTrainingDetails && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 px-4 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative animate-in fade-in zoom-in duration-300">
+                        {/* Close button */}
+                        <button
+                            onClick={handleClose}
+                            className="absolute top-4 right-4 z-10 bg-white/20 hover:bg-white/40 text-white rounded-full p-2 backdrop-blur-md transition-all"
+                        >
+                            <X className="h-5 w-5" />
+                        </button>
+
+                        <div className="h-64 shrink-0 relative">
+                            <img
+                                src={selectedTrainingDetails.image}
+                                alt={selectedTrainingDetails.title}
+                                className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-8">
+                                <h3 className="text-3xl font-bold text-white">
+                                    {selectedTrainingDetails.title}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div className="p-8 overflow-y-auto">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                                <div className="bg-cyan-50 p-4 rounded-xl flex flex-col items-center text-center">
+                                    <User className="h-5 w-5 text-cyan-600 mb-2" />
+                                    <span className="text-xs text-gray-500 uppercase font-bold">Instructor</span>
+                                    <span className="text-sm font-semibold text-gray-800">{selectedTrainingDetails.instructor}</span>
+                                </div>
+                                <div className="bg-cyan-50 p-4 rounded-xl flex flex-col items-center text-center">
+                                    <Clock className="h-5 w-5 text-cyan-600 mb-2" />
+                                    <span className="text-xs text-gray-500 uppercase font-bold">Duration</span>
+                                    <span className="text-sm font-semibold text-gray-800">{selectedTrainingDetails.duration}</span>
+                                </div>
+                                <div className="bg-cyan-50 p-4 rounded-xl flex flex-col items-center text-center">
+                                    <Calendar className="h-5 w-5 text-cyan-600 mb-2" />
+                                    <span className="text-xs text-gray-500 uppercase font-bold">Starts</span>
+                                    <span className="text-sm font-semibold text-gray-800">
+                                        {selectedTrainingDetails.startDate && new Date(selectedTrainingDetails.startDate).toLocaleDateString()}
+                                    </span>
+                                </div>
+                                <div className="bg-cyan-50 p-4 rounded-xl flex flex-col items-center text-center">
+                                    <span className="text-cyan-600 font-bold text-lg mb-2">Rs</span>
+                                    <span className="text-xs text-gray-500 uppercase font-bold">Price</span>
+                                    <span className="text-sm font-semibold text-gray-800">{selectedTrainingDetails.price}</span>
+                                </div>
+                            </div>
+
+                            <div className="space-y-6">
+                                <div>
+                                    <h4 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                        <ArrowRight className="h-5 w-5 text-cyan-600" />
+                                        Course Description
+                                    </h4>
+                                    <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                                        {selectedTrainingDetails.description}
+                                    </p>
+                                </div>
+
+                                {selectedTrainingDetails.shifts && selectedTrainingDetails.shifts.length > 0 && (
+                                    <div>
+                                        <h4 className="text-lg font-bold text-gray-900 mb-3">Available Shifts</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {selectedTrainingDetails.shifts.map((shift, idx) => (
+                                                <span key={idx} className="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium border border-gray-200">
+                                                    {shift}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="mt-10 pt-6 border-t border-gray-100">
+                                <button
+                                    onClick={() => {
+                                        const t = selectedTrainingDetails;
+                                        handleClose();
+                                        handleEnroll(t);
+                                    }}
+                                    className="w-full bg-cyan-600 text-white font-bold py-4 rounded-xl hover:bg-cyan-700 transition-all shadow-lg hover:shadow-cyan-200/50 flex items-center justify-center gap-2"
+                                >
+                                    Enroll in this Course Now
+                                    <ArrowRight className="h-5 w-5" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Enrollment Modal */}
             {showModal && (
@@ -386,6 +446,7 @@ const AvailableTrainings = () => {
                     </div>
                 </div>
             )}
+
         </section>
     );
 };

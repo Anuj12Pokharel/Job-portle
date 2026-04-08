@@ -179,7 +179,7 @@ const SuperAdminDashboard = () => {
                 const res = await axios.get(`${API_BASE_URL}/api/training`);
                 setTrainings(res.data.data);
             } else if (activeTab === "blogs") {
-                const res = await axios.get(`${API_BASE_URL}/api/blogs`);
+                const res = await axios.get(`${API_BASE_URL}/api/blogs?limit=100`);
                 setBlogs(res.data.blogs);
             } else if (activeTab === "user_forms") {
                 const res = await axios.get(`${API_BASE_URL}/api/talent/all`, config);
@@ -1459,7 +1459,9 @@ const SuperAdminDashboard = () => {
                                                         </td>
                                                          <td className="px-6 py-4 font-medium">{b.title}</td>
                                                         <td className="px-6 py-4">{b.author}</td>
-                                                        <td className="px-6 py-4">{new Date(b.date).toLocaleDateString()}</td>
+                                                        <td className="px-6 py-4">
+                                                            {(b.date || b.createdAt) ? new Date(b.date || b.createdAt).toLocaleDateString() : '—'}
+                                                        </td>
                                                         <td className="px-6 py-4 flex gap-2">
                                                             <button onClick={() => handleEdit(b, "blog")} className="text-blue-500 hover:text-blue-700" title="Edit">
                                                                 <Edit className="w-5 h-5" />

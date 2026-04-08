@@ -13,6 +13,8 @@ import {
   FaWhatsapp,
   FaLinkedinIn,
   FaTwitter,
+  FaFacebookMessenger,
+  FaCopy,
 } from "react-icons/fa";
 
 interface Job {
@@ -301,9 +303,39 @@ const JobDetails = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-800 hover:text-gray-800 transition"
+                title="Twitter"
               >
                 <FaTwitter size={16} />
               </a>
+              <a
+                href={`fb-messenger://share/?link=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:text-blue-500 transition md:hidden"
+                title="Messenger"
+              >
+                <FaFacebookMessenger size={16} />
+              </a>
+              {/* Desktop Messenger (Fallthrough to FB share as direct send needs app_id) */}
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-800 hover:text-blue-500 transition hidden md:block"
+                title="Messenger"
+              >
+                <FaFacebookMessenger size={16} />
+              </a>
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(shareUrl);
+                  toast.success("Link copied to clipboard!");
+                }}
+                className="text-gray-800 hover:text-blue-600 transition"
+                title="Copy Link"
+              >
+                <FaCopy size={16} />
+              </button>
             </div>
           </div>
         </div>

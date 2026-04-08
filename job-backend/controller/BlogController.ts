@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 // Get all blogs with pagination
 export const getBlogs = async (req: Request, res: Response) => {
   const page = parseInt(req.query.page as string) || 1;
-  const limit = parseInt(req.query.limit as string) || 6;
+  const limit = parseInt(req.query.limit as string) || 100;
   const skip = (page - 1) * limit;
 
   try {

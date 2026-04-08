@@ -16,8 +16,10 @@ const TeamCard = ({
   image,
   bio,
 }: Omit<TeamMember, "id">) => {
+  const imageUrl = image ? (image.startsWith('http') ? image : `${API_BASE_URL}/${image.replace(/\\/g, '/')}`) : '';
+
   return (
-    <div className="w-72 h-[420px] perspective group">
+    <div className="w-72 min-h-[400px] perspective group">
       <div
         className="
           relative w-full h-full
@@ -29,31 +31,32 @@ const TeamCard = ({
       >
         {/* FRONT */}
         <div
-          className="absolute inset-0 border-2 border-cyan-500 rounded-lg bg-white text-center p-5"
+          className="absolute inset-0 border-2 border-cyan-500 rounded-lg bg-white text-center p-5 flex flex-col items-center"
           style={{ backfaceVisibility: "hidden" }}
         >
           <img
-            src={image}
+            src={imageUrl}
             alt={name}
-            className="w-32 h-32 mx-auto mt-5 rounded-lg object-cover"
+            className="w-32 h-32 rounded-lg object-cover shadow-md mb-4"
           />
-          <h3 className="mt-4 text-2xl font-bold text-cyan-500">{name}</h3>
-          <p className="mt-2 text-gray-700">{bio}</p>
+          <h3 className="text-xl font-bold text-cyan-600 leading-tight">{name}</h3>
+          <p className="text-sm font-semibold text-cyan-500 mb-2 uppercase tracking-wide">{designation}</p>
+          <p className="text-gray-600 text-sm line-clamp-4">{bio}</p>
         </div>
 
         {/* BACK */}
         <div
-          className="absolute inset-0 rotate-y-180 border-2 border-cyan-500 rounded-lg bg-white text-center p-5"
+          className="absolute inset-0 rotate-y-180 border-2 border-cyan-500 rounded-lg bg-white text-center p-6 flex flex-col items-center justify-center shadow-lg"
           style={{
             transform: "rotateY(180deg)",
             backfaceVisibility: "hidden",
           }}
         >
-          <h3 className="text-2xl font-bold text-cyan-500">About</h3>
-          <p className="mt-4 text-gray-700 text-sm">{bio}</p>
-          <button className="mt-6 w-12 h-12 bg-cyan-500 text-white text-2xl rounded-md">
-            +
-          </button>
+          <h3 className="text-xl font-bold text-cyan-600 mb-3">About {name.split(' ')[0]}</h3>
+          <p className="text-gray-700 text-sm leading-relaxed">{bio}</p>
+          <div className="mt-6 w-10 h-10 bg-cyan-500 text-white flex items-center justify-center rounded-full shadow-lg">
+            <span className="text-2xl font-bold">+</span>
+          </div>
         </div>
       </div>
     </div>
