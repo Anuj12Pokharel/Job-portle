@@ -108,11 +108,11 @@ export default function Navbar() {
           <div className="flex items-center flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
               {/* Circular Logo */}
-              <img
-                src={logo}
-                alt="JobLink 360 Logo"
-                className="h-14 sm:h-16 md:h-18 w-auto"
-              />
+                <img
+                  src={logo}
+                  alt="JobLink 360 Logo"
+                  className="h-11 sm:h-13 md:h-15 w-auto"
+                />
             </Link>
 
           </div>
@@ -261,14 +261,14 @@ export default function Navbar() {
                       <img
                         src={buildImageUrl(user.profilePicture)}
                         alt="Profile"
-                        className="w-9 h-9 rounded-full object-cover ring-2 ring-teal-400/60 ring-offset-1 group-hover:ring-teal-500 transition-all"
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-teal-400/60 ring-offset-1 group-hover:ring-teal-500 transition-all"
                       />
                     ) : (
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
-                        <UserIcon className="w-5 h-5" />
+                      <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <UserIcon className="w-4 h-4" />
                       </div>
                     )}
-                    <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-white rounded-full" />
+                    <span className="absolute -bottom-0 -right-0 w-2.5 h-2.5 bg-emerald-400 border-2 border-white rounded-full" />
                   </div>
                   <div className="hidden sm:block text-left">
                     <p className="text-sm font-semibold text-gray-800 leading-tight">{user.fullName || user.companyName}</p>

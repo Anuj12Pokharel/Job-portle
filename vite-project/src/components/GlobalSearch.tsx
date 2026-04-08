@@ -53,7 +53,7 @@ const GlobalSearch = () => {
                 </div>
                 <button
                     onClick={handleSearch}
-                    className="w-full md:w-auto bg-[#FF4F3A] text-white rounded-full px-8 py-3 hover:bg-[#E6422E] font-semibold transition-all duration-300 flex items-center justify-center whitespace-nowrap text-base mt-2 md:mt-0 shadow-[0_8px_20px_rgba(255,79,58,0.25)] hover:shadow-[0_12px_25px_rgba(255,79,58,0.35)] group active:scale-[0.98]"
+                    className="w-full md:w-auto bg-[#FF4F3A] text-white rounded-full px-6 py-2.5 hover:bg-[#E6422E] font-semibold transition-all duration-300 flex items-center justify-center whitespace-nowrap text-sm mt-2 md:mt-0 shadow-[0_8px_20px_rgba(255,79,58,0.25)] hover:shadow-[0_12px_25px_rgba(255,79,58,0.35)] group active:scale-[0.98]"
                 >
                     Search Jobs <span className="ml-2 group-hover:translate-x-1 transition-transform duration-200">→</span>
                 </button>

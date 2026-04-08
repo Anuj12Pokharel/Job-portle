@@ -427,11 +427,19 @@ export const getJobsByLevel = async (req: Request, res: Response) => {
         { expiryDate: { $gt: new Date() } }
       ]
     })
+      .populate("postedBy", "companyName profilePicture")
       .sort({ createdAt: -1 })
-      .select("companyName logo position jobLevel")
       .limit(10);
 
-    res.status(200).json(jobs);
+    const formattedJobs = jobs.map((job: any) => {
+      const jobObj = job.toObject() as any;
+      if (jobObj.postedBy?.profilePicture) {
+        jobObj.logo = jobObj.postedBy.profilePicture;
+      }
+      return jobObj;
+    });
+
+    res.status(200).json(formattedJobs);
   } catch (err) {
     console.error("getJobsByLevel error:", err);
     res.status(500).json({ message: "Failed to fetch jobs by level" });

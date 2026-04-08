@@ -35,7 +35,7 @@ const LogoSlider = () => {
 
   return (
     <div className="w-full pt-0 pb-16 overflow-hidden">
-      <h2 className="text-center font-bold text-xl md:text-2xl text-cyan-600 mb-6 uppercase tracking-wider">
+      <h2 className="text-center font-bold text-lg md:text-xl text-cyan-600 mb-6 uppercase tracking-wider">
         Top Employers
       </h2>
 
@@ -45,7 +45,7 @@ const LogoSlider = () => {
           {track1.map((logo, index) => (
             <div
               key={`row1-${index}`}
-              className="flex-shrink-0 w-52 h-24 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              className="flex-shrink-0 w-44 h-20 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-3 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               <img
                 src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}
@@ -61,7 +61,7 @@ const LogoSlider = () => {
           {track2.map((logo, index) => (
             <div
               key={`row2-${index}`}
-              className="flex-shrink-0 w-52 h-24 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+              className="flex-shrink-0 w-44 h-20 bg-white border border-gray-100 rounded-2xl flex items-center justify-center p-3 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0px_10px_30px_rgba(8,145,178,0.15)] hover:border-cyan-200 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
             >
               <img
                 src={`${API_BASE_URL}/${logo.logo.replace(/\\/g, "/")}`}

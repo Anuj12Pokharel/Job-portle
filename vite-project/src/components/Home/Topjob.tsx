@@ -99,39 +99,43 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
             className="bg-white rounded-2xl shadow-md p-4 sm:p-5 flex flex-col hover:shadow-lg transition"
           >
             {/* Company Logo + Name */}
-            <div className="flex items-center gap-3 sm:gap-4 bg-sky-100 px-2 py-2 rounded-xl">
+            <div className="flex items-center gap-3 sm:gap-4 bg-sky-50 px-2 py-2 rounded-xl">
               {buildLogoUrl(job.logo) ? (
                 <img
                   src={buildLogoUrl(job.logo)}
                   alt={job.companyName}
-                  className="w-10 h-10 sm:w-16 sm:h-16 object-cover rounded-xl shadow-sm border border-white"
+                  className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shadow-sm border border-white flex-shrink-0"
                 />
               ) : (
-                <div className="w-12 h-12 bg-sky-50 flex items-center justify-center rounded-xl border border-dashed border-sky-200">
-                  <span className="text-[10px] text-sky-400 font-medium">No Logo</span>
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-sky-100 flex items-center justify-center rounded-xl border border-dashed border-sky-200 flex-shrink-0">
+                  <span className="text-[10px] text-sky-400 font-bold">No Logo</span>
                 </div>
               )}
-              <div>
-                <h1 className="font-semibold">{job.companyName}</h1>
-                <p className="text-gray-500 text-sm">{job.position}</p>
+              <div className="overflow-hidden">
+                <h1 className="font-semibold text-[11px] text-gray-800 truncate" title={job.companyName}>
+                  {job.companyName}
+                </h1>
+                <p className="text-gray-500 text-[10px] truncate" title={job.position}>
+                  {job.position}
+                </p>
               </div>
             </div>
 
             {/* Location + Expiry + Experience + Salary Grid */}
-            <div className="mt-3 text-gray-600 text-sm space-y-2">
+            <div className="mt-3 text-gray-600 text-[9px] space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center gap-1 min-w-0">
-                  <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
+                  <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
                   <span className="truncate">{job.location || "Location..."}</span>
                 </div>
                 <div className="flex items-center gap-1 min-w-0">
-                  <FaBusinessTime className="w-5 h-5 text-gray-400 shrink-0" />
+                  <FaBusinessTime className="w-4 h-4 text-gray-400 shrink-0" />
                   <span className="truncate">{job.experience || "Experience..."}</span>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
-                <div className="flex items-center gap-1 min-w-0">
-                  <Calendar className="w-5 h-5 text-gray-400 shrink-0" />
+                <div className="flex items-center gap-1 min-w-0 text-red-600 font-medium">
+                  <Calendar className="w-5 h-5 shrink-0" />
                   <span className="truncate">
                     {job.expiryDate
                       ? (() => {
