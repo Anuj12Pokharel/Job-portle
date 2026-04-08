@@ -111,12 +111,12 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                   <span className="text-[10px] text-sky-400 font-bold">No Logo</span>
                 </div>
               )}
-              <div className="overflow-hidden">
-                <h1 className="font-semibold text-[11px] text-gray-800 truncate" title={job.companyName}>
-                  {job.companyName}
-                </h1>
-                <p className="text-gray-500 text-[10px] truncate" title={job.position}>
+              <div className="">
+                <h1 className="font-semibold text-[11px] text-gray-800" title={job.position}>
                   {job.position}
+                </h1>
+                <p className="text-gray-500 text-[10px]" title={job.companyName}>
+                  {job.companyName}
                 </p>
               </div>
             </div>
