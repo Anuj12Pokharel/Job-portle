@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { API_BASE_URL } from "../config/api";
 import { Briefcase, X } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export default function Jobform() {
   const [formData, setFormData] = useState({
@@ -99,8 +100,8 @@ export default function Jobform() {
           </button>
         </div>
 
-        {showForm && (
-          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
+        {showForm && createPortal(
+          <div className="fixed inset-0 z-[10000] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-300">
             <div 
               className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative animate-in zoom-in-95 duration-300"
               onClick={(e) => e.stopPropagation()}
@@ -125,7 +126,8 @@ export default function Jobform() {
             </div>
             {/* Close on click outside */}
             <div className="absolute inset-0 -z-10" onClick={() => setShowForm(false)} />
-          </div>
+          </div>,
+          document.body
         )}
       </div>
     </div>
