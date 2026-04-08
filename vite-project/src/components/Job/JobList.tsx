@@ -217,10 +217,10 @@ export default function JobList({
                     <img
                       src={buildLogoUrl(job.logo)}
                       alt={job.companyName}
-                      className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-xl shadow-sm border border-white flex-shrink-0"
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-xl shadow-sm border border-white flex-shrink-0"
                     />
                   ) : (
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 bg-sky-50 flex items-center justify-center rounded-xl border border-dashed border-sky-200 flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-sky-50 flex items-center justify-center rounded-xl border border-dashed border-sky-200 flex-shrink-0">
                       <span className="text-[10px] text-sky-400 font-bold">No Logo</span>
                     </div>
                   )}
@@ -277,19 +277,8 @@ export default function JobList({
                   </div>
                 </div>
 
-                {/* Job Level + Type + View Details */}
-                <div className="mt-4 flex justify-between items-center flex-wrap gap-2">
-                  <div className="flex flex-wrap gap-2">
-                    {job.jobLevel && (
-                      <span className="bg-blue-50 text-blue-700 px-2.5 py-1 text-xs font-medium rounded-full border border-blue-100">
-                        {job.jobLevel}
-                      </span>
-                    )}
-                    <span className="bg-green-50 text-green-700 px-2.5 py-1 text-xs font-medium rounded-full border border-green-100">
-                      {job.jobType}
-                    </span>
-                  </div>
-
+                {/* View Details Only */}
+                <div className="mt-4 flex justify-end items-center">
                   <Link
                     to={`/jobs/${job._id}`}
                     className="text-blue-600 text-sm font-semibold hover:underline"
