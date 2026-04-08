@@ -230,7 +230,7 @@ const AvailableTrainings = () => {
 
             {/* Details Modal */}
             {showDetailsModal && selectedTrainingDetails && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 px-4 backdrop-blur-sm">
+                <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-60 px-4 pt-24 backdrop-blur-sm overflow-y-auto">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col relative animate-in fade-in zoom-in duration-300">
                         {/* Close button */}
                         <button
@@ -324,7 +324,7 @@ const AvailableTrainings = () => {
 
             {/* Enrollment Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-4">
+                <div className="fixed inset-0 z-50 flex items-start justify-center bg-black bg-opacity-50 px-4 pt-24 overflow-y-auto">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8 relative">
                         {/* Close button */}
                         <button
