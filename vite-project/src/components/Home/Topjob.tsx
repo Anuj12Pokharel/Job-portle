@@ -115,7 +115,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                 <h1 className="font-bold text-base text-gray-800" title={job.position}>
                   {job.position}
                 </h1>
-                <p className="text-gray-600 text-sm" title={job.companyName}>
+                <p className="text-gray-600 text-xs" title={job.companyName}>
                   {job.companyName}
                 </p>
               </div>

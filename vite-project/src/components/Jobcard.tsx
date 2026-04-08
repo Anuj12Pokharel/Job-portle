@@ -111,7 +111,7 @@ export default function Jobcard() {
                 <p className="font-bold text-sm text-gray-800 leading-tight">
                   {job.position}
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-600">
                   {job.companyName}
                 </p>
               </div>

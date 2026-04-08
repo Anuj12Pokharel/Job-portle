@@ -232,7 +232,7 @@ export default function JobList({
                       {job.position}
                     </h1>
                     <p
-                      className="text-gray-600 text-sm"
+                      className="text-gray-600 text-xs"
                       title={job.companyName}
                     >
                       {job.companyName}
