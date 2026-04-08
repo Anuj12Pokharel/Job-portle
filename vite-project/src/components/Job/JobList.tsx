@@ -257,8 +257,8 @@ export default function JobList({
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    <div className="flex items-center gap-1 min-w-0">
-                      <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
+                    <div className="flex items-center gap-1 min-w-0 text-red-600 font-medium">
+                      <Calendar className="w-4 h-4 shrink-0" />
                       <span className="truncate">
                         {job.expiryDate
                           ? `${Math.ceil(
