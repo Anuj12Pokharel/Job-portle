@@ -122,7 +122,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
             </div>
 
             {/* Location + Expiry + Experience + Salary Grid */}
-            <div className="mt-3 text-gray-600 text-[9px] space-y-2">
+            <div className="mt-3 text-gray-600 text-sm space-y-2">
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center gap-1 min-w-0">
                   <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
@@ -135,7 +135,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center gap-1 min-w-0 text-red-600 font-medium">
-                  <Calendar className="w-5 h-5 shrink-0" />
+                  <Calendar className="w-4 h-4 shrink-0" />
                   <span className="truncate">
                     {job.expiryDate
                       ? (() => {
@@ -151,7 +151,7 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                   </span>
                 </div>
                 <div className="flex items-center gap-1 min-w-0">
-                  <LiaMoneyCheckSolid className="h-5 w-5 text-gray-400 shrink-0" />
+                  <LiaMoneyCheckSolid className="h-4 w-4 text-gray-400 shrink-0" />
                   <span className="truncate">{job.salary || "Negotiable"}</span>
                 </div>
               </div>
@@ -161,11 +161,11 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
             <div className="mt-3 flex justify-between items-center">
               <div className="flex space-x-2">
                 {job.jobLevel && (
-                  <span className="bg-blue-100 text-blue-700 px-2 py-1 text-xs rounded">
+                  <span className="bg-blue-50 text-blue-700 px-2.5 py-1 text-xs font-medium rounded-full border border-blue-100">
                     {job.jobLevel}
                   </span>
                 )}
-                <span className="bg-green-100 text-green-700 px-2 py-1 text-xs rounded">
+                <span className="bg-green-50 text-green-700 px-2.5 py-1 text-xs font-medium rounded-full border border-green-100">
                   {job.jobType}
                 </span>
               </div>
