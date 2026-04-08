@@ -17,16 +17,17 @@ export const getProfile = async (req: AuthRequest, res: Response) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Construct full URL for profile picture if it exists and is a relative path
-        let profilePictureUrl = user.profilePicture;
-        if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
-            const baseUrl = `${req.protocol}://${req.get("host")}`;
-            profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
+        // Normalize profile picture path to be relative to the server root (starting with uploads/)
+        let profilePicture = user.profilePicture;
+        if (profilePicture && !profilePicture.startsWith("http")) {
+            const cleanedPath = profilePicture.replace(/\\/g, "/");
+            const uploadsIndex = cleanedPath.indexOf("uploads/");
+            profilePicture = uploadsIndex !== -1 ? cleanedPath.slice(uploadsIndex) : cleanedPath;
         }
 
         res.status(200).json({
             ...user.toObject(),
-            profilePicture: profilePictureUrl,
+            profilePicture,
         });
     } catch (error) {
         console.error("Get profile error:", error);
@@ -72,18 +73,19 @@ export const updateProfile = async (req: AuthRequest, res: Response) => {
 
         await user.save();
 
-        // Return updated user
-        let profilePictureUrl = user.profilePicture;
-        if (profilePictureUrl && !profilePictureUrl.startsWith("http")) {
-            const baseUrl = `${req.protocol}://${req.get("host")}`;
-            profilePictureUrl = `${baseUrl}/${profilePictureUrl.replace(/\\/g, "/")}`;
+        // Return updated user with normalized profile picture path
+        let profilePicture = user.profilePicture;
+        if (profilePicture && !profilePicture.startsWith("http")) {
+            const cleanedPath = profilePicture.replace(/\\/g, "/");
+            const uploadsIndex = cleanedPath.indexOf("uploads/");
+            profilePicture = uploadsIndex !== -1 ? cleanedPath.slice(uploadsIndex) : cleanedPath;
         }
 
         res.status(200).json({
             message: "Profile updated successfully",
             user: {
                 ...user.toObject(),
-                profilePicture: profilePictureUrl,
+                profilePicture,
             },
         });
     } catch (error) {

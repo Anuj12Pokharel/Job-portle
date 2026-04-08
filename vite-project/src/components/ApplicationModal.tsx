@@ -21,12 +21,20 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
         if (isOpen && application) {
             setStatus(application.status);
 
-            // Construct resume URL
+            // Construct resume URL robustly
             if (application.resume) {
-                const url = application.resume.startsWith("http")
-                    ? application.resume
-                    : `${API_BASE_URL}/${application.resume.replace(/\\/g, "/")}`;
-                setResumeUrl(url);
+                let cleaned = String(application.resume).replace(/\\/g, "/");
+                
+                if (cleaned.startsWith("http")) {
+                    setResumeUrl(cleaned);
+                } else {
+                    const uploadsIndex = cleaned.indexOf("uploads/");
+                    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+                    const baseUrl = API_BASE_URL.replace(/\/+$/, "");
+                    setResumeUrl(`${baseUrl}/${relativePath}`);
+                }
+            } else {
+                setResumeUrl(null);
             }
 
             // Auto-update status to "viewing" if currently "applied"
@@ -176,22 +184,38 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
                         {/* Main Content: Resume Viewer */}
                         <div className="sm:w-2/3 bg-gray-100 p-0 flex flex-col h-full relative">
                             {resumeUrl ? (
-                                <iframe
-                                    src={resumeUrl}
-                                    className="w-full h-full border-none"
-                                    title="Resume"
-                                >
-                                    <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                                        <p>PDF view not supported or error loading.</p>
-                                        <a href={resumeUrl} target="_blank" rel="noopener noreferrer" className="mt-2 text-teal-600 hover:underline flex items-center">
-                                            Download Resume <ExternalLink className="w-4 h-4 ml-1" />
+                                <>
+                                    <div className="bg-white px-4 py-2 border-b border-gray-200 flex justify-between items-center text-xs font-medium text-gray-500">
+                                        <div className="flex items-center gap-2">
+                                            <FileText className="w-4 h-4 text-teal-600" />
+                                            <span>CURRICULUM VITAE (CV)</span>
+                                        </div>
+                                        <a 
+                                            href={resumeUrl} 
+                                            target="_blank" 
+                                            rel="noopener noreferrer" 
+                                            className="px-3 py-1 bg-teal-50 text-teal-700 rounded-lg hover:bg-teal-100 transition-colors flex items-center font-bold"
+                                        >
+                                            <ExternalLink className="w-3 h-3 mr-1" /> Open in New Tab
                                         </a>
                                     </div>
-                                </iframe>
+                                    <div className="flex-1 bg-gray-500 relative">
+                                        <iframe
+                                            src={resumeUrl.toLowerCase().endsWith('.pdf') ? resumeUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl)}&embedded=true`}
+                                            className="w-full h-full border-none bg-white"
+                                            title="Resume"
+                                        />
+                                        {/* Overlay for better click interaction or if iframe fails */}
+                                        <div className="absolute inset-0 pointer-events-none border-4 border-transparent hover:border-teal-500/20 transition-all"></div>
+                                    </div>
+                                </>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-full text-gray-500">
-                                    <FileText className="w-16 h-16 mb-4 text-gray-300" />
-                                    <p>No resume uploaded for this application.</p>
+                                <div className="flex flex-col items-center justify-center h-full text-gray-500 bg-white">
+                                    <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
+                                        <FileText className="w-10 h-10 text-gray-300" />
+                                    </div>
+                                    <h5 className="text-lg font-semibold text-gray-700">No CV Found</h5>
+                                    <p className="text-sm text-gray-400 max-w-xs text-center">There is no resume uploaded for this applicant. You can still review their profile details on the left.</p>
                                 </div>
                             )}
                         </div>

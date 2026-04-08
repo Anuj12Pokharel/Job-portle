@@ -352,7 +352,15 @@ export const getEmployerProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Employer not found. Please check if your account exists and is approved." });
     }
 
-    res.status(200).json(admin.toObject());
+    // Normalize profile picture path if it exists
+    let adminData = admin.toObject();
+    if (adminData.profilePicture && !adminData.profilePicture.startsWith("http")) {
+      const cleanedPath = adminData.profilePicture.replace(/\\/g, "/");
+      const uploadsIndex = cleanedPath.indexOf("uploads/");
+      adminData.profilePicture = uploadsIndex !== -1 ? cleanedPath.slice(uploadsIndex) : cleanedPath;
+    }
+
+    res.status(200).json(adminData);
   } catch (error) {
     console.error("Get employer profile error:", error);
     res.status(500).json({ message: "Server error" });
@@ -398,9 +406,17 @@ export const updateEmployerProfile = async (req: Request, res: Response) => {
 
     await admin.save();
 
+    // Normalize profile picture path for the response
+    let adminData = admin.toObject();
+    if (adminData.profilePicture && !adminData.profilePicture.startsWith("http")) {
+      const cleanedPath = adminData.profilePicture.replace(/\\/g, "/");
+      const uploadsIndex = cleanedPath.indexOf("uploads/");
+      adminData.profilePicture = uploadsIndex !== -1 ? cleanedPath.slice(uploadsIndex) : cleanedPath;
+    }
+
     res.status(200).json({
       message: "Profile updated successfully",
-      admin: admin.toObject(),
+      admin: adminData,
     });
   } catch (error) {
     console.error("Update employer profile error:", error);

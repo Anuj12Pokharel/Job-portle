@@ -30,13 +30,20 @@ export default function Jobcard() {
 
   const buildLogoUrl = (logo?: string) => {
     if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
-    const cleaned = String(logo).replace(/\\/g, "/");
-    // If it's already a full http URL, use it directly
+    
+    // Normalize slashes
+    let cleaned = String(logo).replace(/\\/g, "/");
+    
+    // If it's already a full URL, return it
     if (cleaned.startsWith("http")) return cleaned;
-    // Extract the relative part starting from 'uploads/'
+    
+    // Ensure it's a relative path starting from uploads/
     const uploadsIndex = cleaned.indexOf("uploads/");
-    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
-    return `${backendBase}/${relativePath}`;
+    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+    
+    // Clean up base URL and combine
+    const baseUrl = backendBase.replace(/\/+$/, "");
+    return `${baseUrl}/${relativePath}`;
   };
 
   useEffect(() => {

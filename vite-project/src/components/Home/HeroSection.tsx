@@ -17,21 +17,6 @@ export default function HeroSection() {
           </p>
 
           {/* Search Box */}
-
-          {/* Popular Searches */}
-          <div className="flex flex-wrap justify-center gap-4 text-sm text-gray-600">
-            <span>Popular searches:</span>
-            <button className="text-cyan-600 hover:underline">
-              Software Engineer
-            </button>
-            <button className="text-cyan-600 hover:underline">
-              Marketing Manager
-            </button>
-            <button className="text-cyan-600 hover:underline">
-              Remote Work
-            </button>
-            <button className="text-cyan-600 hover:underline">Banking</button>
-          </div>
         </div>
       </div>
     </section>

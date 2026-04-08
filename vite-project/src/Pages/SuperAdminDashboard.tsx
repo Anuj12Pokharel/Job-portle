@@ -709,7 +709,7 @@ const SuperAdminDashboard = () => {
                                         {selectedFile ? (
                                             <img src={URL.createObjectURL(selectedFile)} alt="Preview" className="w-full h-full object-cover" />
                                         ) : editFormData.image ? (
-                                            <img src={editFormData.image.startsWith('http') ? editFormData.image : `${API_BASE_URL}/uploads/blogs/${editFormData.image}`} alt="Current" className="w-full h-full object-cover" />
+                                            <img src={buildImageUrl(editFormData.image)} alt="Current" className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="flex items-center justify-center h-full text-gray-400"><ImageIcon /></div>
                                         )}
@@ -1452,14 +1452,14 @@ const SuperAdminDashboard = () => {
                                             <tbody className="divide-y divide-gray-100">
                                                 {blogs.map((b: any) => (
                                                     <tr key={b._id} className="hover:bg-gray-50 transition-colors">
-                                                        <td className="px-6 py-4">
+                                                         <td className="px-6 py-4">
                                                             <div className="w-16 h-10 rounded bg-gray-200 overflow-hidden">
-                                                                {b.image ? <img src={b.image.startsWith('http') ? b.image : `${API_BASE_URL}/uploads/blogs/${b.image}`} alt="" className="w-full h-full object-cover" /> : <BookOpen className="p-2 w-full h-full text-gray-400" />}
+                                                                {b.image ? <img src={buildImageUrl(b.image)} alt="" className="w-full h-full object-cover" /> : <BookOpen className="p-2 w-full h-full text-gray-400" />}
                                                             </div>
                                                         </td>
-                                                        <td className="px-6 py-4 font-medium">{b.title}</td>
+                                                         <td className="px-6 py-4 font-medium">{b.title}</td>
                                                         <td className="px-6 py-4">{b.author}</td>
-                                                        <td className="px-6 py-4">{new Date(b.createdAt).toLocaleDateString()}</td>
+                                                        <td className="px-6 py-4">{new Date(b.date).toLocaleDateString()}</td>
                                                         <td className="px-6 py-4 flex gap-2">
                                                             <button onClick={() => handleEdit(b, "blog")} className="text-blue-500 hover:text-blue-700" title="Edit">
                                                                 <Edit className="w-5 h-5" />

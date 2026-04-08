@@ -16,11 +16,20 @@ const ProfileSettings = () => {
 
     const buildImageUrl = (imagePath?: string | null) => {
         if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
-        const cleaned = String(imagePath).replace(/\\/g, "/");
+        
+        // Normalize slashes
+        let cleaned = String(imagePath).replace(/\\/g, "/");
+        
+        // If it's already a full URL, return it
         if (cleaned.startsWith("http")) return cleaned;
+        
+        // Ensure it's a relative path starting from uploads/
         const uploadsIndex = cleaned.indexOf("uploads/");
-        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
-        return `${API_BASE_URL}/${relativePath}`;
+        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+        
+        // Clean up base URL and combine
+        const baseUrl = API_BASE_URL.replace(/\/+$/, "");
+        return `${baseUrl}/${relativePath}`;
     };
 
     // Form State
@@ -209,10 +218,10 @@ const ProfileSettings = () => {
                                 </div>
                                 <div className="text-center sm:text-left pt-2">
                                     <h3 className="text-base sm:text-lg font-medium text-gray-900">
-                                        Company Logo
+                                        Profile Picture
                                     </h3>
                                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                                        Upload your company logo to personalize your profile.
+                                        Upload a profile picture to personalize your account.
                                         <br className="hidden sm:block" />
                                         <span className="block sm:inline"> JPG, GIF or PNG. Max size of 5MB.</span>
                                     </p>

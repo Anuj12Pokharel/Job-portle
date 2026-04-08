@@ -15,11 +15,20 @@ const EmployerProfileSettings = () => {
 
     const buildImageUrl = (imagePath?: string | null) => {
         if (!imagePath || String(imagePath) === "undefined" || String(imagePath) === "null") return "";
-        const cleaned = String(imagePath).replace(/\\/g, "/");
+        
+        // Normalize slashes
+        let cleaned = String(imagePath).replace(/\\/g, "/");
+        
+        // If it's already a full URL, return it
         if (cleaned.startsWith("http")) return cleaned;
+        
+        // Ensure it's a relative path starting from uploads/
         const uploadsIndex = cleaned.indexOf("uploads/");
-        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
-        return `${API_BASE_URL}/${relativePath}`;
+        const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+        
+        // Clean up base URL and combine
+        const baseUrl = API_BASE_URL.replace(/\/+$/, "");
+        return `${baseUrl}/${relativePath}`;
     };
 
     // Form State

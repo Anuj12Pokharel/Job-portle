@@ -33,7 +33,7 @@ const steps = [
 ];
 const Workingmethod = () => {
   return (
-    <section className="w-screen bg-gradient-to-br from-white via-sky-50 to-white text-black p-6 ">
+    <section className="w-full bg-gradient-to-br from-white via-sky-50 to-white text-black p-6 overflow-x-hidden">
       <div className="px-6 max-w-[1400px] mx-auto">
         <h2 className="text-2xl text-cyan-600 font-bold text-center mb-12">
           Your Path to Employment in Nepal Starts with JOBLINK360

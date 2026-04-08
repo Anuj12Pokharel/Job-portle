@@ -115,7 +115,19 @@ export const getApplicantsForJob = async (req: Request, res: Response) => {
       return res.status(403).json({ message: "Not authorized" });
 
     const applicants = await Application.find({ job: job._id }).populate("user", "fullName email");
-    res.json(applicants);
+
+    // Normalize resume paths
+    const formattedApplicants = applicants.map(app => {
+      const appObj = app.toObject() as any;
+      if (appObj.resume && !appObj.resume.startsWith("http")) {
+        const cleanedPath = appObj.resume.replace(/\\/g, "/");
+        const uploadsIndex = cleanedPath.indexOf("uploads/");
+        appObj.resume = uploadsIndex !== -1 ? cleanedPath.slice(uploadsIndex) : cleanedPath;
+      }
+      return appObj;
+    });
+
+    res.json(formattedApplicants);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Failed to fetch applicants" });

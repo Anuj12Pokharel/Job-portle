@@ -11,17 +11,24 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
 
   const backendBase =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://job-portle-backend-fsai.onrender.com";
+    "http://localhost:5000";
 
   const buildLogoUrl = (logo?: string) => {
     if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
-    const cleaned = String(logo).replace(/\\/g, "/");
-    // If it's already a full http URL, use it directly
+    
+    // Normalize slashes
+    let cleaned = String(logo).replace(/\\/g, "/");
+    
+    // If it's already a full URL, return it
     if (cleaned.startsWith("http")) return cleaned;
-    // Extract the relative part starting from 'uploads/'
+    
+    // Ensure it's a relative path starting from uploads/
     const uploadsIndex = cleaned.indexOf("uploads/");
-    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
-    return `${backendBase}/${relativePath}`;
+    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+    
+    // Clean up base URL and combine
+    const baseUrl = backendBase.replace(/\/+$/, "");
+    return `${baseUrl}/${relativePath}`;
   };
 
   useEffect(() => {
@@ -110,31 +117,28 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
               </div>
             </div>
 
-            {/* Location + Expiry */}
+            {/* Location + Expiry + Experience + Salary Grid */}
             <div className="mt-3 text-gray-600 text-sm space-y-2">
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1">
-                  <MapPin className="w-5 h-5 text-gray-500" />
-                  <span>{job.location || "Location not specified"}</span>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center gap-1 min-w-0">
+                  <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
+                  <span className="truncate">{job.location || "Location..."}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <FaBusinessTime className="w-5 h-5 text-gray-500" />
-                  <span>{job.experience || "Experience not specified"}</span>
+                <div className="flex items-center gap-1 min-w-0">
+                  <FaBusinessTime className="w-5 h-5 text-gray-400 shrink-0" />
+                  <span className="truncate">{job.experience || "Experience..."}</span>
                 </div>
               </div>
-              <div className="flex justify-between">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-5 h-5 text-gray-500" />
-                  <span>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="flex items-center gap-1 min-w-0">
+                  <Calendar className="w-5 h-5 text-gray-400 shrink-0" />
+                  <span className="truncate">
                     {job.expiryDate
                       ? (() => {
                         const expiry = new Date(job.expiryDate);
-                        // Set expiry to end of the day
                         expiry.setHours(23, 59, 59, 999);
-
                         const diff = expiry.getTime() - Date.now();
                         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-
                         if (days < 0) return "Expired";
                         if (days === 0) return "Expires Today";
                         return `${days} days left`;
@@ -142,11 +146,9 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                       : "No expiry"}
                   </span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <LiaMoneyCheckSolid className="h-5 w-5 text-gray-700" />
-                  <span className="  text-gray-500 rounded">
-                    {job.salary}
-                  </span>
+                <div className="flex items-center gap-1 min-w-0">
+                  <LiaMoneyCheckSolid className="h-5 w-5 text-gray-400 shrink-0" />
+                  <span className="truncate">{job.salary || "Negotiable"}</span>
                 </div>
               </div>
             </div>

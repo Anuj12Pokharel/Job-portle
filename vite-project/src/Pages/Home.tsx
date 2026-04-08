@@ -22,7 +22,7 @@ function Home() {
 
   return (
     <>
-      <div className="front overflow-visible">
+      <div className="front overflow-x-hidden">
         <Jobsearchbanner />
         <div className="py-6 text-center">
           <h1 className="text-2xl md:text-4xl font-bold text-gray-800 tracking-tight">
@@ -40,9 +40,9 @@ function Home() {
           </div>
           <div className="w-full lg:w-[74%] xl:w-[78%] flex flex-col gap-6">
             <JobList category={category} search={search} />
+            <Topjob category={category} search={search} />
           </div>
         </div>
-        <Topjob category={category} search={search} />
         <HeroSection />
         <div className="py-7">
           <h1 className="text-center  text-2xl font-bold text-cyan-600">

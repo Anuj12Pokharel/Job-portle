@@ -12,10 +12,11 @@ export const getBlogs = async (req: Request, res: Response) => {
     const blogs = await Blog.find().skip(skip).limit(limit);
 
     // Convert image filenames to full URLs
-    const blogsWithFullImageUrls = blogs.map(blog => {
+    const blogsWithNormalizedImages = blogs.map(blog => {
       if (blog.image) {
-        const fullImageUrl = `${req.protocol}://${req.get('host')}/uploads/blogs/${blog.image}`;
-        return { ...blog.toObject(), image: fullImageUrl };
+        // Return relative path starting with uploads/blogs/
+        const normalizedPath = `uploads/blogs/${blog.image}`;
+        return { ...blog.toObject(), image: normalizedPath };
       }
       return blog.toObject();
     });
@@ -24,7 +25,7 @@ export const getBlogs = async (req: Request, res: Response) => {
       totalBlogs,
       currentPage: page,
       totalPages: Math.ceil(totalBlogs / limit),
-      blogs: blogsWithFullImageUrls,
+      blogs: blogsWithNormalizedImages,
     });
   } catch (error) {
     console.error(error);
@@ -41,9 +42,9 @@ export const getBlogById = async (req: Request, res: Response) => {
 
     // Convert image filename to full URL
     if (blog.image) {
-      const fullImageUrl = `${req.protocol}://${req.get('host')}/uploads/blogs/${blog.image}`;
-      const blogWithFullImageUrl = { ...blog.toObject(), image: fullImageUrl };
-      return res.json(blogWithFullImageUrl);
+      const normalizedPath = `uploads/blogs/${blog.image}`;
+      const blogWithNormalizedImage = { ...blog.toObject(), image: normalizedPath };
+      return res.json(blogWithNormalizedImage);
     }
 
     res.json(blog);

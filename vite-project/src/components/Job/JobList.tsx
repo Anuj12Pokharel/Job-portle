@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { MapPin, Calendar, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FaBusinessTime } from "react-icons/fa";
+import { LiaMoneyCheckSolid } from "react-icons/lia";
 
 interface Job {
   _id: string;
@@ -13,6 +15,8 @@ interface Job {
   expiryDate?: string;
   jobLevel?: string;
   jobType: string;
+  experience?: string;
+  salary?: string;
 }
 
 interface Category {
@@ -46,17 +50,24 @@ export default function JobList({
 
   const backendBase =
     import.meta.env.VITE_API_BASE_URL ||
-    "https://job-portle-backend-fsai.onrender.com";
+    "http://localhost:5000";
 
   const buildLogoUrl = (logo?: string) => {
     if (!logo || String(logo) === "undefined" || String(logo) === "null") return "";
-    const cleaned = String(logo).replace(/\\/g, "/");
-    // If it's already a full http URL, use it directly
+    
+    // Normalize slashes
+    let cleaned = String(logo).replace(/\\/g, "/");
+    
+    // If it's already a full URL, return it
     if (cleaned.startsWith("http")) return cleaned;
-    // Extract the relative part starting from 'uploads/'
+    
+    // Ensure it's a relative path starting from uploads/
     const uploadsIndex = cleaned.indexOf("uploads/");
-    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : cleaned.replace(/^\/+/, "");
-    return `${backendBase}/${relativePath}`;
+    const relativePath = uploadsIndex !== -1 ? cleaned.slice(uploadsIndex) : `uploads/${cleaned.replace(/^\/+/, "")}`;
+    
+    // Clean up base URL and combine
+    const baseUrl = backendBase.replace(/\/+$/, "");
+    return `${baseUrl}/${relativePath}`;
   };
 
   useEffect(() => {
@@ -229,27 +240,40 @@ export default function JobList({
                   </div>
                 </div>
 
-                {/* Location + Expiry */}
+                {/* Location + Expiry + Experience + Salary Grid */}
                 <div className="mt-3 text-gray-600 text-sm space-y-2">
-                  {/* Location */}
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4 text-gray-400" />
-                    <span className="truncate">
-                      {job.location || "Location not specified"}
-                    </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 min-w-0">
+                      <MapPin className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="truncate">
+                        {job.location || "Location..."}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 min-w-0">
+                      <FaBusinessTime className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="truncate">
+                        {job.experience || "Experience..."}
+                      </span>
+                    </div>
                   </div>
-
-                  {/* Expiry Date */}
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4 text-gray-400" />
-                    <span>
-                      {job.expiryDate
-                        ? `${Math.ceil(
-                          (new Date(job.expiryDate).getTime() - Date.now()) /
-                          (1000 * 60 * 60 * 24)
-                        )} days left`
-                        : "No expiry"}
-                    </span>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="flex items-center gap-1 min-w-0">
+                      <Calendar className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="truncate">
+                        {job.expiryDate
+                          ? `${Math.ceil(
+                            (new Date(job.expiryDate).getTime() - Date.now()) /
+                            (1000 * 60 * 60 * 24)
+                          )} days left`
+                          : "No expiry"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1 min-w-0">
+                      <LiaMoneyCheckSolid className="w-4 h-4 text-gray-400 shrink-0" />
+                      <span className="truncate">
+                        {job.salary || "Negotiable"}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
