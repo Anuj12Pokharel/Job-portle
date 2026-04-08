@@ -226,13 +226,13 @@ export default function JobList({
                   )}
                   <div className="">
                     <h1
-                      className="font-semibold text-[11px] text-gray-800"
+                      className="font-bold text-base text-gray-800"
                       title={job.position}
                     >
                       {job.position}
                     </h1>
                     <p
-                      className="text-gray-500 text-[10px]"
+                      className="text-gray-600 text-sm"
                       title={job.companyName}
                     >
                       {job.companyName}
@@ -241,7 +241,7 @@ export default function JobList({
                 </div>
 
                 {/* Location + Expiry + Experience + Salary Grid */}
-                <div className="mt-3 text-gray-600 text-sm space-y-2">
+                <div className="mt-3 text-gray-500 text-xs space-y-2">
                   <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-center gap-1 min-w-0">
                       <MapPin className="w-4 h-4 text-gray-400 shrink-0" />

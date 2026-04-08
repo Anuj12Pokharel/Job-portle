@@ -108,10 +108,10 @@ export default function Jobcard() {
                 className="w-10 h-10 object-contain flex-shrink-0 rounded-md shadow-sm border border-gray-50"
               />
               <div>
-                <p className="font-bold text-[12px] text-gray-800 leading-tight">
+                <p className="font-bold text-sm text-gray-800 leading-tight">
                   {job.position}
                 </p>
-                <p className="text-[11px] text-gray-500">
+                <p className="text-xs text-gray-500">
                   {job.companyName}
                 </p>
               </div>
