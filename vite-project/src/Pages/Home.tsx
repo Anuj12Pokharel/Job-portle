@@ -24,9 +24,9 @@ function Home() {
     <>
       <div className="front overflow-x-hidden">
         <Jobsearchbanner />
-        <div className="py-6 text-center">
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-800 tracking-tight">
-            Find Your Dream Job at <span className="text-cyan-600">Hamro Job Pvt. Ltd.</span>
+        <div className="py-8 px-4 text-center max-w-4xl mx-auto">
+          <h1 className="text-2xl md:text-5xl font-extrabold text-gray-800 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+            Find Your Dream Job at <span className="text-cyan-600 bg-gradient-to-r from-cyan-600 to-teal-500 bg-clip-text text-transparent">Hamro Job</span>
           </h1>
         </div>
         <GlobalSearch />

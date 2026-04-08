@@ -2137,46 +2137,86 @@ const SuperAdminDashboard = () => {
                         <div className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 max-w-4xl mx-auto">
                             <h3 className="text-2xl font-bold text-gray-800 mb-6">Manage Job Search Banner</h3>
                             <form onSubmit={handleBannerUpload} className="space-y-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Banner Title</label>
-                                    <input
-                                        type="text"
-                                        value={bannerData.title}
-                                        onChange={(e) => setBannerData({ ...bannerData, title: e.target.value })}
-                                        className="w-full border rounded-lg px-4 py-2"
-                                        placeholder="e.g., Find Your Dream Job"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Banner Subtitle</label>
-                                    <input
-                                        type="text"
-                                        value={bannerData.subtitle}
-                                        onChange={(e) => setBannerData({ ...bannerData, subtitle: e.target.value })}
-                                        className="w-full border rounded-lg px-4 py-2"
-                                        placeholder="e.g., Connecting Talent with Opportunity"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Background Image</label>
-                                    <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg">
-                                        <div className="space-y-1 text-center">
-                                                                                                        <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
-                                            <div className="flex text-sm text-gray-600">
-                                                <label className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
-                                                    <span>Upload a file</span>
-                                                    <input
-                                                        type="file"
-                                                        className="sr-only"
-                                                        accept="image/*"
-                                                        onChange={onSelectBannerFile}
-                                                    />
-                                                </label>
-                                                <p className="pl-1">or drag and drop</p>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Banner Title</label>
+                                            <input
+                                                type="text"
+                                                value={bannerData.title}
+                                                onChange={(e) => setBannerData({ ...bannerData, title: e.target.value })}
+                                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                                placeholder="e.g., Find Your Dream Job"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Banner Subtitle</label>
+                                            <input
+                                                type="text"
+                                                value={bannerData.subtitle}
+                                                onChange={(e) => setBannerData({ ...bannerData, subtitle: e.target.value })}
+                                                className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                                                placeholder="e.g., Connecting Talent with Opportunity"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Upload New Background Image</label>
+                                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer relative">
+                                                <div className="space-y-1 text-center">
+                                                    <ImageIcon className="mx-auto h-12 w-12 text-gray-400" />
+                                                    <div className="flex text-sm text-gray-600">
+                                                        <label className="relative cursor-pointer rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                                            <span>Select or drag image</span>
+                                                            <input
+                                                                type="file"
+                                                                className="sr-only"
+                                                                accept="image/*"
+                                                                onChange={onSelectBannerFile}
+                                                            />
+                                                        </label>
+                                                    </div>
+                                                    <p className="text-xs text-gray-500">PNG, JPG up to 5MB</p>
+                                                </div>
                                             </div>
-                                            <p className="text-xs text-gray-500">PNG, JPG, GIF up to 5MB</p>
                                         </div>
                                     </div>
+
+                                    {/* Preview Section */}
+                                    <div className="flex flex-col">
+                                        <label className="block text-sm font-medium text-gray-700 mb-1">Current/Preview Banner</label>
+                                        <div className="flex-1 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden flex items-center justify-center relative group">
+                                            {bannerData._id || bannerFile ? (
+                                                <div className="w-full h-full relative">
+                                                    <img
+                                                        src={bannerFile ? URL.createObjectURL(bannerFile) : (bannerData._id ? `${API_BASE_URL}/uploads/banners/${bannerData._id}.jpg` : '')}
+                                                        alt="Banner Preview"
+                                                        className="w-full h-full object-cover"
+                                                        onError={(e) => {
+                                                            // Fallback if the path logic above is too simple
+                                                            const target = e.target as HTMLImageElement;
+                                                            if (bannerData._id && !target.src.includes('blob')) {
+                                                                fetch(`${API_BASE_URL}/api/banners/job-search`)
+                                                                    .then(r => r.json())
+                                                                    .then(d => {
+                                                                        if (d.data?.backgroundImage) target.src = `${API_BASE_URL}${d.data.backgroundImage}`;
+                                                                    });
+                                                            }
+                                                        }}
+                                                    />
+                                                    <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-white p-4 text-center">
+                                                        <h4 className="text-xl font-bold truncate w-full">{bannerData.title || "Your Heading"}</h4>
+                                                        <p className="text-sm opacity-90 truncate w-full">{bannerData.subtitle || "Your Subtitle goes here"}</p>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="text-gray-400 text-center p-6">
+                                                    <ImageIcon className="w-12 h-12 mx-auto mb-2 opacity-20" />
+                                                    <p className="text-sm italic">No custom banner active</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                                     {bannerFile && (
                                         <div className="mt-2 text-sm text-green-600 flex items-center justify-between bg-green-50 p-2 rounded border border-green-200">
                                             <span>Selected: {bannerFile.name} (Cropped)</span>
@@ -2230,8 +2270,7 @@ const SuperAdminDashboard = () => {
                                             </div>
                                         </div>
                                     )}
-                                </div>
-
+                                
                                 <div className="flex justify-end gap-4">
                                     {bannerData._id && (
                                         <button
