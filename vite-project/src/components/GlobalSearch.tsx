@@ -27,8 +27,8 @@ const GlobalSearch = () => {
     };
 
     return (
-        <div className="w-full bg-transparent mt-[-1.5rem] mb-4 relative z-10 px-4">
-            <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center bg-white rounded-2xl md:rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.06)] p-1.5 border border-gray-100 transition-all duration-300 hover:shadow-[0_15px_45px_rgba(0,0,0,0.1)]">
+        <div className="w-full bg-transparent mt-4 mb-8 relative z-10 px-4">
+            <div className="max-w-3xl mx-auto flex flex-col md:flex-row items-center bg-white rounded-2xl md:rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.06)] p-1.5 border border-gray-100 transition-all duration-300 hover:shadow-[0_15px_45px_rgba(0,0,0,0.1)]">
                 <div className="flex-[1.5] flex items-center px-4 md:px-6 py-2 md:py-1 border-b md:border-b-0 md:border-r border-gray-100 w-full md:w-auto">
                     <Search className="text-gray-400 w-5 h-5 mr-3 flex-shrink-0" />
                     <input
