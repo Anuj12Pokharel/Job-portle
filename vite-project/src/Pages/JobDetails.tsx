@@ -16,6 +16,7 @@ import {
   FaFacebookMessenger,
   FaCopy,
 } from "react-icons/fa";
+import { calculateDaysLeft, formatDaysLeftDisplay } from "../utils/dateUtils";
 
 interface Job {
   _id: string;
@@ -149,9 +150,7 @@ const JobDetails = () => {
   }
 
   // Compute days left
-  const daysLeft = job.expiryDate
-    ? Math.ceil((new Date(job.expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
-    : null;
+  const daysLeft = calculateDaysLeft(job.expiryDate);
 
   const expiryDisplay = (() => {
     if (!job.expiryDate) return "N/A";
@@ -209,7 +208,7 @@ const JobDetails = () => {
               <DetailRow label="Salary" value={job.salary || "Negotiable"} />
               <DetailRow label="Education Level" value={job.educationLevel || "Bachelor"} />
               <DetailRow label="Experience" value={job.experience || "Not Mentioned"} />
-              <DetailRow label="Application Deadline" value={expiryDisplay} />
+              <DetailRow label="Application Deadline" value={`${expiryDisplay} (${formatDaysLeftDisplay(daysLeft)})`} />
             </div>
           </div>
 

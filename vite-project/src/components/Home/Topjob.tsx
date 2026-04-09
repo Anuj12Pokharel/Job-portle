@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { MapPin, Calendar } from "lucide-react";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { FaBusinessTime } from "react-icons/fa";
+import { calculateDaysLeft, formatDaysLeftDisplay } from "../../utils/dateUtils";
 
 const Topjob = ({ category, search }: { category?: string; search?: string }) => {
   const [jobs, setJobs] = useState<any[]>([]); // Use appropriate type if available, else any[]
@@ -133,21 +134,12 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
                   <span className="truncate">{job.experience || "Experience..."}</span>
                 </div>
               </div>
+
               <div className="grid grid-cols-2 gap-2">
                 <div className="flex items-center gap-1 min-w-0 text-red-600 font-medium">
                   <Calendar className="w-4 h-4 shrink-0" />
                   <span className="truncate">
-                    {job.expiryDate
-                      ? (() => {
-                        const expiry = new Date(job.expiryDate);
-                        expiry.setHours(23, 59, 59, 999);
-                        const diff = expiry.getTime() - Date.now();
-                        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                        if (days < 0) return "Expired";
-                        if (days === 0) return "Expires Today";
-                        return `${days} days left`;
-                      })()
-                      : "No expiry"}
+                    {formatDaysLeftDisplay(calculateDaysLeft(job.expiryDate))}
                   </span>
                 </div>
                 <div className="flex items-center gap-1 min-w-0">

@@ -4,6 +4,7 @@ import axios from "axios";
 import { MapPin, Calendar, Briefcase, DollarSign, Filter, Search } from "lucide-react";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
 import { FaBusinessTime } from "react-icons/fa";
+import { calculateDaysLeft, formatDaysLeftDisplay } from "../utils/dateUtils";
 
 interface Job {
     _id: string;
@@ -328,15 +329,10 @@ export default function Jobs() {
                                                         <LiaMoneyCheckSolid className="w-4 h-4 text-gray-400 flex-shrink-0" />
                                                         <span>{job.salary || "Not disclosed"}</span>
                                                     </div>
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                                    <div className="flex items-center gap-2 text-sm text-red-600 font-medium">
+                                                        <Calendar className="w-4 h-4 flex-shrink-0" />
                                                         <span>
-                                                            {job.expiryDate
-                                                                ? `${Math.ceil(
-                                                                    (new Date(job.expiryDate).getTime() - Date.now()) /
-                                                                    (1000 * 60 * 60 * 24)
-                                                                )} days left`
-                                                                : "No expiry"}
+                                                            {formatDaysLeftDisplay(calculateDaysLeft(job.expiryDate))}
                                                         </span>
                                                     </div>
                                                 </div>

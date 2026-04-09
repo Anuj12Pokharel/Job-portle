@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { MapPin, Calendar } from "lucide-react";
+import { calculateDaysLeft, formatDaysLeftDisplay } from "../../utils/dateUtils";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://job-portle-backend-fsai.onrender.com";
 
@@ -38,8 +39,8 @@ const Alljob = () => {
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {jobs
           .filter((job) => {
-            if (!job.expiryDate) return true;
-            return new Date(job.expiryDate) >= new Date();
+            const days = calculateDaysLeft(job.expiryDate);
+            return days === null || days >= 0;
           })
           .map((job) => (
             <div
@@ -73,18 +74,11 @@ const Alljob = () => {
                   <span>{job.location || "Location not specified"}</span>
                 </div>
 
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-5 h-5 text-gray-500" />
+                <div className="flex items-center gap-1 text-red-600 font-medium">
+                  <Calendar className="w-5 h-5" />
                   <span>
-                    {job.expiryDate
-                      ? (() => {
-                        const diff = new Date(job.expiryDate).getTime() - Date.now();
-                        const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                        return days <= 0 ? "Closing today" : `${days} days left`;
-                      })()
-                      : "No expiry"}
+                    {formatDaysLeftDisplay(calculateDaysLeft(job.expiryDate))}
                   </span>
-
                 </div>
               </div>
 

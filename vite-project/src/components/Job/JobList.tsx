@@ -5,6 +5,7 @@ import { MapPin, Calendar, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FaBusinessTime } from "react-icons/fa";
 import { LiaMoneyCheckSolid } from "react-icons/lia";
+import { calculateDaysLeft, formatDaysLeftDisplay } from "../../utils/dateUtils";
 
 interface Job {
   _id: string;
@@ -260,12 +261,7 @@ export default function JobList({
                     <div className="flex items-center gap-1 min-w-0 text-red-600 font-medium">
                       <Calendar className="w-4 h-4 shrink-0" />
                       <span className="truncate">
-                        {job.expiryDate
-                          ? `${Math.ceil(
-                            (new Date(job.expiryDate).getTime() - Date.now()) /
-                            (1000 * 60 * 60 * 24)
-                          )} days left`
-                          : "No expiry"}
+                        {formatDaysLeftDisplay(calculateDaysLeft(job.expiryDate))}
                       </span>
                     </div>
                     <div className="flex items-center gap-1 min-w-0">
