@@ -208,7 +208,7 @@ const JobDetails = () => {
               <DetailRow label="Salary" value={job.salary || "Negotiable"} />
               <DetailRow label="Education Level" value={job.educationLevel || "Bachelor"} />
               <DetailRow label="Experience" value={job.experience || "Not Mentioned"} />
-              <DetailRow label="Application Deadline" value={`${expiryDisplay} (${formatDaysLeftDisplay(daysLeft)})`} />
+              <DetailRow label="Application Deadline" value={expiryDisplay} />
             </div>
           </div>
 
