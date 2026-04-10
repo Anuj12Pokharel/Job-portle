@@ -205,7 +205,6 @@ export default function JobList({
               expiry.setHours(23, 59, 59, 999);
               return expiry.getTime() > Date.now(); // Only include active jobs
             })
-            .slice(-8)
             .reverse()
             .map((job) => (
               <div
