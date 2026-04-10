@@ -39,7 +39,7 @@ function Home() {
           {/* Right Sidebar - Fixed to Screen */}
           <div className="w-full lg:w-[25%] xl:w-[22%] flex flex-col gap-4 
                           lg:fixed lg:right-6 xl:right-8 lg:top-32 
-                          max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar z-40">
+                          max-h-[calc(100vh-9rem)] lg:pb-4 overflow-y-auto custom-scrollbar z-40">
             <Jobform />
             <Jobcard />
           </div>
