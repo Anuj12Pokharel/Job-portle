@@ -31,17 +31,32 @@ function Home() {
         </div>
         <GlobalSearch />
         <LogoSlider />
-        {/* Jobs section - sidebar is sticky ONLY within this section */}
+        {/* Jobs section — sidebar locks in place while scrolling through job lists */}
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6 items-start">
-          {/* Right Sidebar - Sticky within Jobs Section only */}
+
+          {/* Right Sidebar — sticky: stays locked while job sections are on screen */}
           <div className="w-full lg:w-[25%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-28 self-start">
             <Jobform />
             <Jobcard />
           </div>
-          {/* Left - Featured Jobs + Top Jobs */}
-          <div className="w-full lg:w-[75%] xl:w-[78%] flex flex-col gap-6">
-            <JobList category={category} search={search} />
-            <Topjob category={category} search={search} />
+
+          {/* Left — Featured Jobs + Top Jobs each with their own internal scroll */}
+          <div className="w-full lg:w-[75%] xl:w-[78%] flex flex-col gap-8">
+
+            {/* Featured Jobs — scrollable container */}
+            <div>
+              <div className="max-h-[520px] overflow-y-auto pr-1 custom-scrollbar rounded-2xl">
+                <JobList category={category} search={search} />
+              </div>
+            </div>
+
+            {/* Top Jobs — scrollable container */}
+            <div>
+              <div className="max-h-[520px] overflow-y-auto pr-1 custom-scrollbar rounded-2xl">
+                <Topjob category={category} search={search} />
+              </div>
+            </div>
+
           </div>
         </div>
 
