@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 // Tabs for UI
-const LEVELS_UI = ["Senior", "Mid", "Junior"];
+const LEVELS_UI = ["Senior", "Mid", "Junior", "Entry Level", "Fresher"];
 
 // Mapping from UI tab to backend enum
 const LEVELS_MAP: Record<string, string> = {
   Senior: "Senior-level",
   Mid: "Mid-level",
   Junior: "Junior",
+  "Entry Level": "Entry-level",
+  Fresher: "Fresher",
 };
 
 interface Job {
@@ -97,7 +99,7 @@ export default function Jobcard() {
         <p className="text-center text-gray-400">No jobs found</p>
       ) : (
         <div className="flex flex-col gap-3">
-          {jobs.slice(0, 4).map((job) => (
+          {jobs.slice(0, 3).map((job) => (
             <div
               key={job._id}
               className="flex items-start sm:items-center gap-3 bg-white p-3 sm:p-4 rounded-xl shadow-sm"

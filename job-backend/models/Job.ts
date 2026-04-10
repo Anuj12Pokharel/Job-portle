@@ -36,7 +36,7 @@ const jobSchema = new Schema<IJob>(
     location: { type: String, required: true },
     jobLevel: {
       type: String,
-      enum: ["Entry-level", "Mid-level", "Senior-level", "Junior", "Executive"],
+      enum: ["Entry-level", "Mid-level", "Senior-level", "Junior", "Executive", "Fresher"],
 
     },
     jobType: {

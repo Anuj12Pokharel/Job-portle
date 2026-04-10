@@ -33,29 +33,34 @@ function Home() {
         <LogoSlider />
         <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6 items-start">
           
-          {/* Right Sidebar - Sticky on Desktop */}
-          <div className="w-full lg:w-[26%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-32 self-start">
+          {/* Right Sidebar - Ghost Placeholder for Flex Layout to keep exact sizing */}
+          <div className="hidden lg:block lg:w-[25%] xl:w-[22%]"></div>
+
+          {/* Right Sidebar - Fixed to Screen */}
+          <div className="w-full lg:w-[25%] xl:w-[22%] flex flex-col gap-4 
+                          lg:fixed lg:right-6 xl:right-8 lg:top-32 
+                          max-h-[calc(100vh-6rem)] overflow-y-auto custom-scrollbar z-40">
             <Jobform />
             <Jobcard />
           </div>
-          <div className="w-full lg:w-[74%] xl:w-[78%] flex flex-col gap-6">
+          <div className="w-full lg:w-[72%] xl:w-[76%] flex flex-col gap-6 lg:mr-auto">
             <JobList category={category} search={search} />
             <Topjob category={category} search={search} />
+            <HeroSection />
+            <div className="py-7">
+              <h1 className="text-center  text-2xl font-bold text-cyan-600">
+                What Makes JOBLINK360 the Best Platform for Jobs in Nepal?
+              </h1>
+              <Jobseeker />
+              <Employer />
+            </div>
+            <Workingmethod />
+            <Jobsearch />
+            <Training />
+            <FA />
           </div>
         </div>
-        <HeroSection />
-        <div className="py-7">
-          <h1 className="text-center  text-2xl font-bold text-cyan-600">
-            What Makes JOBLINK360 the Best Platform for Jobs in Nepal?
-          </h1>
-          <Jobseeker />
-          <Employer />
-        </div>
-        <Workingmethod />
       </div>
-      <Jobsearch />
-      <Training />
-      <FA />
     </>
   );
 }
