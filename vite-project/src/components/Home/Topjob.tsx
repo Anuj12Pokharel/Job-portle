@@ -56,10 +56,13 @@ const Topjob = ({ category, search }: { category?: string; search?: string }) =>
 
   const sortedJobs = [...jobs]
     .filter((job) => {
-      if (!job.expiryDate) return true; // Keep jobs with no expiry
+      // Exclude featured jobs — they already appear in Featured Jobs section
+      if (job.isFeatured) return false;
+      // Exclude expired jobs
+      if (!job.expiryDate) return true;
       const expiry = new Date(job.expiryDate);
-      expiry.setHours(23, 59, 59, 999); // End of the expiry day
-      return expiry.getTime() > Date.now(); // Only include jobs that are not expired
+      expiry.setHours(23, 59, 59, 999);
+      return expiry.getTime() > Date.now();
     })
     .sort((a, b) => {
       const dateA = new Date(a.createdAt || 0).getTime();
