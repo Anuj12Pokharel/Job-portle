@@ -31,33 +31,27 @@ function Home() {
         </div>
         <GlobalSearch />
         <LogoSlider />
-        {/* Jobs section — sidebar locks in place while scrolling through job lists */}
-        <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6 items-start">
+        {/* Jobs section — two-column layout: left scrolls, right sidebar stays locked */}
+        <div className="flex flex-col lg:flex-row-reverse gap-6 lg:gap-9 px-4 sm:px-6 lg:px-8 py-6">
 
-          {/* Right Sidebar — sticky: stays locked while job sections are on screen */}
-          <div className="w-full lg:w-[25%] xl:w-[22%] flex flex-col gap-4 lg:sticky lg:top-28 self-start">
+          {/* Right Sidebar — never moves, always visible */}
+          <div className="w-full lg:w-[25%] xl:w-[22%] flex-shrink-0 flex flex-col gap-4 lg:sticky lg:top-28 self-start">
             <Jobform />
             <Jobcard />
           </div>
 
-          {/* Left — Featured Jobs + Top Jobs each with their own internal scroll */}
-          <div className="w-full lg:w-[75%] xl:w-[78%] flex flex-col gap-8">
+          {/* Left — Featured Jobs + Top Jobs in ONE tall scrollable column */}
+          <div className="w-full lg:w-[75%] xl:w-[78%] lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto custom-scrollbar pr-1">
+            {/* Featured Jobs */}
+            <JobList category={category} search={search} />
 
-            {/* Featured Jobs — scrollable container */}
-            <div>
-              <div className="max-h-[520px] overflow-y-auto pr-1 custom-scrollbar rounded-2xl">
-                <JobList category={category} search={search} />
-              </div>
-            </div>
+            {/* Divider */}
+            <div className="my-6 border-t border-gray-100" />
 
-            {/* Top Jobs — scrollable container */}
-            <div>
-              <div className="max-h-[520px] overflow-y-auto pr-1 custom-scrollbar rounded-2xl">
-                <Topjob category={category} search={search} />
-              </div>
-            </div>
-
+            {/* Top Jobs */}
+            <Topjob category={category} search={search} />
           </div>
+
         </div>
 
         {/* Sections below job listings — scroll normally, sidebar not visible here */}
