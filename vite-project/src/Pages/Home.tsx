@@ -40,8 +40,8 @@ function Home() {
             <Jobcard />
           </div>
 
-          {/* Left — Featured Jobs + Top Jobs in ONE tall scrollable column */}
-          <div className="w-full lg:w-[75%] xl:w-[78%] lg:max-h-[calc(100vh-9rem)] lg:overflow-y-auto custom-scrollbar pr-1">
+          {/* Left — Featured Jobs + Top Jobs in ONE tall column (scrolls with the main page) */}
+          <div className="w-full lg:w-[75%] xl:w-[78%] pr-1">
             {/* Featured Jobs */}
             <JobList category={category} search={search} />
 
