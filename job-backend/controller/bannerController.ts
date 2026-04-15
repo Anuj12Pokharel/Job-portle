@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import Banner from "../models/Banner";
+import path from "path";
+import fs from "fs";
+import sharp from "sharp";
 
 // Get all banners
 export const getBanners = async (req: Request, res: Response) => {
@@ -95,7 +98,22 @@ export const upsertBanner = async (req: Request, res: Response) => {
         };
 
         if (req.file) {
-            bannerData.backgroundImage = `/uploads/banners/${req.file.filename}`;
+            const originalPath = req.file.path;
+            const filename = `resized-${Date.now()}-${req.file.filename}`;
+            const targetPath = path.join(req.file.destination, filename);
+
+            // Resize the uploaded image to standard 1920x400 for homepage banners
+            await sharp(originalPath)
+                .resize(1920, 400, {
+                    fit: sharp.fit.cover,
+                    position: sharp.strategy.entropy // intelligent cropping
+                })
+                .toFile(targetPath);
+
+            // delete original file to save space
+            fs.unlinkSync(originalPath);
+
+            bannerData.backgroundImage = `/uploads/banners/${filename}`;
         }
 
         const banner = await Banner.findOneAndUpdate(

@@ -107,14 +107,12 @@ export default function Navbar() {
           {/* Left: Logo */}
           <div className="flex items-center flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
-              {/* Circular Logo */}
                 <img
                   src={logo}
                   alt="JobLink 360 Logo"
-                  className="h-11 sm:h-13 md:h-15 w-auto"
+                  className="h-12 sm:h-14 md:h-[65px] lg:h-[75px] w-auto object-contain cursor-pointer"
                 />
             </Link>
-
           </div>
 
           {/* Center: Navigation Links */}

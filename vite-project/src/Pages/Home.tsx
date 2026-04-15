@@ -24,8 +24,8 @@ function Home() {
     <>
       <div className="front overflow-x-hidden">
         <Jobsearchbanner />
-        <div className="pt-8 pb-3 px-4 text-center max-w-4xl mx-auto">
-          <h1 className="text-2xl md:text-5xl font-extrabold text-gray-800 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="pt-8 pb-3 px-4 flex flex-col items-center justify-center text-center max-w-4xl mx-auto w-full">
+          <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-gray-800 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700 w-full text-center">
             Find Your Dream Job at <span className="text-cyan-600 bg-gradient-to-r from-cyan-600 to-teal-500 bg-clip-text text-transparent">Hamro Job</span>
           </h1>
         </div>
