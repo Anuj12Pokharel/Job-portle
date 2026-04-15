@@ -22,7 +22,7 @@ function Home() {
 
   return (
     <>
-      <div className="front overflow-x-hidden">
+      <div className="front flex flex-col w-full">
         <Jobsearchbanner />
         <div className="pt-8 pb-3 px-4 flex flex-col items-center justify-center text-center max-w-4xl mx-auto w-full">
           <h1 className="text-3xl md:text-5xl lg:text-[54px] font-extrabold text-gray-800 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700 w-full text-center">
