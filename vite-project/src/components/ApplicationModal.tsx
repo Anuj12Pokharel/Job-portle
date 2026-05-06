@@ -16,15 +16,17 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
     const [status, setStatus] = useState(application?.status || "applied");
     const [loading, setLoading] = useState(false);
     const [resumeUrl, setResumeUrl] = useState<string | null>(null);
+    const [iframeError, setIframeError] = useState(false);
 
     useEffect(() => {
         if (isOpen && application) {
             setStatus(application.status);
+            setIframeError(false); // reset each time a new application is opened
 
             // Construct resume URL robustly
             if (application.resume) {
                 let cleaned = String(application.resume).replace(/\\/g, "/");
-                
+
                 if (cleaned.startsWith("http")) {
                     setResumeUrl(cleaned);
                 } else {
@@ -199,14 +201,43 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
                                             <ExternalLink className="w-3 h-3 mr-1" /> Open in New Tab
                                         </a>
                                     </div>
-                                    <div className="flex-1 bg-gray-500 relative">
-                                        <iframe
-                                            src={resumeUrl.toLowerCase().endsWith('.pdf') ? resumeUrl : `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl)}&embedded=true`}
-                                            className="w-full h-full border-none bg-white"
-                                            title="Resume"
-                                        />
-                                        {/* Overlay for better click interaction or if iframe fails */}
-                                        <div className="absolute inset-0 pointer-events-none border-4 border-transparent hover:border-teal-500/20 transition-all"></div>
+                                    <div className="flex-1 bg-gray-50 relative">
+                                        {iframeError ? (
+                                            /* Fallback: iframe was blocked (X-Frame-Options / cross-origin) */
+                                            <div className="flex flex-col items-center justify-center h-full gap-5 p-8 text-center">
+                                                <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center">
+                                                    <FileText className="w-10 h-10 text-teal-400" />
+                                                </div>
+                                                <div>
+                                                    <h5 className="text-base font-semibold text-gray-700 mb-1">Preview unavailable</h5>
+                                                    <p className="text-sm text-gray-400 max-w-xs">
+                                                        The resume cannot be previewed inline (the server does not allow embedding).
+                                                        Open it in a new tab to view the full document.
+                                                    </p>
+                                                </div>
+                                                <a
+                                                    href={resumeUrl!}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-teal-600 text-white text-sm font-semibold rounded-lg hover:bg-teal-700 transition-colors shadow-sm"
+                                                >
+                                                    <ExternalLink className="w-4 h-4" />
+                                                    Open Resume in New Tab
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <iframe
+                                                key={resumeUrl} /* remount when URL changes */
+                                                src={
+                                                    resumeUrl!.toLowerCase().endsWith('.pdf')
+                                                        ? resumeUrl!
+                                                        : `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl!)}&embedded=true`
+                                                }
+                                                className="w-full h-full border-none bg-white"
+                                                title="Resume"
+                                                onError={() => setIframeError(true)}
+                                            />
+                                        )}
                                     </div>
                                 </>
                             ) : (

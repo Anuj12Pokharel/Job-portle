@@ -33,7 +33,17 @@ const app = express();
 // Use absolute path to ensure it works in both dev and production
 // In production: __dirname = /app/dist, so we go up one level to /app/uploads
 const uploadsPath = path.join(__dirname, "..", "uploads");
-app.use("/uploads", express.static(uploadsPath));
+
+// Serve uploaded files (resumes, images) with headers that allow same-origin
+// iframe embedding. Without these, browsers block the resume PDF preview.
+app.use("/uploads", (req: Request, res: Response, next: NextFunction) => {
+  // Allow embedding only from the same origin (not arbitrary third-party sites)
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("Content-Security-Policy", "frame-ancestors 'self'");
+  // Allow the frontend origin to fetch/display these files
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  next();
+}, express.static(uploadsPath));
 
 // Log uploads path for debugging
 console.log("Serving uploads from:", uploadsPath);
