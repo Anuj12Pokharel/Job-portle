@@ -228,14 +228,19 @@ const ApplicationModal: React.FC<ApplicationModalProps> = ({ isOpen, onClose, ap
                                         ) : (
                                             <iframe
                                                 key={resumeUrl} /* remount when URL changes */
-                                                src={
-                                                    resumeUrl!.toLowerCase().endsWith('.pdf')
-                                                        ? resumeUrl!
-                                                        : `https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl!)}&embedded=true`
-                                                }
+                                                src={`https://docs.google.com/viewer?url=${encodeURIComponent(resumeUrl!)}&embedded=true`}
                                                 className="w-full h-full border-none bg-white"
                                                 title="Resume"
                                                 onError={() => setIframeError(true)}
+                                                onLoad={(e) => {
+                                                    // Detect Chrome's SSL/network error page — its title is "Error"
+                                                    try {
+                                                        const title = (e.target as HTMLIFrameElement).contentDocument?.title ?? "";
+                                                        if (title === "Error" || title === "") setIframeError(true);
+                                                    } catch {
+                                                        // cross-origin read blocked — means the frame loaded a real page, not an error page
+                                                    }
+                                                }}
                                             />
                                         )}
                                     </div>

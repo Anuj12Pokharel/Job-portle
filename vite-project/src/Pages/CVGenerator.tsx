@@ -64,6 +64,7 @@ const CVGenerator: React.FC = () => {
     const [generating, setGenerating] = useState(false);
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateKey>("professional");
     const [showTemplatePicker, setShowTemplatePicker] = useState(false);
+    const [activeTab, setActiveTab] = useState<"form" | "preview">("form");
 
     const handleDownload = async () => {
         const previewEl = document.getElementById("cv-preview");
@@ -153,11 +154,39 @@ const CVGenerator: React.FC = () => {
                 </button>
             </div>
 
+            {/* Tab Selector for Mobile (Visible only on screens smaller than lg) */}
+            {!showTemplatePicker && (
+                <div className="flex lg:hidden mb-6 bg-gray-100 p-1.5 rounded-xl border border-gray-200">
+                    <button
+                        onClick={() => setActiveTab("form")}
+                        className={`flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all ${
+                            activeTab === "form"
+                                ? "bg-white text-teal-700 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                    >
+                        Edit Details
+                    </button>
+                    <button
+                        onClick={() => setActiveTab("preview")}
+                        className={`flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all ${
+                            activeTab === "preview"
+                                ? "bg-white text-teal-700 shadow-sm"
+                                : "text-gray-600 hover:text-gray-900"
+                        }`}
+                    >
+                        Live Preview
+                    </button>
+                </div>
+            )}
+
             {/* Main layout */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-[calc(100vh-230px)]">
 
                 {/* LEFT: Form OR Template Picker */}
-                <div className="overflow-y-auto rounded-xl border border-gray-200 bg-white">
+                <div className={`overflow-y-auto rounded-xl border border-gray-200 bg-white ${
+                    showTemplatePicker || activeTab === "form" ? "block" : "hidden lg:block"
+                }`}>
                     {showTemplatePicker ? (
                         /* ---- Template Picker Panel ---- */
                         <div className="p-6">
@@ -200,8 +229,10 @@ const CVGenerator: React.FC = () => {
                 </div>
 
                 {/* RIGHT: CV Preview */}
-                <div className="hidden lg:block bg-gray-100 p-6 rounded-xl overflow-y-auto">
-                    <div id="cv-preview" className="max-w-[800px] mx-auto scale-95 origin-top bg-white p-4 pb-12 shadow-sm">
+                <div className={`bg-gray-100 p-4 lg:p-6 rounded-xl overflow-y-auto ${
+                    !showTemplatePicker && activeTab === "preview" ? "block" : "hidden lg:block"
+                }`}>
+                    <div id="cv-preview" className="max-w-[800px] mx-auto scale-95 origin-top bg-white p-4 pb-12 shadow-sm overflow-x-auto">
                         <CVPreview data={cvData} template={selectedTemplate} />
                         {/* Branding Footer */}
                         <div className="mt-8 pt-4 border-t border-gray-200 text-center">
